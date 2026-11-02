@@ -1,0 +1,3602 @@
+{
+  "schema": "hadavin.demo-export/1",
+  "banner": "prototype, sample data",
+  "demo": {
+    "slug": "intake",
+    "title": "Document intake",
+    "version": "0.1.0-example",
+    "core_commit": "6608146",
+    "kit_commit": "uncommitted"
+  },
+  "run": {
+    "run_id": "intake-example-001",
+    "ts": "2026-11-01T09:00:00Z",
+    "model": "scripted",
+    "mode": "scripted",
+    "prompt_sha256": "d941dd62bbf546c8d84d49a513071da4eae454c3aeceaf01c7672d5a0338d585",
+    "config_hash": "4c54930ada2d483d8ce949fb8e17a125cb91b2e22b6dc9684e7a66efd174d616",
+    "dataset_sha256": "eec3d838b2459566fb1f9e695243171d3c7410ea05b9b30c48dc4e61fe4f698b",
+    "seed": 13,
+    "level": "suggest"
+  },
+  "cases": [
+    {
+      "case_id": "intake-e-001",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Birch Supplies: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "11375",
+          "model_value": "11375"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-001",
+      "audit_event_ids": [
+        "evt-0001",
+        "evt-0002"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Birch Supplies"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "113.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "113.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "08d8883a6faa98b3fc1aefa53cad54addc7033081ee77df94a7a4963a19ff4b5"
+    },
+    {
+      "case_id": "intake-h-002",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Corvus Print: CSV with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "12750",
+          "model_value": "12750"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-002",
+      "audit_event_ids": [
+        "evt-0004",
+        "evt-0005"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "CSV"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Corvus Print"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "127.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "127.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "ff66b06c82a213bbd44d29c6089616a8763d6306e1567b15c15cbe0e023e0796"
+    },
+    {
+      "case_id": "intake-e-003",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Delta Linens: email text with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "14125",
+          "model_value": "14125"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-003",
+      "audit_event_ids": [
+        "evt-0007",
+        "evt-0008"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "email text"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Delta Linens"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "141.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "141.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "003827c1f690302a5aa11dcda7f09886d46cd21da341bcda0459424566ccbe38"
+    },
+    {
+      "case_id": "intake-e-004",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Elm Tooling: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "15500",
+          "model_value": "15500"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-004",
+      "audit_event_ids": [
+        "evt-0010",
+        "evt-0011"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Elm Tooling"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "155.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "155.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "8f11ca38642107c466ec206d1e2315f41a465fac481840ef34fb8d41c7909722"
+    },
+    {
+      "case_id": "intake-h-005",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Fenn Logistics: CSV with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "16875",
+          "model_value": "16875"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-005",
+      "audit_event_ids": [
+        "evt-0013",
+        "evt-0014"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "CSV"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Fenn Logistics"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "168.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "168.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "b8f75d18ea2ed3aecb291e7e2b2f95ad4d5dd75965afecc5322fc8c654c36a14"
+    },
+    {
+      "case_id": "intake-e-006",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Gale Foods: email text with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "18250",
+          "model_value": "18250"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-006",
+      "audit_event_ids": [
+        "evt-0016",
+        "evt-0017"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "email text"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Gale Foods"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "182.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "182.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "5ff8533723b2127582350bdc8f575a96ebe487790a0a7679ae867d131fb07aa8"
+    },
+    {
+      "case_id": "intake-e-007",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Hale Optics: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "19625",
+          "model_value": "19625"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-007",
+      "audit_event_ids": [
+        "evt-0019",
+        "evt-0020"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Hale Optics"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "196.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "196.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "ed159d7bdbad216e3b3a361af43594162278dc35490fe1fe5ef712f2cc7279d2"
+    },
+    {
+      "case_id": "intake-h-008",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Iris Pack: CSV with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "21000",
+          "model_value": "21000"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-008",
+      "audit_event_ids": [
+        "evt-0022",
+        "evt-0023"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "CSV"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Iris Pack"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "210.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "210.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "2a7e19d3ed56cecc829186592b478b81d4a87b8c07375068a8ccc8dfc43eb7c8"
+    },
+    {
+      "case_id": "intake-e-009",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Jolt Cables: email text with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "22375",
+          "model_value": "22375"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-009",
+      "audit_event_ids": [
+        "evt-0025",
+        "evt-0026"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "email text"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Jolt Cables"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "223.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "223.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "47826c6093ba5da59d5fdfba5f21e6ab549396ab70be0999b47d591ced761739"
+    },
+    {
+      "case_id": "intake-e-010",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Kiln Ceramics: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "23750",
+          "model_value": "23750"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-010",
+      "audit_event_ids": [
+        "evt-0028",
+        "evt-0029"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Kiln Ceramics"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "237.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "237.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "2cfcd3a62bcbe270ace1a82ffa6fd5271f8b598962ec5dc918807a66f405d548"
+    },
+    {
+      "case_id": "intake-h-011",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Larch Timber: CSV with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "25125",
+          "model_value": "25125"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-011",
+      "audit_event_ids": [
+        "evt-0031",
+        "evt-0032"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "CSV"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Larch Timber"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "251.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "251.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "8d334223038d193e6e7bffac88c772952530c2ee9d44fe071b8155081316d643"
+    },
+    {
+      "case_id": "intake-e-012",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Moss Cleaning: email text with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "26500",
+          "model_value": "26500"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-012",
+      "audit_event_ids": [
+        "evt-0034",
+        "evt-0035"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "email text"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Moss Cleaning"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "265.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "265.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "03a5c1dcfa44604de0f790ae18f44ae5bf94fdd0aed1f2a40264589ac6d65178"
+    },
+    {
+      "case_id": "intake-e-013",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Nova Paper: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "27875",
+          "model_value": "27875"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-013",
+      "audit_event_ids": [
+        "evt-0037",
+        "evt-0038"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Nova Paper"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "278.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "278.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "76108919d81811338f40e4a77206f97efa9b3098c855c3b69491ca97b9b4a252"
+    },
+    {
+      "case_id": "intake-h-014",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Orrin Metals: CSV with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "29250",
+          "model_value": "29250"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-014",
+      "audit_event_ids": [
+        "evt-0040",
+        "evt-0041"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "CSV"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Orrin Metals"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "292.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "292.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "b1d70aa771da3c5293d711008a9470fb4c630621bd7f26bce56fbba72882c6b2"
+    },
+    {
+      "case_id": "intake-e-015",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Pike Hardware: email text with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "30625",
+          "model_value": "30625"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-015",
+      "audit_event_ids": [
+        "evt-0043",
+        "evt-0044"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "email text"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Pike Hardware"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "306.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "306.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "79e07cdb3e6960f02f863b9646ac23daa5ec9149d2f40ca7bc053dfa23d8946f"
+    },
+    {
+      "case_id": "intake-e-016",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Quill Labels: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "32000",
+          "model_value": "32000"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-016",
+      "audit_event_ids": [
+        "evt-0046",
+        "evt-0047"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Quill Labels"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "320.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "320.00 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "5b274d32ccf1547255939140ab445dd80905eb5c3a4430731bb36284842700e5"
+    },
+    {
+      "case_id": "intake-h-017",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Reed Textiles: CSV with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "33375",
+          "model_value": "33375"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-017",
+      "audit_event_ids": [
+        "evt-0049",
+        "evt-0050"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "CSV"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Reed Textiles"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "333.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "333.75 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "ff8afd579863c06e23f814c9c29ea856b10170aa98487c0b0c139ed4847410d5"
+    },
+    {
+      "case_id": "intake-e-018",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Sable Tools: email text with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "34750",
+          "model_value": "34750"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-018",
+      "audit_event_ids": [
+        "evt-0052",
+        "evt-0053"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "email text"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Sable Tools"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "347.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "347.50 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "fb7a2317d06ead35de5afe4ea54fc7386d9a26f3d0e1e08273f8ff7a046e2865"
+    },
+    {
+      "case_id": "intake-e-019",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Tarn Glass: PDF-as-text fixture with 3 line items.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "totals cross-check in code",
+          "draft object only"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "vendor": "plumbing only",
+            "total": "plumbing only"
+          },
+          "ms": 330,
+          "cost_usd": "0.0028",
+          "source_value": "36125",
+          "model_value": "36125"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-001",
+          "decision": "needs_approval",
+          "reason": "draft only; a person confirms",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-019",
+      "audit_event_ids": [
+        "evt-0055",
+        "evt-0056"
+      ],
+      "tier": "human",
+      "facts": [
+        {
+          "group": "draft",
+          "label": "Source type",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "group": "draft",
+          "label": "Vendor",
+          "value": "Tarn Glass"
+        },
+        {
+          "group": "draft",
+          "label": "Total",
+          "value": "361.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Sum of 3 lines",
+          "value": "361.25 USD"
+        },
+        {
+          "group": "draft",
+          "label": "Totals match",
+          "value": "yes"
+        }
+      ],
+      "source_document_sha256": "32c247f39dba26511456521d59ee665fa928cccc00b5a37a04641ff65fa27c60"
+    },
+    {
+      "case_id": "intake-t-001",
+      "bucket": "trap",
+      "split": "test",
+      "input_summary": "PDF text claims total 1,000.00 but the lines add up to 1,200.00.",
+      "expected": {
+        "outcome": "refuse",
+        "checks": [
+          "mismatch is a deterministic deny"
+        ]
+      },
+      "outcome": "blocked",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 340,
+          "cost_usd": "0.0029",
+          "source_value": "120000",
+          "model_value": "100000"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "totals_crosscheck",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-002",
+          "decision": "deny",
+          "reason": "total does not equal sum of lines",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": null,
+      "audit_event_ids": [
+        "evt-0058",
+        "evt-0059"
+      ],
+      "tier": "none",
+      "source_document_sha256": "32de895fa79158a2eabc9261e94776bc953517ee169f0a56c1158592f3e3cbc5"
+    },
+    {
+      "case_id": "intake-a-001",
+      "bucket": "abstain",
+      "split": "test",
+      "input_summary": "Scanned receipt, illegible; mood 🙂 in the cover note.",
+      "expected": {
+        "outcome": "abstain",
+        "checks": [
+          "no draft"
+        ]
+      },
+      "outcome": "abstained",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_fields",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 300,
+          "cost_usd": "0.0025",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "abstain_policy",
+          "args_summary": {},
+          "rule_id": "R-INTAKE-003",
+          "decision": "deny",
+          "reason": "unreadable source",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": null,
+      "audit_event_ids": [
+        "evt-0060",
+        "evt-0061"
+      ],
+      "tier": "none",
+      "source_document_sha256": "e8918aa9929fdf44f180cde68dd8ea39e163d67b755bddede794e68e63b270ac"
+    }
+  ],
+  "approvals": [
+    {
+      "approval_id": "appr-001",
+      "case_id": "intake-e-001",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-001",
+        "total_minor": "11375",
+        "currency": "USD"
+      },
+      "idempotency_key": "cef1583b0f4046d69df9b141e7d3bdf1199b59c2ab3887b8eee8c549294b8717",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "11375 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "11375 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:00:16Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:01:11Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-001",
+        "result": "ok",
+        "ts": "2026-11-01T09:01:14Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-002",
+      "case_id": "intake-h-002",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-002",
+        "total_minor": "12750",
+        "currency": "USD"
+      },
+      "idempotency_key": "6c5304501689a74dc0634abfc0b84d5a4c535a5cdad1f51b90a7be01210f615e",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "CSV"
+        },
+        {
+          "label": "Total (document)",
+          "value": "12750 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "12750 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:01:30Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:02:25Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-002",
+        "result": "ok",
+        "ts": "2026-11-01T09:02:28Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-003",
+      "case_id": "intake-e-003",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-003",
+        "total_minor": "14125",
+        "currency": "USD"
+      },
+      "idempotency_key": "4fd6dc1e66ff0611350051739fa2b6c98af22f0855521dd17f7566ead61eb016",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "email text"
+        },
+        {
+          "label": "Total (document)",
+          "value": "14125 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "14125 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:02:44Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:03:39Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-003",
+        "result": "ok",
+        "ts": "2026-11-01T09:03:42Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-004",
+      "case_id": "intake-e-004",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-004",
+        "total_minor": "15500",
+        "currency": "USD"
+      },
+      "idempotency_key": "0df1a9a91cdf8352f7069f2bad4c768c83149036747d466a74efd4d22c4dc4b3",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "15500 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "15500 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:03:58Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:04:53Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-004",
+        "result": "ok",
+        "ts": "2026-11-01T09:04:56Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-005",
+      "case_id": "intake-h-005",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-005",
+        "total_minor": "16875",
+        "currency": "USD"
+      },
+      "idempotency_key": "1be0b4e2ac8ee640683d7d72af701fa9f050a9614a19dd84bd44bc711b1bb043",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "CSV"
+        },
+        {
+          "label": "Total (document)",
+          "value": "16875 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "16875 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:05:12Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:06:07Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-005",
+        "result": "ok",
+        "ts": "2026-11-01T09:06:10Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-006",
+      "case_id": "intake-e-006",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-006",
+        "total_minor": "18250",
+        "currency": "USD"
+      },
+      "idempotency_key": "86fc7eb8c6df8e452521be6f970184c205b9337091b7ddcd538959d19ffbccc4",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "email text"
+        },
+        {
+          "label": "Total (document)",
+          "value": "18250 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "18250 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:06:26Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:07:21Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-006",
+        "result": "ok",
+        "ts": "2026-11-01T09:07:24Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-007",
+      "case_id": "intake-e-007",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-007",
+        "total_minor": "19625",
+        "currency": "USD"
+      },
+      "idempotency_key": "54676f13206658e4fca7bc340c084c4fb10753787c4b02654ae2ee493f04687f",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "19625 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "19625 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:07:40Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:08:35Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-007",
+        "result": "ok",
+        "ts": "2026-11-01T09:08:38Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-008",
+      "case_id": "intake-h-008",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-008",
+        "total_minor": "21000",
+        "currency": "USD"
+      },
+      "idempotency_key": "e56cc1406b7bcec8ff1590566c0b355c057220d502ffaaa272edb52dfa724214",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "CSV"
+        },
+        {
+          "label": "Total (document)",
+          "value": "21000 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "21000 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:08:54Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:09:49Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-008",
+        "result": "ok",
+        "ts": "2026-11-01T09:09:52Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-009",
+      "case_id": "intake-e-009",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-009",
+        "total_minor": "22375",
+        "currency": "USD"
+      },
+      "idempotency_key": "25c5cbf7bd10e1cea95a98904d5015bc1864c61bd75f6ddc4b8974a619faaa8c",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "email text"
+        },
+        {
+          "label": "Total (document)",
+          "value": "22375 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "22375 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:10:08Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:11:03Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-009",
+        "result": "ok",
+        "ts": "2026-11-01T09:11:06Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-010",
+      "case_id": "intake-e-010",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-010",
+        "total_minor": "23750",
+        "currency": "USD"
+      },
+      "idempotency_key": "d8b104e31ba92cb11dff22f6e5253db35d109e41c644e8d9739184ec775ae878",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "23750 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "23750 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:11:22Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:12:17Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-010",
+        "result": "ok",
+        "ts": "2026-11-01T09:12:20Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-011",
+      "case_id": "intake-h-011",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-011",
+        "total_minor": "25125",
+        "currency": "USD"
+      },
+      "idempotency_key": "9cde908cf0512497b51432ac4e1bf76c26e5644b3908a60687af5e6ed8fb7f3d",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "CSV"
+        },
+        {
+          "label": "Total (document)",
+          "value": "25125 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "25125 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:12:36Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:13:31Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-011",
+        "result": "ok",
+        "ts": "2026-11-01T09:13:34Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-012",
+      "case_id": "intake-e-012",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-012",
+        "total_minor": "26500",
+        "currency": "USD"
+      },
+      "idempotency_key": "1c2bd2036755ea4f454a5f2a26789da49907359dc3630fd634591bc0e6124cfa",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "email text"
+        },
+        {
+          "label": "Total (document)",
+          "value": "26500 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "26500 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:13:50Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:14:45Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-012",
+        "result": "ok",
+        "ts": "2026-11-01T09:14:48Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-013",
+      "case_id": "intake-e-013",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-013",
+        "total_minor": "27875",
+        "currency": "USD"
+      },
+      "idempotency_key": "765d44bcf6c7a983a1b207b6295e123cf4392064e0022045959afb0b82c924da",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "27875 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "27875 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:15:04Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:15:59Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-013",
+        "result": "ok",
+        "ts": "2026-11-01T09:16:02Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-014",
+      "case_id": "intake-h-014",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-014",
+        "total_minor": "29250",
+        "currency": "USD"
+      },
+      "idempotency_key": "c9e316287091ca9b1406135170b103f889dc688c273d001da76bcbff5a493028",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "CSV"
+        },
+        {
+          "label": "Total (document)",
+          "value": "29250 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "29250 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:16:18Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:17:13Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-014",
+        "result": "ok",
+        "ts": "2026-11-01T09:17:16Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-015",
+      "case_id": "intake-e-015",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-015",
+        "total_minor": "30625",
+        "currency": "USD"
+      },
+      "idempotency_key": "6b6b84c893c2455cfd701bd492d712538b6678ac47eecca24153cf67d0bc84e1",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "email text"
+        },
+        {
+          "label": "Total (document)",
+          "value": "30625 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "30625 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:17:32Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:18:27Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-015",
+        "result": "ok",
+        "ts": "2026-11-01T09:18:30Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-016",
+      "case_id": "intake-e-016",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-016",
+        "total_minor": "32000",
+        "currency": "USD"
+      },
+      "idempotency_key": "f5bb00ffe4324a512bc467a85376d577e747b5bf8ee835a5054a22c01417ee00",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "32000 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "32000 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:18:46Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:19:41Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-016",
+        "result": "ok",
+        "ts": "2026-11-01T09:19:44Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-017",
+      "case_id": "intake-h-017",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-017",
+        "total_minor": "33375",
+        "currency": "USD"
+      },
+      "idempotency_key": "a19f4227577f48988bae7673d2ea6eaabca9e96363ed743b839680ff7130848d",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "CSV"
+        },
+        {
+          "label": "Total (document)",
+          "value": "33375 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "33375 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:20:00Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:20:55Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-017",
+        "result": "ok",
+        "ts": "2026-11-01T09:20:58Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-018",
+      "case_id": "intake-e-018",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-018",
+        "total_minor": "34750",
+        "currency": "USD"
+      },
+      "idempotency_key": "0affe2b5a7b3ba6cf1a20066fbaa3554c8b9e4c29c7925f8d4f043750a746e76",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "email text"
+        },
+        {
+          "label": "Total (document)",
+          "value": "34750 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "34750 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:21:14Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:22:09Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-018",
+        "result": "ok",
+        "ts": "2026-11-01T09:22:12Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    },
+    {
+      "approval_id": "appr-019",
+      "case_id": "intake-e-019",
+      "action": "confirm_draft",
+      "args": {
+        "document_id": "doc-019",
+        "total_minor": "36125",
+        "currency": "USD"
+      },
+      "idempotency_key": "11005ec35b900e35fb7382ba2f65d2ea5b17a541fd7a3592780075b3886902b4",
+      "tier": "human",
+      "rule_id": "R-INTAKE-001",
+      "evidence": [
+        {
+          "label": "Source",
+          "value": "PDF-as-text fixture"
+        },
+        {
+          "label": "Total (document)",
+          "value": "36125 USD"
+        },
+        {
+          "label": "Total (sum of lines)",
+          "value": "36125 USD"
+        }
+      ],
+      "requested_at": "2026-11-01T09:22:28Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_clerk",
+          "decision": "approve",
+          "ts": "2026-11-01T09:23:23Z",
+          "sig_ok": true
+        }
+      ],
+      "executed": {
+        "port": "erp_drafts",
+        "call_id": "call-019",
+        "result": "ok",
+        "ts": "2026-11-01T09:23:26Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent"
+    }
+  ],
+  "audit": {
+    "chain": "hash-chain/1",
+    "events": [
+      {
+        "seq": 1,
+        "event_id": "evt-0001",
+        "ts": "2026-11-01T09:00:07Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-001",
+        "summary": "draft from Birch Supplies",
+        "prev_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "sha256": "333fa790587fe72741017d377b399a64f3e05ade59489e6cd24adfe736352cb0"
+      },
+      {
+        "seq": 2,
+        "event_id": "evt-0002",
+        "ts": "2026-11-01T09:00:14Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-001",
+        "summary": "confirmed draft",
+        "prev_sha256": "333fa790587fe72741017d377b399a64f3e05ade59489e6cd24adfe736352cb0",
+        "sha256": "0b54e053998436650953aeab77b1bc2267b20aeb14de434205ce5b1d14808f05"
+      },
+      {
+        "seq": 3,
+        "event_id": "evt-0003",
+        "ts": "2026-11-01T09:01:14Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-001",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "0b54e053998436650953aeab77b1bc2267b20aeb14de434205ce5b1d14808f05",
+        "sha256": "204a59290dc59d3bd3014e7ab59592b93664438832513f7c9f8c6625905bce2b"
+      },
+      {
+        "seq": 4,
+        "event_id": "evt-0004",
+        "ts": "2026-11-01T09:01:21Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-h-002",
+        "summary": "draft from Corvus Print",
+        "prev_sha256": "204a59290dc59d3bd3014e7ab59592b93664438832513f7c9f8c6625905bce2b",
+        "sha256": "c79a763c2ac9c148f44d5aa85f1eb6f866f5ddd0a8ca38f5f3f9b14cb54bc1d9"
+      },
+      {
+        "seq": 5,
+        "event_id": "evt-0005",
+        "ts": "2026-11-01T09:01:28Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-h-002",
+        "summary": "confirmed draft",
+        "prev_sha256": "c79a763c2ac9c148f44d5aa85f1eb6f866f5ddd0a8ca38f5f3f9b14cb54bc1d9",
+        "sha256": "8f8568b578b3f14c71c778316afb370cf27ecf8369b2a3a860f2800e9016ef1e"
+      },
+      {
+        "seq": 6,
+        "event_id": "evt-0006",
+        "ts": "2026-11-01T09:02:28Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-h-002",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "8f8568b578b3f14c71c778316afb370cf27ecf8369b2a3a860f2800e9016ef1e",
+        "sha256": "f35714f2aa75b1d305aa31f5a288a1d25573cfbc6ab708ddde480cc32f947747"
+      },
+      {
+        "seq": 7,
+        "event_id": "evt-0007",
+        "ts": "2026-11-01T09:02:35Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-003",
+        "summary": "draft from Delta Linens",
+        "prev_sha256": "f35714f2aa75b1d305aa31f5a288a1d25573cfbc6ab708ddde480cc32f947747",
+        "sha256": "d3781ebd4c3ad22327f01e43fba96a8acb52bbf466efc59533707dcd86a0feda"
+      },
+      {
+        "seq": 8,
+        "event_id": "evt-0008",
+        "ts": "2026-11-01T09:02:42Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-003",
+        "summary": "confirmed draft",
+        "prev_sha256": "d3781ebd4c3ad22327f01e43fba96a8acb52bbf466efc59533707dcd86a0feda",
+        "sha256": "ca1627b81bf541f92da8d96c7e7a9e45e40d3a19e221ee75e402983a7025ea91"
+      },
+      {
+        "seq": 9,
+        "event_id": "evt-0009",
+        "ts": "2026-11-01T09:03:42Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-003",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "ca1627b81bf541f92da8d96c7e7a9e45e40d3a19e221ee75e402983a7025ea91",
+        "sha256": "520031481e3caf4f0ae5667706a08581db47731ab4e3f1db0f21fea68041fa79"
+      },
+      {
+        "seq": 10,
+        "event_id": "evt-0010",
+        "ts": "2026-11-01T09:03:49Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-004",
+        "summary": "draft from Elm Tooling",
+        "prev_sha256": "520031481e3caf4f0ae5667706a08581db47731ab4e3f1db0f21fea68041fa79",
+        "sha256": "6ebcc88c37696a222917c6c0f19064951d3e6299f73b420b4bd1704e5f275f79"
+      },
+      {
+        "seq": 11,
+        "event_id": "evt-0011",
+        "ts": "2026-11-01T09:03:56Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-004",
+        "summary": "confirmed draft",
+        "prev_sha256": "6ebcc88c37696a222917c6c0f19064951d3e6299f73b420b4bd1704e5f275f79",
+        "sha256": "28e24e9c7a6dce119039bbd77ff6b07c757ddd08a6ea91552d54fe2171a709df"
+      },
+      {
+        "seq": 12,
+        "event_id": "evt-0012",
+        "ts": "2026-11-01T09:04:56Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-004",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "28e24e9c7a6dce119039bbd77ff6b07c757ddd08a6ea91552d54fe2171a709df",
+        "sha256": "a54ec2466300df1bc36960262743590bad83fb82f4c58ac2e066226739cfdd49"
+      },
+      {
+        "seq": 13,
+        "event_id": "evt-0013",
+        "ts": "2026-11-01T09:05:03Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-h-005",
+        "summary": "draft from Fenn Logistics",
+        "prev_sha256": "a54ec2466300df1bc36960262743590bad83fb82f4c58ac2e066226739cfdd49",
+        "sha256": "cdc68458ce07f0cc4119bc010192b0886094577f41852dd0b82305b4319f79d0"
+      },
+      {
+        "seq": 14,
+        "event_id": "evt-0014",
+        "ts": "2026-11-01T09:05:10Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-h-005",
+        "summary": "confirmed draft",
+        "prev_sha256": "cdc68458ce07f0cc4119bc010192b0886094577f41852dd0b82305b4319f79d0",
+        "sha256": "687b43f2e57e0d91ae247989d54781dadceedd724f157a56c3c1bd175cdb2223"
+      },
+      {
+        "seq": 15,
+        "event_id": "evt-0015",
+        "ts": "2026-11-01T09:06:10Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-h-005",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "687b43f2e57e0d91ae247989d54781dadceedd724f157a56c3c1bd175cdb2223",
+        "sha256": "5bb0df083a31518c1f199b2bf01d9bf21991416762bb88abf01ca7b6625edb5b"
+      },
+      {
+        "seq": 16,
+        "event_id": "evt-0016",
+        "ts": "2026-11-01T09:06:17Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-006",
+        "summary": "draft from Gale Foods",
+        "prev_sha256": "5bb0df083a31518c1f199b2bf01d9bf21991416762bb88abf01ca7b6625edb5b",
+        "sha256": "358fe5b265b073a98599d37404c6bc6d892ff96731e6e7608428e15f05e74fc9"
+      },
+      {
+        "seq": 17,
+        "event_id": "evt-0017",
+        "ts": "2026-11-01T09:06:24Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-006",
+        "summary": "confirmed draft",
+        "prev_sha256": "358fe5b265b073a98599d37404c6bc6d892ff96731e6e7608428e15f05e74fc9",
+        "sha256": "fb26176a113fd3b2f1baef34f233c9ec32741e59546e3d7a39e696de5076a8ea"
+      },
+      {
+        "seq": 18,
+        "event_id": "evt-0018",
+        "ts": "2026-11-01T09:07:24Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-006",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "fb26176a113fd3b2f1baef34f233c9ec32741e59546e3d7a39e696de5076a8ea",
+        "sha256": "748e26ce8216d2cfdf3926d298ca26a0f272fbdbb6d1440df6a1208eb45ec6eb"
+      },
+      {
+        "seq": 19,
+        "event_id": "evt-0019",
+        "ts": "2026-11-01T09:07:31Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-007",
+        "summary": "draft from Hale Optics",
+        "prev_sha256": "748e26ce8216d2cfdf3926d298ca26a0f272fbdbb6d1440df6a1208eb45ec6eb",
+        "sha256": "0823334cf8c31161ec80f0ce6cc94df288116717fae31b0c88516f2b7d565aaa"
+      },
+      {
+        "seq": 20,
+        "event_id": "evt-0020",
+        "ts": "2026-11-01T09:07:38Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-007",
+        "summary": "confirmed draft",
+        "prev_sha256": "0823334cf8c31161ec80f0ce6cc94df288116717fae31b0c88516f2b7d565aaa",
+        "sha256": "636fb297c097599bd50660ca0ba9beaefd94bebc3eb4a529f489331c932de190"
+      },
+      {
+        "seq": 21,
+        "event_id": "evt-0021",
+        "ts": "2026-11-01T09:08:38Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-007",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "636fb297c097599bd50660ca0ba9beaefd94bebc3eb4a529f489331c932de190",
+        "sha256": "b1af28208b000cbb9cc13255c7480ba7ea17268773240d36e3487007158af344"
+      },
+      {
+        "seq": 22,
+        "event_id": "evt-0022",
+        "ts": "2026-11-01T09:08:45Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-h-008",
+        "summary": "draft from Iris Pack",
+        "prev_sha256": "b1af28208b000cbb9cc13255c7480ba7ea17268773240d36e3487007158af344",
+        "sha256": "fcba1fa49731b411f3cfb18a37344d0b3045d5b3bf6f523a3def9187a72a5e7a"
+      },
+      {
+        "seq": 23,
+        "event_id": "evt-0023",
+        "ts": "2026-11-01T09:08:52Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-h-008",
+        "summary": "confirmed draft",
+        "prev_sha256": "fcba1fa49731b411f3cfb18a37344d0b3045d5b3bf6f523a3def9187a72a5e7a",
+        "sha256": "f479940634ea3b8f0bf451143c41ec0a4e0b894f392820206302fe208b93230c"
+      },
+      {
+        "seq": 24,
+        "event_id": "evt-0024",
+        "ts": "2026-11-01T09:09:52Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-h-008",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "f479940634ea3b8f0bf451143c41ec0a4e0b894f392820206302fe208b93230c",
+        "sha256": "a67b191d71752b0982df494f04830c0918fd36625795b13c7ea0d3d2800827e6"
+      },
+      {
+        "seq": 25,
+        "event_id": "evt-0025",
+        "ts": "2026-11-01T09:09:59Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-009",
+        "summary": "draft from Jolt Cables",
+        "prev_sha256": "a67b191d71752b0982df494f04830c0918fd36625795b13c7ea0d3d2800827e6",
+        "sha256": "0789d6e33afa480212b487b992ddcdc675fae604a30c70b32abc9981ca028ae5"
+      },
+      {
+        "seq": 26,
+        "event_id": "evt-0026",
+        "ts": "2026-11-01T09:10:06Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-009",
+        "summary": "confirmed draft",
+        "prev_sha256": "0789d6e33afa480212b487b992ddcdc675fae604a30c70b32abc9981ca028ae5",
+        "sha256": "c236eabd9946b765bf30b4ac666f3454c7ac7494882652d10854a7a0265b3e9c"
+      },
+      {
+        "seq": 27,
+        "event_id": "evt-0027",
+        "ts": "2026-11-01T09:11:06Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-009",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "c236eabd9946b765bf30b4ac666f3454c7ac7494882652d10854a7a0265b3e9c",
+        "sha256": "f271ecd8088da3cf32e42e308db65bd0165d3c1fe2205b5d78bfa519e05250c9"
+      },
+      {
+        "seq": 28,
+        "event_id": "evt-0028",
+        "ts": "2026-11-01T09:11:13Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-010",
+        "summary": "draft from Kiln Ceramics",
+        "prev_sha256": "f271ecd8088da3cf32e42e308db65bd0165d3c1fe2205b5d78bfa519e05250c9",
+        "sha256": "2ac191487ed4873df9eda76cdbc286ab6c060998aaf5116bea536f09449aaa89"
+      },
+      {
+        "seq": 29,
+        "event_id": "evt-0029",
+        "ts": "2026-11-01T09:11:20Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-010",
+        "summary": "confirmed draft",
+        "prev_sha256": "2ac191487ed4873df9eda76cdbc286ab6c060998aaf5116bea536f09449aaa89",
+        "sha256": "4fd4b3e4a0af29aa027937a431447b2219b3d838c0403682865f6ce83bd61fc4"
+      },
+      {
+        "seq": 30,
+        "event_id": "evt-0030",
+        "ts": "2026-11-01T09:12:20Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-010",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "4fd4b3e4a0af29aa027937a431447b2219b3d838c0403682865f6ce83bd61fc4",
+        "sha256": "5f85c586e1ef9274d975bf9fcb896aebcb375a20612dff2595b64f134cf0fdd7"
+      },
+      {
+        "seq": 31,
+        "event_id": "evt-0031",
+        "ts": "2026-11-01T09:12:27Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-h-011",
+        "summary": "draft from Larch Timber",
+        "prev_sha256": "5f85c586e1ef9274d975bf9fcb896aebcb375a20612dff2595b64f134cf0fdd7",
+        "sha256": "98aa7ecfc051d9db1e5ad6e466e5c123facd5158c0cb07860a4450ad0040e227"
+      },
+      {
+        "seq": 32,
+        "event_id": "evt-0032",
+        "ts": "2026-11-01T09:12:34Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-h-011",
+        "summary": "confirmed draft",
+        "prev_sha256": "98aa7ecfc051d9db1e5ad6e466e5c123facd5158c0cb07860a4450ad0040e227",
+        "sha256": "a61042323204305377d4b866bd94538552687fc1134abf71340d5ff7845ead72"
+      },
+      {
+        "seq": 33,
+        "event_id": "evt-0033",
+        "ts": "2026-11-01T09:13:34Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-h-011",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "a61042323204305377d4b866bd94538552687fc1134abf71340d5ff7845ead72",
+        "sha256": "d36d3aaca332c92480498070f537ef01e5309f35f6bf1cc9655d7f446d5db885"
+      },
+      {
+        "seq": 34,
+        "event_id": "evt-0034",
+        "ts": "2026-11-01T09:13:41Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-012",
+        "summary": "draft from Moss Cleaning",
+        "prev_sha256": "d36d3aaca332c92480498070f537ef01e5309f35f6bf1cc9655d7f446d5db885",
+        "sha256": "5f4e8cd1b248783427b68fea07ddfe8d84d90177508a975afa95e8f60d1f3764"
+      },
+      {
+        "seq": 35,
+        "event_id": "evt-0035",
+        "ts": "2026-11-01T09:13:48Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-012",
+        "summary": "confirmed draft",
+        "prev_sha256": "5f4e8cd1b248783427b68fea07ddfe8d84d90177508a975afa95e8f60d1f3764",
+        "sha256": "a0631bf360ad750f939d15a94799c00db2b24bb3be5dcdc738cadac66c61dde3"
+      },
+      {
+        "seq": 36,
+        "event_id": "evt-0036",
+        "ts": "2026-11-01T09:14:48Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-012",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "a0631bf360ad750f939d15a94799c00db2b24bb3be5dcdc738cadac66c61dde3",
+        "sha256": "37b721c766aa9aedd461dd15476c7c8bd1de03d02c0c2b0993f86f9a3355f1c6"
+      },
+      {
+        "seq": 37,
+        "event_id": "evt-0037",
+        "ts": "2026-11-01T09:14:55Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-013",
+        "summary": "draft from Nova Paper",
+        "prev_sha256": "37b721c766aa9aedd461dd15476c7c8bd1de03d02c0c2b0993f86f9a3355f1c6",
+        "sha256": "f72126026e0388dc75a6716105d77c3564e80c7fbc3d1f11071545321624284f"
+      },
+      {
+        "seq": 38,
+        "event_id": "evt-0038",
+        "ts": "2026-11-01T09:15:02Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-013",
+        "summary": "confirmed draft",
+        "prev_sha256": "f72126026e0388dc75a6716105d77c3564e80c7fbc3d1f11071545321624284f",
+        "sha256": "be1094689c0dfc7db08d10372e8751bc64e96feb0bc10e21d5805e7c526c7ff7"
+      },
+      {
+        "seq": 39,
+        "event_id": "evt-0039",
+        "ts": "2026-11-01T09:16:02Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-013",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "be1094689c0dfc7db08d10372e8751bc64e96feb0bc10e21d5805e7c526c7ff7",
+        "sha256": "14b63772b2a7907b12e2649386443ba762a7adfa08e9db99b7ef288ee41d827f"
+      },
+      {
+        "seq": 40,
+        "event_id": "evt-0040",
+        "ts": "2026-11-01T09:16:09Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-h-014",
+        "summary": "draft from Orrin Metals",
+        "prev_sha256": "14b63772b2a7907b12e2649386443ba762a7adfa08e9db99b7ef288ee41d827f",
+        "sha256": "f75d058d004b3661ce0f73f6900046189d856cecdc74f79d1882f44b50468a59"
+      },
+      {
+        "seq": 41,
+        "event_id": "evt-0041",
+        "ts": "2026-11-01T09:16:16Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-h-014",
+        "summary": "confirmed draft",
+        "prev_sha256": "f75d058d004b3661ce0f73f6900046189d856cecdc74f79d1882f44b50468a59",
+        "sha256": "04b3ef48c04fd1e7bc6848dec5a0cb89e2d61f6910cabf6cca841f099a6e80ef"
+      },
+      {
+        "seq": 42,
+        "event_id": "evt-0042",
+        "ts": "2026-11-01T09:17:16Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-h-014",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "04b3ef48c04fd1e7bc6848dec5a0cb89e2d61f6910cabf6cca841f099a6e80ef",
+        "sha256": "1fd53f1b3eb21ca7cac368627d28fbfa55bae044a934188b9bbf0d38771afbb6"
+      },
+      {
+        "seq": 43,
+        "event_id": "evt-0043",
+        "ts": "2026-11-01T09:17:23Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-015",
+        "summary": "draft from Pike Hardware",
+        "prev_sha256": "1fd53f1b3eb21ca7cac368627d28fbfa55bae044a934188b9bbf0d38771afbb6",
+        "sha256": "5fa53cccc030d4cf180db04befd03f916131385b3c43a5c4b4bfe6b82586f113"
+      },
+      {
+        "seq": 44,
+        "event_id": "evt-0044",
+        "ts": "2026-11-01T09:17:30Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-015",
+        "summary": "confirmed draft",
+        "prev_sha256": "5fa53cccc030d4cf180db04befd03f916131385b3c43a5c4b4bfe6b82586f113",
+        "sha256": "2ca305a1d71117f7aa03d0c1a1c60089639e3312c1b0a8d2a5daf15a9e6e2db4"
+      },
+      {
+        "seq": 45,
+        "event_id": "evt-0045",
+        "ts": "2026-11-01T09:18:30Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-015",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "2ca305a1d71117f7aa03d0c1a1c60089639e3312c1b0a8d2a5daf15a9e6e2db4",
+        "sha256": "3d9de4a3d43897e9260875ead8d647e2d7b2c161800c825a066fb2b59499a219"
+      },
+      {
+        "seq": 46,
+        "event_id": "evt-0046",
+        "ts": "2026-11-01T09:18:37Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-016",
+        "summary": "draft from Quill Labels",
+        "prev_sha256": "3d9de4a3d43897e9260875ead8d647e2d7b2c161800c825a066fb2b59499a219",
+        "sha256": "1cdc3af409e53e3f26dae3202ace43ff21b789abaa95431ecb7deb7ac38ce8d9"
+      },
+      {
+        "seq": 47,
+        "event_id": "evt-0047",
+        "ts": "2026-11-01T09:18:44Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-016",
+        "summary": "confirmed draft",
+        "prev_sha256": "1cdc3af409e53e3f26dae3202ace43ff21b789abaa95431ecb7deb7ac38ce8d9",
+        "sha256": "ea8d4959e336de5b62aebbe0999a08635d861babefc7dbb716ed607f528b1fea"
+      },
+      {
+        "seq": 48,
+        "event_id": "evt-0048",
+        "ts": "2026-11-01T09:19:44Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-016",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "ea8d4959e336de5b62aebbe0999a08635d861babefc7dbb716ed607f528b1fea",
+        "sha256": "6b241425a0022a08a094d6fa1f810bb50c56357a6726628353545b4c43ca8969"
+      },
+      {
+        "seq": 49,
+        "event_id": "evt-0049",
+        "ts": "2026-11-01T09:19:51Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-h-017",
+        "summary": "draft from Reed Textiles",
+        "prev_sha256": "6b241425a0022a08a094d6fa1f810bb50c56357a6726628353545b4c43ca8969",
+        "sha256": "642d0ba5fe1442651835c6d87bd1634d37a2d47d8f220315b1ab3f723b7cbb77"
+      },
+      {
+        "seq": 50,
+        "event_id": "evt-0050",
+        "ts": "2026-11-01T09:19:58Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-h-017",
+        "summary": "confirmed draft",
+        "prev_sha256": "642d0ba5fe1442651835c6d87bd1634d37a2d47d8f220315b1ab3f723b7cbb77",
+        "sha256": "2dc58d47feb72c107483f23265478fd70c2de7c21af1426a351ff85281e43960"
+      },
+      {
+        "seq": 51,
+        "event_id": "evt-0051",
+        "ts": "2026-11-01T09:20:58Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-h-017",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "2dc58d47feb72c107483f23265478fd70c2de7c21af1426a351ff85281e43960",
+        "sha256": "23136065f4e55936cceecb66c3d62a7fa325b15f6476272e42fb36eaaba30d0a"
+      },
+      {
+        "seq": 52,
+        "event_id": "evt-0052",
+        "ts": "2026-11-01T09:21:05Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-018",
+        "summary": "draft from Sable Tools",
+        "prev_sha256": "23136065f4e55936cceecb66c3d62a7fa325b15f6476272e42fb36eaaba30d0a",
+        "sha256": "0ddf1288279274ca438392ff6abd5eee1ea9f53049c5cd17f00cd8366aea43a3"
+      },
+      {
+        "seq": 53,
+        "event_id": "evt-0053",
+        "ts": "2026-11-01T09:21:12Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-018",
+        "summary": "confirmed draft",
+        "prev_sha256": "0ddf1288279274ca438392ff6abd5eee1ea9f53049c5cd17f00cd8366aea43a3",
+        "sha256": "107915b40eaca119834b668a2ab42b98eced210979eaab251ae802adc88bf5da"
+      },
+      {
+        "seq": 54,
+        "event_id": "evt-0054",
+        "ts": "2026-11-01T09:22:12Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-018",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "107915b40eaca119834b668a2ab42b98eced210979eaab251ae802adc88bf5da",
+        "sha256": "8e9d3abc2a80c98dd3f72db6c406bd680165a62f172d67f59ea7ca30d988cf38"
+      },
+      {
+        "seq": 55,
+        "event_id": "evt-0055",
+        "ts": "2026-11-01T09:22:19Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-e-019",
+        "summary": "draft from Tarn Glass",
+        "prev_sha256": "8e9d3abc2a80c98dd3f72db6c406bd680165a62f172d67f59ea7ca30d988cf38",
+        "sha256": "e839860126e493184b284aa9df6c600b431fa04aae26b7031da78247df071a8c"
+      },
+      {
+        "seq": 56,
+        "event_id": "evt-0056",
+        "ts": "2026-11-01T09:22:26Z",
+        "type": "approval",
+        "actor": "human:ap_clerk",
+        "case_id": "intake-e-019",
+        "summary": "confirmed draft",
+        "prev_sha256": "e839860126e493184b284aa9df6c600b431fa04aae26b7031da78247df071a8c",
+        "sha256": "d477bb04dab0bc57a0fb4cac078f43fd4dc614a18e71c8d7a93268c1eaeea4f4"
+      },
+      {
+        "seq": 57,
+        "event_id": "evt-0057",
+        "ts": "2026-11-01T09:23:26Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "intake-e-019",
+        "summary": "erp_drafts.confirm_draft applied",
+        "prev_sha256": "d477bb04dab0bc57a0fb4cac078f43fd4dc614a18e71c8d7a93268c1eaeea4f4",
+        "sha256": "f83190eb9f914acef6fcb9ccd9d1a113af2fc65dd3d2c8a2a06ec060fa9fdf77"
+      },
+      {
+        "seq": 58,
+        "event_id": "evt-0058",
+        "ts": "2026-11-01T09:23:33Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-t-001",
+        "summary": "draft with total 100000",
+        "prev_sha256": "f83190eb9f914acef6fcb9ccd9d1a113af2fc65dd3d2c8a2a06ec060fa9fdf77",
+        "sha256": "f4d4f70891b04b542acede4437798e145247f04539a9ea8072016eb6a7712bda"
+      },
+      {
+        "seq": 59,
+        "event_id": "evt-0059",
+        "ts": "2026-11-01T09:23:40Z",
+        "type": "deny",
+        "actor": "system",
+        "case_id": "intake-t-001",
+        "summary": "R-INTAKE-002: totals mismatch",
+        "prev_sha256": "f4d4f70891b04b542acede4437798e145247f04539a9ea8072016eb6a7712bda",
+        "sha256": "09475367624ce7bc47ba657d3cac26384b8335a2ed7ab2d88293d91e88c6b0eb"
+      },
+      {
+        "seq": 60,
+        "event_id": "evt-0060",
+        "ts": "2026-11-01T09:23:47Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "intake-a-001",
+        "summary": "hand back: unreadable",
+        "prev_sha256": "09475367624ce7bc47ba657d3cac26384b8335a2ed7ab2d88293d91e88c6b0eb",
+        "sha256": "951503ea5fb4c458b4813be008c823c6ac9aa0c4069f6bf14164b073baebcc2a"
+      },
+      {
+        "seq": 61,
+        "event_id": "evt-0061",
+        "ts": "2026-11-01T09:23:54Z",
+        "type": "outcome",
+        "actor": "agent",
+        "case_id": "intake-a-001",
+        "summary": "abstained",
+        "prev_sha256": "951503ea5fb4c458b4813be008c823c6ac9aa0c4069f6bf14164b073baebcc2a",
+        "sha256": "ddc5dbe98940d1a7b66019256bec56b6e38d77b4d27bd3d034b0bfb8da533378"
+      }
+    ],
+    "verify": {
+      "events": 61,
+      "matched": 61,
+      "ok": true,
+      "text": "local integrity check: 61 of 61 events match"
+    }
+  },
+  "adapter_calls": [
+    {
+      "call_id": "call-001",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "cef1583b0f4046d69df9b141e7d3bdf1199b59c2ab3887b8eee8c549294b8717",
+      "ts": "2026-11-01T09:01:14Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-002",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "6c5304501689a74dc0634abfc0b84d5a4c535a5cdad1f51b90a7be01210f615e",
+      "ts": "2026-11-01T09:02:28Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-003",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "4fd6dc1e66ff0611350051739fa2b6c98af22f0855521dd17f7566ead61eb016",
+      "ts": "2026-11-01T09:03:42Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-004",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "0df1a9a91cdf8352f7069f2bad4c768c83149036747d466a74efd4d22c4dc4b3",
+      "ts": "2026-11-01T09:04:56Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-005",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "1be0b4e2ac8ee640683d7d72af701fa9f050a9614a19dd84bd44bc711b1bb043",
+      "ts": "2026-11-01T09:06:10Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-006",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "86fc7eb8c6df8e452521be6f970184c205b9337091b7ddcd538959d19ffbccc4",
+      "ts": "2026-11-01T09:07:24Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-007",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "54676f13206658e4fca7bc340c084c4fb10753787c4b02654ae2ee493f04687f",
+      "ts": "2026-11-01T09:08:38Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-008",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "e56cc1406b7bcec8ff1590566c0b355c057220d502ffaaa272edb52dfa724214",
+      "ts": "2026-11-01T09:09:52Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-009",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "25c5cbf7bd10e1cea95a98904d5015bc1864c61bd75f6ddc4b8974a619faaa8c",
+      "ts": "2026-11-01T09:11:06Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-010",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "d8b104e31ba92cb11dff22f6e5253db35d109e41c644e8d9739184ec775ae878",
+      "ts": "2026-11-01T09:12:20Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-011",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "9cde908cf0512497b51432ac4e1bf76c26e5644b3908a60687af5e6ed8fb7f3d",
+      "ts": "2026-11-01T09:13:34Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-012",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "1c2bd2036755ea4f454a5f2a26789da49907359dc3630fd634591bc0e6124cfa",
+      "ts": "2026-11-01T09:14:48Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-013",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "765d44bcf6c7a983a1b207b6295e123cf4392064e0022045959afb0b82c924da",
+      "ts": "2026-11-01T09:16:02Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-014",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "c9e316287091ca9b1406135170b103f889dc688c273d001da76bcbff5a493028",
+      "ts": "2026-11-01T09:17:16Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-015",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "6b6b84c893c2455cfd701bd492d712538b6678ac47eecca24153cf67d0bc84e1",
+      "ts": "2026-11-01T09:18:30Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-016",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "f5bb00ffe4324a512bc467a85376d577e747b5bf8ee835a5054a22c01417ee00",
+      "ts": "2026-11-01T09:19:44Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-017",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "a19f4227577f48988bae7673d2ea6eaabca9e96363ed743b839680ff7130848d",
+      "ts": "2026-11-01T09:20:58Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-018",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "0affe2b5a7b3ba6cf1a20066fbaa3554c8b9e4c29c7925f8d4f043750a746e76",
+      "ts": "2026-11-01T09:22:12Z",
+      "outcome": "applied",
+      "fault": null
+    },
+    {
+      "call_id": "call-019",
+      "port": "erp_drafts",
+      "op": "confirm_draft",
+      "idempotency_key": "11005ec35b900e35fb7382ba2f65d2ea5b17a541fd7a3592780075b3886902b4",
+      "ts": "2026-11-01T09:23:26Z",
+      "outcome": "applied",
+      "fault": null
+    }
+  ],
+  "scorecard": {
+    "split": "test",
+    "label": "smoke",
+    "n": 21,
+    "n_answered": 20,
+    "n_refused": 1,
+    "scripted": true,
+    "pass_rate": 1.0,
+    "k": 1,
+    "pass_k": 1.0,
+    "confident_wrong": {
+      "x": 0,
+      "n_answered": 20,
+      "rate": 0.0,
+      "upper_bound": 0.1391083406682652,
+      "items": []
+    },
+    "false_abstain": {
+      "x": 0,
+      "n_should_answer": 19,
+      "rate": 0.0
+    },
+    "wrong_and_allowed": {
+      "x": 0,
+      "n": 19
+    },
+    "coverage": {
+      "answered_correct": 19,
+      "definite": 19
+    },
+    "abstention": {
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "hard_zeros": {
+      "erp_write": 0,
+      "total_mismatch_passed": 0
+    },
+    "hard_zero_defs": [
+      {
+        "key": "erp_write",
+        "meaning": "Anything was written to the ERP; the port has no write method."
+      },
+      {
+        "key": "total_mismatch_passed",
+        "meaning": "A draft whose line items do not sum to its total was offered for confirmation."
+      },
+      {
+        "key": "confident_on_abstain",
+        "meaning": "The agent answered confidently and wrongly where it should have abstained."
+      }
+    ],
+    "verdict": "amber",
+    "verdict_text": "promising, not demonstrated: at most the amber level with 95 % confidence on a small set",
+    "thresholds": {
+      "green_max_upper": 0.1,
+      "amber_max_upper": 0.15
+    },
+    "cost_usd": "0.0441",
+    "latency_ms": {
+      "p50": 370,
+      "p95": 370
+    },
+    "disclaimer": "A smoke result on a small held-out set of synthetic data; not live accuracy.",
+    "lock_sha256": "ede217a0904571007ab421cf6bf70771aeab927d8d669d802a0c6012facdb34b"
+  },
+  "registry": {
+    "agent_id": "intake-agent",
+    "owner_role": "ap_clerk",
+    "level": "suggest",
+    "tools": [
+      {
+        "name": "extract_fields",
+        "risk": "read",
+        "needs_approval": false,
+        "rules": []
+      },
+      {
+        "name": "create_draft",
+        "risk": "draft",
+        "needs_approval": true,
+        "rules": [
+          "R-INTAKE-001",
+          "R-INTAKE-002"
+        ]
+      }
+    ],
+    "readiness": [
+      {
+        "check": "No ERP write method on the port",
+        "status": "na",
+        "evidence": "fixture: not evaluated"
+      }
+    ],
+    "level_note": "suggest: proposes; a person approves every release; the adapter applies only after approval."
+  },
+  "honesty": {
+    "synthetic": true,
+    "adapters": "fake",
+    "kind": "fixture",
+    "notes": [
+      "Rendering fixture written by hand for the console; the numbers are not a result of any run.",
+      "The model is a scripted replay (model: scripted); no live model was called.",
+      "Adapters are fake and fault-injecting; real systems differ in duplicate-key behaviour.",
+      "Confidence labels are scripted and are plumbing only."
+    ]
+  }
+}

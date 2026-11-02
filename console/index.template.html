@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="__CSP__">
+<meta name="referrer" content="no-referrer">
+<title>__TITLE__</title>
+<style>__CSS__</style>
+</head>
+<body>
+<button type="button" class="skip" id="skip">Skip to content</button>
+<div class="top">
+  <div class="banner" role="note"><span id="banner-text">prototype, sample data</span><span id="honest-line"></span></div>
+  <div class="ribbon" id="ribbon" role="note" hidden></div>
+  <div class="bar">
+    <div class="brand">Hadavin demo console<small id="demo-title"></small></div>
+    <span class="grow"></span>
+    <button type="button" id="theme-btn" class="pill" aria-pressed="false">Dark theme</button>
+    <nav aria-label="Pages">
+      <a href="#/approvals" data-route="approvals">Approvals</a>
+      <a href="#/run" data-route="run">Run and audit</a>
+      <a href="#/scorecard" data-route="scorecard">Scorecard</a>
+      <a href="#/registry" data-route="registry">Registry</a>
+      <a href="#/controls" data-route="controls">Controls</a>
+    </nav>
+  </div>
+</div>
+<main id="main" tabindex="-1"><noscript><p>This console needs JavaScript. It makes no network request.</p></noscript></main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script type="application/json" id="export-data">__DATA__</script>
+<script>__JS__</script>
+</body>
+</html>

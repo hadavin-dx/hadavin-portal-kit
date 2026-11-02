@@ -1,0 +1,41 @@
+[project]
+name = "hadavin-portal-kit"
+version = "0.1.0"
+description = "Hadavin portal kit: the demo export schema, validator, console and conformance checks"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "LicenseRef-Proprietary"
+classifiers = ["Private :: Do Not Upload"]
+# Core pinned to a merged commit (6608146). Only hadavin_sdk.stats is used by the kit.
+dependencies = [
+    "hadavin-sdk @ git+https://github.com/hadavin-dx/hadavin-sdk@660814674ece8ad578293e5412633d796eddb96f",
+    "jsonschema==4.26.0",
+]
+
+[dependency-groups]
+dev = ["pytest==9.1.1", "ruff==0.17.1"]
+scan = ["pip-audit==2.10.1", "bandit==1.9.4", "zizmor==1.31.1"]
+
+[tool.uv]
+package = false
+default-groups = ["dev"]
+
+[tool.ruff]
+line-length = 100
+src = ["hadavin_kit", "tests", "tools"]
+
+[tool.ruff.lint]
+extend-select = ["B", "DTZ", "I", "S", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"**/tests/**" = ["S101", "S602", "S603", "S607"]
+"tests/**" = ["S101"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# The kit and every demo package import by name; no build step.
+pythonpath = ["."]
+markers = [
+  "browser: needs an installed Chromium-family browser (skipped if none)",
+  "needs_samples: needs the sample-data folder (skipped in the cut test)",
+]

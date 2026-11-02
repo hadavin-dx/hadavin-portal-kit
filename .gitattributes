@@ -1,0 +1,6 @@
+# The frozen minor-0 exports are evidence; their bytes (and checksums) must not change with the platform line ending.
+demo_only/fixtures/compat-v1.0/** -text
+hadavin_kit/*.py text eol=lf
+schema/*.json text eol=lf
+console/* text eol=lf
+KIT-SHA256SUMS text eol=lf

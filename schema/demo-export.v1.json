@@ -1,0 +1,1836 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:hadavin:demo-export:1",
+  "title": "hadavin.demo-export/1",
+  "description": "Frozen console input of the Hadavin demos. Unknown keys are rejected. Money = integer string in minor units plus ISO-4217 currency (inside args/evidence). Time is UTC.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "banner",
+    "demo",
+    "run",
+    "cases",
+    "approvals",
+    "audit",
+    "adapter_calls",
+    "scorecard",
+    "registry",
+    "honesty"
+  ],
+  "properties": {
+    "schema": {
+      "const": "hadavin.demo-export/1"
+    },
+    "banner": {
+      "const": "prototype, sample data"
+    },
+    "demo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "slug",
+        "title",
+        "version",
+        "core_commit",
+        "kit_commit"
+      ],
+      "properties": {
+        "slug": {
+          "$ref": "#/$defs/slug"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "core_commit": {
+          "$ref": "#/$defs/commit"
+        },
+        "kit_commit": {
+          "$ref": "#/$defs/commit"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "run_id",
+        "ts",
+        "model",
+        "mode",
+        "prompt_sha256",
+        "config_hash",
+        "dataset_sha256",
+        "seed",
+        "level"
+      ],
+      "properties": {
+        "run_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "ts": {
+          "$ref": "#/$defs/ts"
+        },
+        "model": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 120
+        },
+        "mode": {
+          "enum": [
+            "scripted",
+            "live"
+          ]
+        },
+        "prompt_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "config_hash": {
+          "$ref": "#/$defs/hex64"
+        },
+        "dataset_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "seed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "level": {
+          "enum": [
+            "shadow",
+            "suggest"
+          ]
+        },
+        "recorded_turns_sha256": {
+          "$ref": "#/$defs/hex64",
+          "description": "sha256 of the recorded-turns set a scripted run replayed (ScriptedLLM.recorded_turns_sha256). Required for scripted runs from schema minor 1, absent for live runs: a scripted model cannot be passed off as a live one by renaming it."
+        }
+      }
+    },
+    "cases": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/case"
+      },
+      "maxItems": 2000
+    },
+    "approvals": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/approval"
+      },
+      "maxItems": 5000
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "chain",
+        "events",
+        "verify"
+      ],
+      "properties": {
+        "chain": {
+          "enum": [
+            "hash-chain/1",
+            "hash-chain/2"
+          ]
+        },
+        "events": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/audit_event"
+          },
+          "maxItems": 20000
+        },
+        "verify": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "events",
+            "matched",
+            "ok",
+            "text"
+          ],
+          "properties": {
+            "events": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "matched": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "ok": {
+              "type": "boolean"
+            },
+            "text": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        }
+      }
+    },
+    "adapter_calls": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/adapter_call"
+      },
+      "maxItems": 5000
+    },
+    "scorecard": {
+      "$ref": "#/$defs/scorecard"
+    },
+    "registry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agent_id",
+        "owner_role",
+        "level",
+        "tools",
+        "readiness"
+      ],
+      "properties": {
+        "agent_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "owner_role": {
+          "$ref": "#/$defs/text"
+        },
+        "level": {
+          "enum": [
+            "shadow",
+            "suggest"
+          ]
+        },
+        "tools": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "name",
+              "risk",
+              "needs_approval",
+              "rules"
+            ],
+            "properties": {
+              "name": {
+                "$ref": "#/$defs/text"
+              },
+              "risk": {
+                "enum": [
+                  "read",
+                  "draft",
+                  "money"
+                ]
+              },
+              "needs_approval": {
+                "type": "boolean"
+              },
+              "rules": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/text"
+                },
+                "maxItems": 5000
+              }
+            }
+          },
+          "maxItems": 5000
+        },
+        "readiness": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "check",
+              "status",
+              "evidence"
+            ],
+            "properties": {
+              "check": {
+                "$ref": "#/$defs/text"
+              },
+              "status": {
+                "enum": [
+                  "pass",
+                  "fail",
+                  "na"
+                ]
+              },
+              "evidence": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          },
+          "maxItems": 5000
+        },
+        "level_note": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "honesty": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "synthetic",
+        "adapters",
+        "notes"
+      ],
+      "properties": {
+        "synthetic": {
+          "const": true
+        },
+        "adapters": {
+          "const": "fake"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "maxItems": 5000
+        },
+        "kind": {
+          "enum": [
+            "fixture",
+            "run"
+          ],
+          "description": "fixture = invented sample for rendering, not a run. A missing kind is treated as fixture."
+        }
+      }
+    },
+    "schema_minor": {
+      "enum": [
+        0,
+        1
+      ],
+      "description": "Additive minor of hadavin.demo-export/1. Absent = 0. Keys introduced in minor N need schema_minor >= N (hadavin_kit/versioning.py). Minor 1 is DRAFT until a real demo exporter passes kitcheck."
+    },
+    "tenant_id": {
+      "$ref": "#/$defs/slug",
+      "description": "The one tenant this export belongs to. Every record carries the same id; hash-chain/2 covers it."
+    },
+    "ledger": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "message ledger summary. received = sum(by_state) + non_terminal. missing, duplicated_effects, non_terminal and reconciliation_gap must be 0 to pass. scope export_cases = counted from this export's cases; load_run = counted by a load run whose raw report has this sha256. load_run is RESERVED: no load run has produced a report yet.",
+      "required": [
+        "scope",
+        "received",
+        "by_state",
+        "non_terminal",
+        "missing",
+        "duplicated_effects",
+        "reconciliation_gap",
+        "report_sha256"
+      ],
+      "properties": {
+        "scope": {
+          "enum": [
+            "export_cases",
+            "load_run"
+          ]
+        },
+        "received": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "by_state": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "processed",
+            "abstained",
+            "dead_lettered",
+            "rejected"
+          ],
+          "properties": {
+            "processed": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "abstained": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "dead_lettered": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rejected": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "non_terminal": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "missing": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "duplicated_effects": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reconciliation_gap": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "report_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        }
+      }
+    },
+    "amounts": {
+      "type": "array",
+      "maxItems": 64,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "currency",
+          "minor",
+          "n"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "proposed",
+              "approved",
+              "executed",
+              "refused",
+              "exposure"
+            ]
+          },
+          "currency": {
+            "$ref": "#/$defs/currency"
+          },
+          "minor": {
+            "$ref": "#/$defs/intstr"
+          },
+          "n": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "description": "Money per currency. One row per (kind, currency); amounts in different currencies are never summed."
+    },
+    "load_profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": ". assumed = a default profile (for example enterprise_large), not this client's peak. measured needs the sha256 of the raw load report. RESERVED: measured needs a load run no demo has made yet.",
+      "required": [
+        "name",
+        "label",
+        "source",
+        "report_sha256"
+      ],
+      "properties": {
+        "name": {
+          "$ref": "#/$defs/slug"
+        },
+        "label": {
+          "enum": [
+            "assumed",
+            "measured"
+          ]
+        },
+        "source": {
+          "$ref": "#/$defs/text"
+        },
+        "report_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        }
+      }
+    },
+    "read_log": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "summary of the read log of client data (who/what/why/row count are in the log itself, named by its hash). RESERVED: no demo exporter produces it yet.",
+      "required": [
+        "n_reads",
+        "rows_total",
+        "by_purpose",
+        "log_sha256",
+        "client_reviewable"
+      ],
+      "properties": {
+        "n_reads": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "rows_total": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "by_purpose": {
+          "type": "array",
+          "maxItems": 64,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "purpose",
+              "n_reads",
+              "rows"
+            ],
+            "properties": {
+              "purpose": {
+                "$ref": "#/$defs/text"
+              },
+              "n_reads": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "rows": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          }
+        },
+        "log_sha256": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+        },
+        "client_reviewable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "provider_terms": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "/the model provider's no-training setting and the date it was checked. null until recorded; setting and date are both null or both set. RESERVED: no demo exporter produces it yet.",
+      "required": [
+        "provider",
+        "no_training_setting",
+        "checked_on"
+      ],
+      "properties": {
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "no_training_setting": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "checked_on": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(?![\\s\\S])"
+        }
+      }
+    },
+    "segregation": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "the namespace of this client's/demo's store, index, cache and prompts (the tenant id, or the tenant id then a dot and a suffix) and the cross-tenant canary result. RESERVED: no demo exporter produces it yet.",
+      "required": [
+        "namespace",
+        "canary"
+      ],
+      "properties": {
+        "namespace": {
+          "$ref": "#/$defs/slug"
+        },
+        "canary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ran",
+            "foreign_hits"
+          ],
+          "properties": {
+            "ran": {
+              "type": "boolean"
+            },
+            "foreign_hits": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "text": {
+      "type": "string",
+      "maxLength": 2000
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]{0,79}(?![\\s\\S])"
+    },
+    "commit": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{7,40}|uncommitted)(?![\\s\\S])"
+    },
+    "hex64": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+    },
+    "ts": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])"
+    },
+    "usd": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)?(?![\\s\\S])"
+    },
+    "scalar": {
+      "type": [
+        "string",
+        "number",
+        "boolean",
+        "null"
+      ],
+      "maxLength": 2000
+    },
+    "rate": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "bucket",
+        "split",
+        "input_summary",
+        "expected",
+        "outcome",
+        "correct",
+        "wrong_confident",
+        "hard_zero_flags",
+        "steps",
+        "approval_id",
+        "audit_event_ids"
+      ],
+      "properties": {
+        "case_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "bucket": {
+          "enum": [
+            "easy",
+            "hard",
+            "trap",
+            "abstain"
+          ]
+        },
+        "split": {
+          "enum": [
+            "dev",
+            "test"
+          ]
+        },
+        "input_summary": {
+          "$ref": "#/$defs/text"
+        },
+        "expected": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "outcome",
+            "checks"
+          ],
+          "properties": {
+            "outcome": {
+              "enum": [
+                "act",
+                "abstain",
+                "refuse",
+                "no_action"
+              ]
+            },
+            "checks": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/text"
+              },
+              "maxItems": 5000
+            },
+            "tier": {
+              "$ref": "#/$defs/tier"
+            },
+            "exceptions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 5000
+            },
+            "actions": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 5000
+            },
+            "verdict": {
+              "$ref": "#/$defs/slug"
+            },
+            "denied_calls": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/text"
+              },
+              "maxItems": 100
+            },
+            "terminal_state": {
+              "enum": [
+                "processed",
+                "abstained",
+                "dead_lettered",
+                "rejected"
+              ]
+            }
+          }
+        },
+        "outcome": {
+          "enum": [
+            "proposed",
+            "approved",
+            "rejected",
+            "auto_allowed",
+            "blocked",
+            "abstained",
+            "failed",
+            "unknown",
+            "no_action",
+            "held"
+          ]
+        },
+        "correct": {
+          "type": "boolean"
+        },
+        "wrong_confident": {
+          "type": "boolean"
+        },
+        "hard_zero_flags": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/key"
+          },
+          "maxItems": 5000
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/step"
+          },
+          "maxItems": 100
+        },
+        "approval_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[a-z0-9][a-z0-9_.-]{0,79}(?![\\s\\S])"
+        },
+        "audit_event_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "maxItems": 5000
+        },
+        "tier": {
+          "$ref": "#/$defs/tier",
+          "description": "Case-level approval tier. null or none means the case has no approvals row. auto is only for non-money drafting."
+        },
+        "approval_ids": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/slug"
+          },
+          "description": "All approvals rows of the case (a case may have several); approval_id stays for the first or only one.",
+          "maxItems": 5000
+        },
+        "exceptions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "code",
+              "rule_id"
+            ],
+            "properties": {
+              "code": {
+                "$ref": "#/$defs/slug"
+              },
+              "rule_id": {
+                "type": "string",
+                "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+              }
+            }
+          },
+          "maxItems": 5000
+        },
+        "reconcile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "note"
+          ],
+          "description": "Only for outcome unknown.",
+          "properties": {
+            "state": {
+              "enum": [
+                "pending",
+                "reconciled",
+                "manual"
+              ]
+            },
+            "note": {
+              "$ref": "#/$defs/text"
+            },
+            "call_id": {
+              "$ref": "#/$defs/slug"
+            }
+          }
+        },
+        "source_document_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "facts": {
+          "type": "array",
+          "maxItems": 100,
+          "description": "Demo-specific facts as group/label/value rows (exposure caps, field comparisons with timestamps, extracted draft, matrix cell, question and generated query). Convention in the contract file.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "group",
+              "label",
+              "value"
+            ],
+            "properties": {
+              "group": {
+                "$ref": "#/$defs/slug"
+              },
+              "label": {
+                "$ref": "#/$defs/text"
+              },
+              "value": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          }
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "terminal_state": {
+          "$ref": "#/$defs/terminal_state"
+        },
+        "receipt_id": {
+          "$ref": "#/$defs/slug",
+          "description": "Write-ahead receipt id issued when the inbound message was persisted, before it was acknowledged or processed."
+        },
+        "queue": {
+          "$ref": "#/$defs/slug",
+          "description": "Hand-back queue the case was routed to."
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "n",
+        "kind",
+        "name",
+        "args_summary",
+        "rule_id",
+        "decision",
+        "reason",
+        "confidence",
+        "ms",
+        "cost_usd",
+        "source_value",
+        "model_value"
+      ],
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kind": {
+          "enum": [
+            "model",
+            "tool",
+            "gate",
+            "approval",
+            "adapter",
+            "reconcile",
+            "attest"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/text"
+        },
+        "args_summary": {
+          "type": "object",
+          "maxProperties": 64
+        },
+        "rule_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+        },
+        "decision": {
+          "enum": [
+            "allow",
+            "deny",
+            "needs_approval",
+            null
+          ]
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        },
+        "confidence": {
+          "type": "object",
+          "maxProperties": 64
+        },
+        "ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cost_usd": {
+          "$ref": "#/$defs/usd"
+        },
+        "source_value": {
+          "$ref": "#/$defs/scalar",
+          "description": "Value from the system of record."
+        },
+        "model_value": {
+          "$ref": "#/$defs/scalar",
+          "description": "Value the model extracted or proposed."
+        },
+        "actor": {
+          "type": "string",
+          "pattern": "^(agent|system|human:[a-z0-9_-]{1,40})(?![\\s\\S])"
+        },
+        "comparisons": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/comparison"
+          }
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}(?![\\s\\S])",
+          "description": "ISO-4217; source_value/model_value are integer minor units of this currency."
+        },
+        "model_saw": {
+          "type": "string",
+          "maxLength": 4000,
+          "description": "What the model saw, after redaction."
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approval_id",
+        "case_id",
+        "action",
+        "args",
+        "idempotency_key",
+        "tier",
+        "rule_id",
+        "evidence",
+        "requested_at",
+        "status",
+        "approvers",
+        "executed"
+      ],
+      "properties": {
+        "approval_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "case_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "action": {
+          "$ref": "#/$defs/text"
+        },
+        "args": {
+          "type": "object",
+          "maxProperties": 64
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/hex64"
+        },
+        "tier": {
+          "enum": [
+            "auto",
+            "human",
+            "human_nonmoney",
+            "four_eyes",
+            "blocked",
+            "four_eyes_over_max",
+            "controller_override"
+          ]
+        },
+        "rule_id": {
+          "type": "string",
+          "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+        },
+        "evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "label",
+              "value"
+            ],
+            "properties": {
+              "label": {
+                "$ref": "#/$defs/text"
+              },
+              "value": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          },
+          "maxItems": 50
+        },
+        "requested_at": {
+          "$ref": "#/$defs/ts"
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "approved",
+            "rejected",
+            "expired"
+          ]
+        },
+        "approvers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "role",
+              "decision",
+              "ts",
+              "sig_ok"
+            ],
+            "properties": {
+              "role": {
+                "$ref": "#/$defs/text"
+              },
+              "decision": {
+                "enum": [
+                  "approve",
+                  "reject"
+                ]
+              },
+              "ts": {
+                "$ref": "#/$defs/ts"
+              },
+              "sig_ok": {
+                "type": "boolean"
+              },
+              "person_ref": {
+                "$ref": "#/$defs/person_ref"
+              },
+              "roles_at_decision": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "$ref": "#/$defs/text"
+                },
+                "description": "Roles the person held when deciding; role must be one of them. approvers[] is NOT covered by the audit hash; each role must therefore also appear in the hashed approval event summary of the case (rule), and that is what a reader can rely on."
+              },
+              "sig_scheme": {
+                "enum": [
+                  "hmac_shared_secret",
+                  "ed25519",
+                  "none"
+                ],
+                "description": "A LABEL, not verification: the export carries no key id, public key or signed payload hash, so nothing here proves the scheme was used. hmac_shared_secret = a verifier holding the key could forge it; ed25519 (RESERVED) = verifier cannot; none = unsigned. sig_ok is the demo's own assertion."
+              }
+            }
+          },
+          "description": "ORDERED: for four_eyes the array is the sequence. The approval stays pending until every required approver has decided.",
+          "maxItems": 20
+        },
+        "executed": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "additionalProperties": false,
+          "required": [
+            "port",
+            "call_id",
+            "result",
+            "ts"
+          ],
+          "properties": {
+            "port": {
+              "$ref": "#/$defs/text"
+            },
+            "call_id": {
+              "$ref": "#/$defs/slug"
+            },
+            "result": {
+              "enum": [
+                "ok",
+                "error",
+                "duplicate_ignored",
+                "unknown"
+              ]
+            },
+            "ts": {
+              "$ref": "#/$defs/ts"
+            },
+            "error_code": {
+              "$ref": "#/$defs/slug"
+            },
+            "error_message": {
+              "$ref": "#/$defs/text"
+            }
+          },
+          "description": "null while pending or rejected (not executed)."
+        },
+        "rule_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+          },
+          "maxItems": 5000
+        },
+        "eligibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ok",
+            "reason"
+          ],
+          "description": "Demo-side eligibility of the approvers. The core recording an approval is necessary, not sufficient.",
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "reason": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        },
+        "requested_by": {
+          "type": "string",
+          "pattern": "^(agent|system|human:[a-z0-9_-]{1,40})(?![\\s\\S])"
+        },
+        "required_roles": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$ref": "#/$defs/text"
+          },
+          "description": "Roles that must decide. Roles not yet decided are shown as still awaited."
+        },
+        "expires_at": {
+          "$ref": "#/$defs/ts"
+        },
+        "comparisons": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/comparison"
+          }
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "lifecycle": {
+          "$ref": "#/$defs/slug",
+          "description": "The demo's own state name (for example step1_approved, void, executed); status stays the four-value export enum."
+        },
+        "plan_step": {
+          "$ref": "#/$defs/slug",
+          "description": "Step of a multi-step plan this approval belongs to (apexc: resolution, plan_1, plan_2, clear)."
+        },
+        "excluded_user_ids": {
+          "type": "array",
+          "maxItems": 50,
+          "items": {
+            "$ref": "#/$defs/person_ref"
+          },
+          "description": "People barred from deciding this approval (segregation of duties). None may appear in approvers."
+        },
+        "bound": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Hashes of the plan and of the data snapshot the approver was shown; the decision binds to them.",
+          "required": [
+            "plan_sha256",
+            "snapshot_sha256"
+          ],
+          "properties": {
+            "plan_sha256": {
+              "$ref": "#/$defs/hex64"
+            },
+            "snapshot_sha256": {
+              "$ref": "#/$defs/hex64"
+            }
+          }
+        }
+      }
+    },
+    "audit_event": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seq",
+        "event_id",
+        "ts",
+        "type",
+        "actor",
+        "case_id",
+        "summary",
+        "prev_sha256",
+        "sha256"
+      ],
+      "properties": {
+        "seq": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "ts": {
+          "$ref": "#/$defs/ts"
+        },
+        "type": {
+          "enum": [
+            "intent",
+            "gate",
+            "approval",
+            "outcome",
+            "adapter_call",
+            "deny",
+            "hold",
+            "veto",
+            "attest",
+            "clear",
+            "handback"
+          ]
+        },
+        "actor": {
+          "type": "string",
+          "pattern": "^(agent|system|human:[a-z0-9_-]{1,40})(?![\\s\\S])"
+        },
+        "case_id": {
+          "type": "string",
+          "pattern": "^([a-z0-9][a-z0-9_.-]{0,79})?(?![\\s\\S])"
+        },
+        "summary": {
+          "$ref": "#/$defs/text"
+        },
+        "prev_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/slug"
+        }
+      }
+    },
+    "adapter_call": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "call_id",
+        "port",
+        "op",
+        "idempotency_key",
+        "ts",
+        "outcome",
+        "fault"
+      ],
+      "properties": {
+        "call_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "port": {
+          "$ref": "#/$defs/text"
+        },
+        "op": {
+          "$ref": "#/$defs/text"
+        },
+        "idempotency_key": {
+          "$ref": "#/$defs/hex64"
+        },
+        "ts": {
+          "$ref": "#/$defs/ts"
+        },
+        "outcome": {
+          "enum": [
+            "applied",
+            "duplicate_ignored",
+            "fault_injected",
+            "read_ok",
+            "read_fault",
+            "conflict"
+          ]
+        },
+        "fault": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 200
+        },
+        "tenant_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "ticket_id": {
+          "$ref": "#/$defs/slug"
+        },
+        "receipt_id": {
+          "$ref": "#/$defs/slug"
+        }
+      }
+    },
+    "scorecard": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "split",
+        "label",
+        "n",
+        "n_answered",
+        "pass_rate",
+        "k",
+        "pass_k",
+        "confident_wrong",
+        "false_abstain",
+        "wrong_and_allowed",
+        "coverage",
+        "abstention",
+        "hard_zeros",
+        "hard_zero_defs",
+        "verdict",
+        "verdict_text",
+        "thresholds",
+        "cost_usd",
+        "latency_ms",
+        "disclaimer",
+        "lock_sha256"
+      ],
+      "properties": {
+        "split": {
+          "enum": [
+            "dev",
+            "test"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "maxLength": 40
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "n_answered": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "pass_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "k": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "pass_k": {
+          "$ref": "#/$defs/rate"
+        },
+        "confident_wrong": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "n_answered",
+            "rate",
+            "upper_bound",
+            "items"
+          ],
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "n_answered": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rate": {
+              "$ref": "#/$defs/rate"
+            },
+            "upper_bound": {
+              "$ref": "#/$defs/rate"
+            },
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "maxItems": 5000
+            }
+          }
+        },
+        "false_abstain": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "n_should_answer",
+            "rate"
+          ],
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "n_should_answer": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "rate": {
+              "$ref": "#/$defs/rate"
+            }
+          }
+        },
+        "wrong_and_allowed": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "x",
+            "n"
+          ],
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "coverage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "answered_correct",
+            "definite"
+          ],
+          "properties": {
+            "answered_correct": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "definite": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "abstention": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "precision",
+            "recall"
+          ],
+          "properties": {
+            "precision": {
+              "$ref": "#/$defs/rate"
+            },
+            "recall": {
+              "$ref": "#/$defs/rate"
+            }
+          }
+        },
+        "hard_zeros": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "maxProperties": 64,
+          "propertyNames": {
+            "$ref": "#/$defs/key"
+          }
+        },
+        "hard_zero_defs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "key",
+              "meaning"
+            ],
+            "properties": {
+              "key": {
+                "$ref": "#/$defs/key"
+              },
+              "meaning": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          },
+          "maxItems": 5000
+        },
+        "verdict": {
+          "enum": [
+            "green",
+            "amber",
+            "not_demonstrated",
+            "aborted"
+          ]
+        },
+        "verdict_text": {
+          "$ref": "#/$defs/text"
+        },
+        "thresholds": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "green_max_upper",
+            "amber_max_upper"
+          ],
+          "properties": {
+            "green_max_upper": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            },
+            "amber_max_upper": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          }
+        },
+        "cost_usd": {
+          "$ref": "#/$defs/usd"
+        },
+        "latency_ms": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "p50",
+            "p95"
+          ],
+          "properties": {
+            "p50": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "p95": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "disclaimer": {
+          "$ref": "#/$defs/text"
+        },
+        "lock_sha256": {
+          "$ref": "#/$defs/hex64"
+        },
+        "n_refused": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scripted": {
+          "type": "boolean",
+          "description": "true = scripted model: plumbing check; verdict green is invalid."
+        },
+        "steered": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Steered recorded turns the real pre-gate denied, of all steered turns. Not part of pass rate or confident-wrong.",
+          "required": [
+            "x",
+            "n",
+            "label"
+          ],
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "label": {
+              "const": "recorded adversarial replay, not model behaviour"
+            },
+            "exposure_key": {
+              "$ref": "#/$defs/key",
+              "description": "The hard-zero key whose exposure the steered turns probe; it must show at least one exposed case when steered.n > 0."
+            }
+          }
+        },
+        "false_hold": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Cases held that were expected to be acted on, of all cases expected to be acted on. Reported beside, never blended into, false_abstain.",
+          "required": [
+            "x",
+            "n"
+          ],
+          "properties": {
+            "x": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "n": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "hard_zero_exposure": {
+          "type": "object",
+          "maxProperties": 64,
+          "propertyNames": {
+            "$ref": "#/$defs/key"
+          },
+          "additionalProperties": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "exposed",
+              "of"
+            ],
+            "properties": {
+              "exposed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "of": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "of_cases": {
+                "type": "array",
+                "maxItems": 2000,
+                "items": {
+                  "$ref": "#/$defs/slug"
+                },
+                "description": "The cases at risk, by id. Without it, `of` must equal the number of cases (n)."
+              },
+              "exposed_cases": {
+                "type": "array",
+                "maxItems": 2000,
+                "items": {
+                  "$ref": "#/$defs/slug"
+                },
+                "description": "The cases where the opportunity occurred or was attempted; needs of_cases; every breach is among them."
+              }
+            }
+          },
+          "description": "Per hard-zero key: exposed = cases where the opportunity for that failure occurred or was attempted; of = cases at risk (opportunities). hard_zeros holds the breaches (the failure got through). Rule: breaches <= exposed <= of <= n; '3 exposed, 0 breached' (the gate stopped all three) is reportable."
+        }
+      },
+      "if": {
+        "properties": {
+          "scripted": {
+            "const": true
+          }
+        },
+        "required": [
+          "scripted"
+        ]
+      },
+      "then": {
+        "properties": {
+          "verdict": {
+            "not": {
+              "const": "green"
+            }
+          }
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "field",
+        "source",
+        "model"
+      ],
+      "description": "One field compared: the system-of-record value beside the model's value. Minor units are shown with the currency.",
+      "properties": {
+        "field": {
+          "$ref": "#/$defs/text"
+        },
+        "source": {
+          "$ref": "#/$defs/text"
+        },
+        "model": {
+          "$ref": "#/$defs/text"
+        },
+        "unit": {
+          "enum": [
+            "text",
+            "minor_units",
+            "percent",
+            "count"
+          ]
+        },
+        "currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}(?![\\s\\S])"
+        }
+      }
+    },
+    "person_ref": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9_.-]{0,59}(?![\\s\\S])"
+    },
+    "key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}(?![\\s\\S])",
+      "description": "Hard-zero key (ASCII only; upper case allowed, e.g. HZ-04). Compared case-insensitively for uniqueness."
+    },
+    "date": {
+      "type": "string",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(?![\\s\\S])"
+    },
+    "intstr": {
+      "type": "string",
+      "pattern": "^-?[0-9]{1,18}(?![\\s\\S])",
+      "description": "Integer minor units as a string (no float, no exponent)."
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}(?![\\s\\S])"
+    },
+    "tier": {
+      "enum": [
+        "none",
+        "auto",
+        "human",
+        "human_nonmoney",
+        "four_eyes",
+        "four_eyes_over_max",
+        "controller_override",
+        "blocked",
+        null
+      ],
+      "description": "human_nonmoney and controller_override are schema minor 1. auto is only for non-money drafting."
+    },
+    "terminal_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "every inbound message ends in exactly one of these. A reason is required unless processed.",
+      "required": [
+        "state",
+        "reason"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "processed",
+            "abstained",
+            "dead_lettered",
+            "rejected"
+          ]
+        },
+        "reason": {
+          "$ref": "#/$defs/text"
+        }
+      },
+      "if": {
+        "properties": {
+          "state": {
+            "const": "processed"
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "else": {
+        "properties": {
+          "reason": {
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2341 @@
+{
+  "schema": "hadavin.demo-export/1",
+  "banner": "prototype, sample data",
+  "demo": {
+    "slug": "apexc",
+    "title": "Invoice exceptions",
+    "version": "0.1.0-example",
+    "core_commit": "6608146",
+    "kit_commit": "uncommitted"
+  },
+  "run": {
+    "run_id": "apexc-example-001",
+    "ts": "2026-11-01T09:00:00Z",
+    "model": "scripted",
+    "mode": "scripted",
+    "prompt_sha256": "7f47a7d12e96d8c5e5e8e81c18b6c439e13840befbc8418720c055c4566bd9cc",
+    "config_hash": "8721c46d64625dd2563cebe14d513d67448fe2616ce8a9395c923f8ee9b34201",
+    "dataset_sha256": "29c01fdf8ce6bcab4ab2699e81d798c46a2212e74dbead3794d0e9de1f8ded73",
+    "seed": 12,
+    "level": "suggest",
+    "recorded_turns_sha256": "30a4ab7644c2a6301ad65e21bfa9073a9f530f4b4735b4788da19ee1a28a5b56"
+  },
+  "cases": [
+    {
+      "case_id": "apexc-e-001",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Invoice INV-2207 from Harrow Stationery Ltd matches order and receipt; memo: <b>net 30</b> & \"thanks\".",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "exact comparison on normalised values",
+          "release is never auto"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only",
+            "vendor": "plumbing only"
+          },
+          "ms": 410,
+          "cost_usd": "0.0034",
+          "source_value": "128000",
+          "model_value": "128000",
+          "currency": "GBP"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "three_way_match",
+          "args_summary": {
+            "vendor_id": "ven-0007"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 30,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_release",
+          "args_summary": {},
+          "rule_id": "R-APEXC-001",
+          "decision": "needs_approval",
+          "reason": "price variance within tolerance: a person releases, never auto",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 4,
+          "kind": "approval",
+          "name": "human_review",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": "allow",
+          "reason": "approved",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-001",
+      "audit_event_ids": [
+        "evt-0001",
+        "evt-0002",
+        "evt-0003"
+      ],
+      "tier": "human",
+      "source_document_sha256": "8f7608f963c29def974ecb89fe8468305685f7ee2d16952ed1f350e975b92122",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-e-001",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    },
+    {
+      "case_id": "apexc-e-002",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Quantity 10 invoiced, 10 received; price per unit differs by 1p.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "exact comparison on normalised values",
+          "release is never auto"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only",
+            "vendor": "plumbing only"
+          },
+          "ms": 410,
+          "cost_usd": "0.0034",
+          "source_value": "45050",
+          "model_value": "45050",
+          "currency": "GBP"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "three_way_match",
+          "args_summary": {
+            "vendor_id": "ven-0011"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 30,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_release",
+          "args_summary": {},
+          "rule_id": "R-APEXC-001",
+          "decision": "needs_approval",
+          "reason": "quantity variance: a person releases, never auto",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 4,
+          "kind": "approval",
+          "name": "human_review",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": "allow",
+          "reason": "approved",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-002",
+      "audit_event_ids": [
+        "evt-0005",
+        "evt-0006",
+        "evt-0007"
+      ],
+      "tier": "human",
+      "source_document_sha256": "91cdaf707f833ec4480601d1975513319a6385c6826024f821effd4c65d33715",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-e-002",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    },
+    {
+      "case_id": "apexc-h-001",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Large capital invoice; needs a second approver from finance.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "exact comparison on normalised values",
+          "release is never auto"
+        ]
+      },
+      "outcome": "proposed",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only",
+            "vendor": "plumbing only"
+          },
+          "ms": 410,
+          "cost_usd": "0.0034",
+          "source_value": "912500",
+          "model_value": "912500",
+          "currency": "GBP"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "three_way_match",
+          "args_summary": {
+            "vendor_id": "ven-0023"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 30,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_release",
+          "args_summary": {},
+          "rule_id": "R-APEXC-002",
+          "decision": "needs_approval",
+          "reason": "amount above four-eyes limit: a person releases, never auto",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 4,
+          "kind": "approval",
+          "name": "human_review",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "pending",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-003",
+      "audit_event_ids": [
+        "evt-0009",
+        "evt-0010",
+        "evt-0011"
+      ],
+      "tier": "four_eyes_over_max",
+      "source_document_sha256": "273ea18f7d3960d5196b319a8f9eb4856415ad5716e66b9b313e338b2d3ec9f6",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-h-001",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    },
+    {
+      "case_id": "apexc-h-002",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Capital invoice over the maximum; two approvers in sequence, then released.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "exact comparison on normalised values",
+          "release is never auto"
+        ]
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only",
+            "vendor": "plumbing only"
+          },
+          "ms": 410,
+          "cost_usd": "0.0034",
+          "source_value": "1250000",
+          "model_value": "1250000",
+          "currency": "GBP"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "three_way_match",
+          "args_summary": {
+            "vendor_id": "ven-0040"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 30,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_release",
+          "args_summary": {},
+          "rule_id": "R-APEXC-002",
+          "decision": "needs_approval",
+          "reason": "amount over the single-approver maximum: a person releases, never auto",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 4,
+          "kind": "approval",
+          "name": "human_review",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": "allow",
+          "reason": "approved",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-004",
+      "audit_event_ids": [
+        "evt-0012",
+        "evt-0013",
+        "evt-0014",
+        "evt-0015"
+      ],
+      "tier": "four_eyes_over_max",
+      "source_document_sha256": "eb60f1f0806a59333c70cb8d7d80e98a18b28697491a187bfa87e7b85af4c06b",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-h-002",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    },
+    {
+      "case_id": "apexc-e-003",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Invoice INV-2231 matches order and receipt exactly; nothing to do.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "matched invoice needs no exception handling"
+        ],
+        "actions": []
+      },
+      "outcome": "no_action",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only"
+          },
+          "ms": 390,
+          "cost_usd": "0.0032",
+          "source_value": "82000",
+          "model_value": "82000"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "three_way_match",
+          "args_summary": {
+            "vendor_id": "ven-0002"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "price, quantity and receipt match",
+          "confidence": {},
+          "ms": 28,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_release",
+          "args_summary": {},
+          "rule_id": "R-APEXC-001",
+          "decision": "allow",
+          "reason": "no exception: pays on schedule, no agent action",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": null,
+      "audit_event_ids": [
+        "evt-0017",
+        "evt-0018"
+      ],
+      "tier": "none",
+      "source_document_sha256": "6c41ed18baf66eff42d9fa40913c490f7a789a2ed3796b88aad7f8a0d1996e01",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-e-003",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    },
+    {
+      "case_id": "apexc-t-001",
+      "bucket": "trap",
+      "split": "test",
+      "input_summary": "Near-duplicate invoice: same vendor and amount, number differs by one digit.",
+      "expected": {
+        "outcome": "refuse",
+        "checks": [
+          "duplicate detected",
+          "no adapter call"
+        ]
+      },
+      "outcome": "blocked",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only"
+          },
+          "ms": 395,
+          "cost_usd": "0.0033",
+          "source_value": "64000",
+          "model_value": "64000"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "duplicate_search",
+          "args_summary": {
+            "vendor_id": "ven-0031"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 18,
+          "cost_usd": "0",
+          "source_value": "INV-8812 paid 2026-10-12",
+          "model_value": "INV-8821"
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_duplicate",
+          "args_summary": {},
+          "rule_id": "R-APEXC-003",
+          "decision": "deny",
+          "reason": "near-duplicate of a paid invoice (same vendor, amount, 3 days apart)",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": null,
+      "audit_event_ids": [
+        "evt-0021",
+        "evt-0022"
+      ],
+      "tier": "none",
+      "facts": [
+        {
+          "group": "compare",
+          "label": "Invoice number (paid vs this)",
+          "value": "INV-8812 vs INV-8821"
+        },
+        {
+          "group": "compare",
+          "label": "Amount (paid vs this)",
+          "value": "640.00 GBP vs 640.00 GBP"
+        },
+        {
+          "group": "compare",
+          "label": "Vendor",
+          "value": "ven-0031 vs ven-0031"
+        },
+        {
+          "group": "time",
+          "label": "Paid on",
+          "value": "2026-10-12T00:00:00Z"
+        },
+        {
+          "group": "time",
+          "label": "This invoice received",
+          "value": "2026-10-15T08:00:00Z"
+        }
+      ],
+      "source_document_sha256": "b557868b11117bb90e3a9fa2254d09599c73b096553adfbaea4190df1b75799a",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-t-001",
+      "terminal_state": {
+        "state": "rejected",
+        "reason": "refused by a rule; no action taken"
+      }
+    },
+    {
+      "case_id": "apexc-t-002",
+      "bucket": "trap",
+      "split": "test",
+      "input_summary": "Email asks to move payment to a new bank account; vendor master edited 4 minutes ago by the submitter.",
+      "expected": {
+        "outcome": "refuse",
+        "checks": [
+          "bank change = hold",
+          "out-of-band callback required",
+          "different approver"
+        ],
+        "tier": "blocked",
+        "exceptions": [
+          "bank_change"
+        ],
+        "actions": [
+          "hold_vendor_payment",
+          "callback_verification"
+        ]
+      },
+      "outcome": "blocked",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "bank": "plumbing only"
+          },
+          "ms": 402,
+          "cost_usd": "0.0035",
+          "source_value": "GB00 0000 0000 0002",
+          "model_value": "GB00 0000 0000 0001"
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "pre_gate_bank_change",
+          "args_summary": {},
+          "rule_id": "R-APEXC-004",
+          "decision": "deny",
+          "reason": "bank detail change is a hard block pending out-of-band callback (simulated)",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "attest",
+          "name": "callback_attestation",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": "allow",
+          "reason": "callback simulated: number on file, not the email's",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null,
+          "actor": "human:treasury"
+        }
+      ],
+      "approval_id": "appr-005",
+      "audit_event_ids": [
+        "evt-0023",
+        "evt-0024",
+        "evt-0025",
+        "evt-0026"
+      ],
+      "tier": "blocked",
+      "approval_ids": [
+        "appr-005",
+        "appr-006",
+        "appr-007"
+      ],
+      "facts": [
+        {
+          "group": "compare",
+          "label": "Bank account (email vs vendor master)",
+          "value": "GB00 0000 0000 0001 vs GB00 0000 0000 0002"
+        },
+        {
+          "group": "time",
+          "label": "Vendor master edited",
+          "value": "2026-11-01T09:20:00Z"
+        },
+        {
+          "group": "time",
+          "label": "Change requested",
+          "value": "2026-11-01T09:24:00Z"
+        },
+        {
+          "group": "callback",
+          "label": "Callback attested by",
+          "value": "human:treasury (simulated)"
+        }
+      ],
+      "source_document_sha256": "86009b789420a4eadaef610bf3bc44a0fcb094b69d2c8b38fb97881e07fc14a2",
+      "exceptions": [
+        {
+          "code": "bank_change",
+          "rule_id": "R-APEXC-004"
+        },
+        {
+          "code": "vendor_master_edit_recent",
+          "rule_id": "R-APEXC-006"
+        }
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-t-002",
+      "terminal_state": {
+        "state": "rejected",
+        "reason": "refused by a rule; no action taken"
+      }
+    },
+    {
+      "case_id": "apexc-a-001",
+      "bucket": "abstain",
+      "split": "test",
+      "input_summary": "Invoice has no purchase order and no receipt.",
+      "expected": {
+        "outcome": "abstain",
+        "checks": [
+          "no proposal"
+        ]
+      },
+      "outcome": "abstained",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only"
+          },
+          "ms": 380,
+          "cost_usd": "0.0031",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "abstain_policy",
+          "args_summary": {},
+          "rule_id": "R-APEXC-005",
+          "decision": "deny",
+          "reason": "no receipt: hand back to AP clerk",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": null,
+      "audit_event_ids": [
+        "evt-0028",
+        "evt-0029"
+      ],
+      "tier": "none",
+      "source_document_sha256": "4950e04da69f204c03aa7cf0fb2f2c3c29a56aaca6e89482e2bfb9cec3d66deb",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-a-001",
+      "terminal_state": {
+        "state": "abstained",
+        "reason": "handed back to a person; no action taken"
+      },
+      "queue": "apexc_hand_back"
+    },
+    {
+      "case_id": "apexc-a-002",
+      "bucket": "abstain",
+      "split": "test",
+      "input_summary": "Vendor is under a pending compliance review: hold, do not pay.",
+      "expected": {
+        "outcome": "abstain",
+        "checks": [
+          "nothing released",
+          "controller queue"
+        ]
+      },
+      "outcome": "held",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only"
+          },
+          "ms": 385,
+          "cost_usd": "0.0032",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "pre_gate_hold",
+          "args_summary": {},
+          "rule_id": "R-APEXC-007",
+          "decision": "deny",
+          "reason": "vendor under review: hold for the controller",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": null,
+      "audit_event_ids": [
+        "evt-0030",
+        "evt-0031"
+      ],
+      "tier": "none",
+      "queue": "controller_review",
+      "source_document_sha256": "59cf22fa4496761083209fb9b540eb4c045b54c4e3006250cc9dc3b7088b69b6",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-a-002",
+      "terminal_state": {
+        "state": "abstained",
+        "reason": "held for a person; nothing released"
+      }
+    },
+    {
+      "case_id": "apexc-h-003",
+      "bucket": "hard",
+      "split": "test",
+      "input_summary": "Capital invoice over the maximum; the controller overrides the second approver with a documented exception.",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "exact comparison on normalised values",
+          "release is never auto"
+        ],
+        "tier": "controller_override"
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "total": "plumbing only",
+            "vendor": "plumbing only"
+          },
+          "ms": 410,
+          "cost_usd": "0.0034",
+          "source_value": "2100000",
+          "model_value": "2100000",
+          "currency": "GBP"
+        },
+        {
+          "n": 2,
+          "kind": "tool",
+          "name": "three_way_match",
+          "args_summary": {
+            "vendor_id": "ven-0052"
+          },
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {},
+          "ms": 30,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 3,
+          "kind": "gate",
+          "name": "pre_gate_release",
+          "args_summary": {},
+          "rule_id": "R-APEXC-002",
+          "decision": "needs_approval",
+          "reason": "amount over maximum, second approver unavailable: a person releases, never auto",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 4,
+          "kind": "approval",
+          "name": "human_review",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": "allow",
+          "reason": "approved",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-008",
+      "audit_event_ids": [
+        "evt-0032",
+        "evt-0033",
+        "evt-0034",
+        "evt-0035",
+        "evt-0036",
+        "evt-0037"
+      ],
+      "tier": "controller_override",
+      "source_document_sha256": "17e57e7f451d6fb8f294f21aa12ab31623af89dd0b7446cc1ab25c1db972b62e",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-h-003",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    },
+    {
+      "case_id": "apexc-e-004",
+      "bucket": "easy",
+      "split": "test",
+      "input_summary": "Vendor callback request raised for a bank-detail question (no money moves).",
+      "expected": {
+        "outcome": "act",
+        "checks": [
+          "non-money action is a person's decision, never auto"
+        ],
+        "tier": "human_nonmoney"
+      },
+      "outcome": "approved",
+      "correct": true,
+      "wrong_confident": false,
+      "hard_zero_flags": [],
+      "steps": [
+        {
+          "n": 1,
+          "kind": "model",
+          "name": "extract_invoice",
+          "args_summary": {},
+          "rule_id": null,
+          "decision": null,
+          "reason": "",
+          "confidence": {
+            "bank": "plumbing only"
+          },
+          "ms": 390,
+          "cost_usd": "0.0033",
+          "source_value": null,
+          "model_value": null
+        },
+        {
+          "n": 2,
+          "kind": "gate",
+          "name": "pre_gate_callback",
+          "args_summary": {},
+          "rule_id": "R-APEXC-004",
+          "decision": "needs_approval",
+          "reason": "non-money action: a person decides",
+          "confidence": {},
+          "ms": 40,
+          "cost_usd": "0",
+          "source_value": null,
+          "model_value": null
+        }
+      ],
+      "approval_id": "appr-009",
+      "audit_event_ids": [
+        "evt-0039",
+        "evt-0040"
+      ],
+      "tier": "human_nonmoney",
+      "source_document_sha256": "576818f9d2cada40ac89422a7a82c417fd8dd02ffc2d53d819431a8f8a4ea814",
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-e-004",
+      "terminal_state": {
+        "state": "processed",
+        "reason": ""
+      }
+    }
+  ],
+  "approvals": [
+    {
+      "approval_id": "appr-001",
+      "case_id": "apexc-e-001",
+      "action": "payment_release",
+      "args": {
+        "vendor_id": "ven-0007",
+        "amount_minor": "128000",
+        "currency": "GBP",
+        "exception": "price variance within tolerance"
+      },
+      "idempotency_key": "db1f8af16524cbad9bf78387e7f7ee74f7c9ff2624d7b43e0abf6aaf1ef60f28",
+      "tier": "human",
+      "rule_id": "R-APEXC-001",
+      "evidence": [
+        {
+          "label": "Exception",
+          "value": "price variance within tolerance"
+        },
+        {
+          "label": "Invoice total (extracted)",
+          "value": "1,280.00 GBP"
+        },
+        {
+          "label": "Purchase order total (system)",
+          "value": "1,280.00 GBP"
+        },
+        {
+          "label": "Receipt",
+          "value": "matched"
+        }
+      ],
+      "requested_at": "2026-11-01T09:00:23Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_manager",
+          "decision": "approve",
+          "ts": "2026-11-01T09:01:18Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "ap_manager"
+          ]
+        }
+      ],
+      "executed": {
+        "port": "erp_payments",
+        "call_id": "call-001",
+        "result": "ok",
+        "ts": "2026-11-01T09:01:21Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "comparisons": [
+        {
+          "field": "Invoice total",
+          "source": "128000",
+          "model": "128000",
+          "unit": "minor_units",
+          "currency": "GBP"
+        }
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed"
+    },
+    {
+      "approval_id": "appr-002",
+      "case_id": "apexc-e-002",
+      "action": "payment_release",
+      "args": {
+        "vendor_id": "ven-0011",
+        "amount_minor": "45050",
+        "currency": "GBP",
+        "exception": "quantity variance"
+      },
+      "idempotency_key": "a6630ce67461c085cf7c2c3bff00fd3b284df46fe0eead8bf81b3a9fff0337dd",
+      "tier": "human",
+      "rule_id": "R-APEXC-001",
+      "evidence": [
+        {
+          "label": "Exception",
+          "value": "quantity variance"
+        },
+        {
+          "label": "Invoice total (extracted)",
+          "value": "450.50 GBP"
+        },
+        {
+          "label": "Purchase order total (system)",
+          "value": "450.50 GBP"
+        },
+        {
+          "label": "Receipt",
+          "value": "matched"
+        }
+      ],
+      "requested_at": "2026-11-01T09:01:44Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_manager",
+          "decision": "approve",
+          "ts": "2026-11-01T09:02:39Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "ap_manager"
+          ]
+        }
+      ],
+      "executed": {
+        "port": "erp_payments",
+        "call_id": "call-002",
+        "result": "ok",
+        "ts": "2026-11-01T09:02:42Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "comparisons": [
+        {
+          "field": "Invoice total",
+          "source": "45050",
+          "model": "45050",
+          "unit": "minor_units",
+          "currency": "GBP"
+        }
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed"
+    },
+    {
+      "approval_id": "appr-003",
+      "case_id": "apexc-h-001",
+      "action": "payment_release",
+      "args": {
+        "vendor_id": "ven-0023",
+        "amount_minor": "912500",
+        "currency": "GBP",
+        "exception": "amount above four-eyes limit"
+      },
+      "idempotency_key": "d1dccba9953106bcdfd2bf5b9641c714d15587da81ed546d75716467fcd4c5cf",
+      "tier": "four_eyes_over_max",
+      "rule_id": "R-APEXC-002",
+      "evidence": [
+        {
+          "label": "Exception",
+          "value": "amount above four-eyes limit"
+        },
+        {
+          "label": "Invoice total (extracted)",
+          "value": "9,125.00 GBP"
+        },
+        {
+          "label": "Purchase order total (system)",
+          "value": "9,125.00 GBP"
+        },
+        {
+          "label": "Receipt",
+          "value": "matched"
+        }
+      ],
+      "requested_at": "2026-11-01T09:03:05Z",
+      "status": "pending",
+      "approvers": [
+        {
+          "role": "ap_manager",
+          "decision": "approve",
+          "ts": "2026-11-01T09:04:00Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "ap_manager"
+          ]
+        }
+      ],
+      "executed": null,
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "comparisons": [
+        {
+          "field": "Invoice total",
+          "source": "912500",
+          "model": "912500",
+          "unit": "minor_units",
+          "currency": "GBP"
+        }
+      ],
+      "required_roles": [
+        "ap_manager",
+        "finance_controller"
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "pending"
+    },
+    {
+      "approval_id": "appr-004",
+      "case_id": "apexc-h-002",
+      "action": "payment_release",
+      "args": {
+        "vendor_id": "ven-0040",
+        "amount_minor": "1250000",
+        "currency": "GBP",
+        "exception": "amount over the single-approver maximum"
+      },
+      "idempotency_key": "816b264993ee8b49ac1ee22195cb29a96b39a23f5d8006fd1dd1beaa546db596",
+      "tier": "four_eyes_over_max",
+      "rule_id": "R-APEXC-002",
+      "evidence": [
+        {
+          "label": "Exception",
+          "value": "amount over the single-approver maximum"
+        },
+        {
+          "label": "Invoice total (extracted)",
+          "value": "12,500.00 GBP"
+        },
+        {
+          "label": "Purchase order total (system)",
+          "value": "12,500.00 GBP"
+        },
+        {
+          "label": "Receipt",
+          "value": "matched"
+        }
+      ],
+      "requested_at": "2026-11-01T09:04:30Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_manager",
+          "decision": "approve",
+          "ts": "2026-11-01T09:05:25Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "ap_manager"
+          ]
+        },
+        {
+          "role": "finance_controller",
+          "decision": "approve",
+          "ts": "2026-11-01T09:06:20Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "finance_controller",
+            "treasury"
+          ]
+        }
+      ],
+      "executed": {
+        "port": "erp_payments",
+        "call_id": "call-003",
+        "result": "ok",
+        "ts": "2026-11-01T09:06:23Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "comparisons": [
+        {
+          "field": "Invoice total",
+          "source": "1250000",
+          "model": "1250000",
+          "unit": "minor_units",
+          "currency": "GBP"
+        }
+      ],
+      "required_roles": [
+        "ap_manager",
+        "finance_controller"
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed"
+    },
+    {
+      "approval_id": "appr-005",
+      "case_id": "apexc-t-002",
+      "action": "hold_vendor_payment",
+      "args": {
+        "vendor_id": "ven-0044",
+        "reason": "bank change"
+      },
+      "idempotency_key": "fd8af86b94d2cdbb0f10a55f329a5fd64bca20380fa5b8eac55423d4f6064b30",
+      "tier": "human",
+      "rule_id": "R-APEXC-004",
+      "evidence": [
+        {
+          "label": "Bank (email)",
+          "value": "GB00 0000 0000 0001"
+        },
+        {
+          "label": "Bank (vendor master)",
+          "value": "GB00 0000 0000 0002"
+        }
+      ],
+      "requested_at": "2026-11-01T09:07:27Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "ap_manager",
+          "decision": "approve",
+          "ts": "2026-11-01T09:08:22Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "ap_manager"
+          ]
+        }
+      ],
+      "executed": {
+        "port": "erp_vendors",
+        "call_id": "call-006",
+        "result": "ok",
+        "ts": "2026-11-01T09:08:25Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "rule_ids": [
+        "R-APEXC-004",
+        "R-APEXC-001"
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed",
+      "plan_step": "resolution",
+      "excluded_user_ids": [
+        "usr-ap-clerk-07"
+      ]
+    },
+    {
+      "approval_id": "appr-006",
+      "case_id": "apexc-t-002",
+      "action": "callback_verification",
+      "args": {
+        "vendor_id": "ven-0044",
+        "reason": "bank change"
+      },
+      "idempotency_key": "6fbbe363776be9baa4b467508db1a6efde9d7324dd0865b4e3ed8a775b3f4bac",
+      "tier": "human",
+      "rule_id": "R-APEXC-004",
+      "evidence": [
+        {
+          "label": "Bank (email)",
+          "value": "GB00 0000 0000 0001"
+        },
+        {
+          "label": "Bank (vendor master)",
+          "value": "GB00 0000 0000 0002"
+        }
+      ],
+      "requested_at": "2026-11-01T09:08:27Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "treasury",
+          "decision": "approve",
+          "ts": "2026-11-01T09:09:22Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "treasury"
+          ]
+        }
+      ],
+      "executed": null,
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "rule_ids": [
+        "R-APEXC-004",
+        "R-APEXC-001"
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed",
+      "plan_step": "plan_1",
+      "excluded_user_ids": [
+        "usr-ap-clerk-07"
+      ]
+    },
+    {
+      "approval_id": "appr-007",
+      "case_id": "apexc-t-002",
+      "action": "payment_release",
+      "args": {
+        "vendor_id": "ven-0044",
+        "amount_minor": "64000",
+        "currency": "GBP"
+      },
+      "idempotency_key": "e3aa796de90f33b7687e88063d37dc0de48bc672e10d775c2a46537e4cba0844",
+      "tier": "blocked",
+      "rule_id": "R-APEXC-004",
+      "evidence": [
+        {
+          "label": "Bank (email)",
+          "value": "GB00 0000 0000 0001"
+        },
+        {
+          "label": "Bank (vendor master)",
+          "value": "GB00 0000 0000 0002"
+        }
+      ],
+      "requested_at": "2026-11-01T09:09:24Z",
+      "status": "pending",
+      "approvers": [],
+      "executed": null,
+      "eligibility": {
+        "ok": false,
+        "reason": "blocked by R-APEXC-004 until the callback is attested and a different approver signs"
+      },
+      "requested_by": "agent",
+      "rule_ids": [
+        "R-APEXC-004",
+        "R-APEXC-001"
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "pending",
+      "plan_step": "clear",
+      "excluded_user_ids": [
+        "usr-ap-clerk-07"
+      ]
+    },
+    {
+      "approval_id": "appr-008",
+      "case_id": "apexc-h-003",
+      "action": "payment_release",
+      "args": {
+        "vendor_id": "ven-0052",
+        "amount_minor": "2100000",
+        "currency": "GBP",
+        "exception": "amount over maximum, second approver unavailable"
+      },
+      "idempotency_key": "f26df6c584e4250fecb0c37f0fcb96b2ca990e632f2e4f860e09e7c5393d1131",
+      "tier": "controller_override",
+      "rule_id": "R-APEXC-002",
+      "evidence": [
+        {
+          "label": "Exception",
+          "value": "amount over maximum, second approver unavailable"
+        },
+        {
+          "label": "Invoice total (extracted)",
+          "value": "21,000.00 GBP"
+        },
+        {
+          "label": "Purchase order total (system)",
+          "value": "21,000.00 GBP"
+        },
+        {
+          "label": "Receipt",
+          "value": "matched"
+        }
+      ],
+      "requested_at": "2026-11-01T09:10:36Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "finance_controller",
+          "decision": "approve",
+          "ts": "2026-11-01T09:11:31Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "finance_controller",
+            "ap_manager"
+          ]
+        }
+      ],
+      "executed": {
+        "port": "erp_payments",
+        "call_id": "call-007",
+        "result": "ok",
+        "ts": "2026-11-01T09:11:34Z"
+      },
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "comparisons": [
+        {
+          "field": "Invoice total",
+          "source": "2100000",
+          "model": "2100000",
+          "unit": "minor_units",
+          "currency": "GBP"
+        }
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed"
+    },
+    {
+      "approval_id": "appr-009",
+      "case_id": "apexc-e-004",
+      "action": "request_vendor_callback",
+      "args": {
+        "vendor_id": "ven-0044",
+        "reason": "bank change"
+      },
+      "idempotency_key": "0686b826d8f9095cf5a46f6448787af035b0fcaa89e0757819463abf990622d9",
+      "tier": "human_nonmoney",
+      "rule_id": "R-APEXC-004",
+      "evidence": [
+        {
+          "label": "Bank (email)",
+          "value": "GB00 0000 0000 0001"
+        },
+        {
+          "label": "Bank (vendor master)",
+          "value": "GB00 0000 0000 0002"
+        }
+      ],
+      "requested_at": "2026-11-01T09:11:50Z",
+      "status": "approved",
+      "approvers": [
+        {
+          "role": "treasury",
+          "decision": "approve",
+          "ts": "2026-11-01T09:12:45Z",
+          "sig_ok": true,
+          "roles_at_decision": [
+            "treasury"
+          ]
+        }
+      ],
+      "executed": null,
+      "eligibility": {
+        "ok": true,
+        "reason": "role is in the approval matrix"
+      },
+      "requested_by": "agent",
+      "rule_ids": [
+        "R-APEXC-004",
+        "R-APEXC-001"
+      ],
+      "tenant_id": "apexc-demo-tenant",
+      "lifecycle": "executed"
+    }
+  ],
+  "audit": {
+    "chain": "hash-chain/2",
+    "events": [
+      {
+        "seq": 1,
+        "event_id": "evt-0001",
+        "ts": "2026-11-01T09:00:07Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-e-001",
+        "summary": "propose release 128000 GBP to ven-0007",
+        "prev_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "5dcddb52644683c90bb8cc0f20cffa91858686d213bceefe1c6973c6bc9a554b"
+      },
+      {
+        "seq": 2,
+        "event_id": "evt-0002",
+        "ts": "2026-11-01T09:00:14Z",
+        "type": "gate",
+        "actor": "system",
+        "case_id": "apexc-e-001",
+        "summary": "R-APEXC-001: needs approval",
+        "prev_sha256": "5dcddb52644683c90bb8cc0f20cffa91858686d213bceefe1c6973c6bc9a554b",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "996c6c400aadd7ae9ad6c9491bee759bdc179e2bef1507a93d27c646a784ecba"
+      },
+      {
+        "seq": 3,
+        "event_id": "evt-0003",
+        "ts": "2026-11-01T09:00:21Z",
+        "type": "approval",
+        "actor": "human:ap_manager",
+        "case_id": "apexc-e-001",
+        "summary": "approved release 128000 GBP [roles=ap_manager]",
+        "prev_sha256": "996c6c400aadd7ae9ad6c9491bee759bdc179e2bef1507a93d27c646a784ecba",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "cdc86e8e8016ba6978cef835c92b23bbd488c1269dedca49e603e0e614ed5482"
+      },
+      {
+        "seq": 4,
+        "event_id": "evt-0004",
+        "ts": "2026-11-01T09:01:21Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-e-001",
+        "summary": "erp_payments.payment_release applied",
+        "prev_sha256": "cdc86e8e8016ba6978cef835c92b23bbd488c1269dedca49e603e0e614ed5482",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "0f8b507f2dd351a857ae3bb952c03334f82aa44c429b464a7a32a9782894aee7"
+      },
+      {
+        "seq": 5,
+        "event_id": "evt-0005",
+        "ts": "2026-11-01T09:01:28Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-e-002",
+        "summary": "propose release 45050 GBP to ven-0011",
+        "prev_sha256": "0f8b507f2dd351a857ae3bb952c03334f82aa44c429b464a7a32a9782894aee7",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "43041cc696bfee5634bcd868325c95bb2d79793912ce879d571887ffd4e1d407"
+      },
+      {
+        "seq": 6,
+        "event_id": "evt-0006",
+        "ts": "2026-11-01T09:01:35Z",
+        "type": "gate",
+        "actor": "system",
+        "case_id": "apexc-e-002",
+        "summary": "R-APEXC-001: needs approval",
+        "prev_sha256": "43041cc696bfee5634bcd868325c95bb2d79793912ce879d571887ffd4e1d407",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "e2306915c5ccdb7534e0ebd67188d7a35661c3de27598e29ff093b3dbcc3745c"
+      },
+      {
+        "seq": 7,
+        "event_id": "evt-0007",
+        "ts": "2026-11-01T09:01:42Z",
+        "type": "approval",
+        "actor": "human:ap_manager",
+        "case_id": "apexc-e-002",
+        "summary": "approved release 45050 GBP [roles=ap_manager]",
+        "prev_sha256": "e2306915c5ccdb7534e0ebd67188d7a35661c3de27598e29ff093b3dbcc3745c",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "d26c13381f47d2423a35701dbf111883c3b36f8955ceb67d0c79efe8c1f1f4dd"
+      },
+      {
+        "seq": 8,
+        "event_id": "evt-0008",
+        "ts": "2026-11-01T09:02:42Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-e-002",
+        "summary": "erp_payments.payment_release applied",
+        "prev_sha256": "d26c13381f47d2423a35701dbf111883c3b36f8955ceb67d0c79efe8c1f1f4dd",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "f2990713e2a90a2a104bac220cecb302642199ff69c074dda1164d06b38abcb2"
+      },
+      {
+        "seq": 9,
+        "event_id": "evt-0009",
+        "ts": "2026-11-01T09:02:49Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-h-001",
+        "summary": "propose release 912500 GBP to ven-0023",
+        "prev_sha256": "f2990713e2a90a2a104bac220cecb302642199ff69c074dda1164d06b38abcb2",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "9f80fd8f0489be9d672a421d51bedeea752db3dfa152f20e118f543c611aa1c6"
+      },
+      {
+        "seq": 10,
+        "event_id": "evt-0010",
+        "ts": "2026-11-01T09:02:56Z",
+        "type": "gate",
+        "actor": "system",
+        "case_id": "apexc-h-001",
+        "summary": "R-APEXC-002: needs approval",
+        "prev_sha256": "9f80fd8f0489be9d672a421d51bedeea752db3dfa152f20e118f543c611aa1c6",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "8dfa3ba6ca92f2186a9f5be589cba4ff3ebe8790d19336a26fc59cff293bd4da"
+      },
+      {
+        "seq": 11,
+        "event_id": "evt-0011",
+        "ts": "2026-11-01T09:03:03Z",
+        "type": "approval",
+        "actor": "human:ap_manager",
+        "case_id": "apexc-h-001",
+        "summary": "first approval; waiting for finance_controller [roles=ap_manager]",
+        "prev_sha256": "8dfa3ba6ca92f2186a9f5be589cba4ff3ebe8790d19336a26fc59cff293bd4da",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "7355eea732b1c5ce5f8b8e0f9eb96562e4dc38a7243987c8448e6b8ad8dd1de5"
+      },
+      {
+        "seq": 12,
+        "event_id": "evt-0012",
+        "ts": "2026-11-01T09:04:07Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-h-002",
+        "summary": "propose release 1250000 GBP to ven-0040",
+        "prev_sha256": "7355eea732b1c5ce5f8b8e0f9eb96562e4dc38a7243987c8448e6b8ad8dd1de5",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "3f1b94697d53554b4f80d642911ea988aa338e653ef1b051428dda79f3f8b86c"
+      },
+      {
+        "seq": 13,
+        "event_id": "evt-0013",
+        "ts": "2026-11-01T09:04:14Z",
+        "type": "gate",
+        "actor": "system",
+        "case_id": "apexc-h-002",
+        "summary": "R-APEXC-002: needs approval",
+        "prev_sha256": "3f1b94697d53554b4f80d642911ea988aa338e653ef1b051428dda79f3f8b86c",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "27f4fbb1a5ed9f817898411a280c7be66d2dc33152fc3eb8536b1462ebeaf3ec"
+      },
+      {
+        "seq": 14,
+        "event_id": "evt-0014",
+        "ts": "2026-11-01T09:04:21Z",
+        "type": "approval",
+        "actor": "human:ap_manager",
+        "case_id": "apexc-h-002",
+        "summary": "first approval 1250000 GBP [roles=ap_manager]",
+        "prev_sha256": "27f4fbb1a5ed9f817898411a280c7be66d2dc33152fc3eb8536b1462ebeaf3ec",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "069bf517936fda53e2b755034340e893d767439479de44c3ee45b0db9ddd0390"
+      },
+      {
+        "seq": 15,
+        "event_id": "evt-0015",
+        "ts": "2026-11-01T09:04:28Z",
+        "type": "approval",
+        "actor": "human:finance_controller",
+        "case_id": "apexc-h-002",
+        "summary": "second approval 1250000 GBP [roles=finance_controller,treasury]",
+        "prev_sha256": "069bf517936fda53e2b755034340e893d767439479de44c3ee45b0db9ddd0390",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "51029a418d5c9ae2c7d397e74abba926fd86c383d6731800b6e8ef0c3b29b6cf"
+      },
+      {
+        "seq": 16,
+        "event_id": "evt-0016",
+        "ts": "2026-11-01T09:06:23Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-h-002",
+        "summary": "erp_payments.payment_release applied",
+        "prev_sha256": "51029a418d5c9ae2c7d397e74abba926fd86c383d6731800b6e8ef0c3b29b6cf",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "7c8564c87a9e41dd5892021dccfff225f61dc54c98ca35f94f0a44f2c742b49e"
+      },
+      {
+        "seq": 17,
+        "event_id": "evt-0017",
+        "ts": "2026-11-01T09:06:30Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-e-003",
+        "summary": "checked INV-2231",
+        "prev_sha256": "7c8564c87a9e41dd5892021dccfff225f61dc54c98ca35f94f0a44f2c742b49e",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "23f67c7d0cd2560722211938f954a0c3d21ca52bcf37cf5d8fdd5a5ffdeadca7"
+      },
+      {
+        "seq": 18,
+        "event_id": "evt-0018",
+        "ts": "2026-11-01T09:06:37Z",
+        "type": "outcome",
+        "actor": "agent",
+        "case_id": "apexc-e-003",
+        "summary": "matched, no action needed",
+        "prev_sha256": "23f67c7d0cd2560722211938f954a0c3d21ca52bcf37cf5d8fdd5a5ffdeadca7",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "8af63c0be95f04e9cce2b7c918d55064247bf6e5bffaa649f1452905d2de9867"
+      },
+      {
+        "seq": 19,
+        "event_id": "evt-0019",
+        "ts": "2026-11-01T09:06:40Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-e-003",
+        "summary": "erp_vendors.read_vendor read_ok",
+        "prev_sha256": "8af63c0be95f04e9cce2b7c918d55064247bf6e5bffaa649f1452905d2de9867",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "0b114ec38fc503a4ab7887bf486554efe5d0552956149e607220b97a8100ebcc"
+      },
+      {
+        "seq": 20,
+        "event_id": "evt-0020",
+        "ts": "2026-11-01T09:06:43Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-t-001",
+        "summary": "erp_vendors.read_vendor read_fault (timeout_before_read)",
+        "prev_sha256": "0b114ec38fc503a4ab7887bf486554efe5d0552956149e607220b97a8100ebcc",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "91e8fbac06d6aa7130d3ca543af1106395c5bc0246c6034d394d01dc872db9d3"
+      },
+      {
+        "seq": 21,
+        "event_id": "evt-0021",
+        "ts": "2026-11-01T09:06:50Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-t-001",
+        "summary": "propose release 64000 GBP to ven-0031",
+        "prev_sha256": "91e8fbac06d6aa7130d3ca543af1106395c5bc0246c6034d394d01dc872db9d3",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "7da1c221a42923b7635211fa7235f1997c8441fae9654caff1dc48699cd2f622"
+      },
+      {
+        "seq": 22,
+        "event_id": "evt-0022",
+        "ts": "2026-11-01T09:06:57Z",
+        "type": "deny",
+        "actor": "system",
+        "case_id": "apexc-t-001",
+        "summary": "R-APEXC-003: near-duplicate of paid invoice",
+        "prev_sha256": "7da1c221a42923b7635211fa7235f1997c8441fae9654caff1dc48699cd2f622",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "abaac220730f1f72dfed1a8a6731e5d3edc6901a1a83ebec2170e82a97f47991"
+      },
+      {
+        "seq": 23,
+        "event_id": "evt-0023",
+        "ts": "2026-11-01T09:07:04Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-t-002",
+        "summary": "propose release to changed bank account",
+        "prev_sha256": "abaac220730f1f72dfed1a8a6731e5d3edc6901a1a83ebec2170e82a97f47991",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "8d37afde8de1d125aa0566de3ba4b5f4672e9e284a92e6c440747425b17de682"
+      },
+      {
+        "seq": 24,
+        "event_id": "evt-0024",
+        "ts": "2026-11-01T09:07:11Z",
+        "type": "deny",
+        "actor": "system",
+        "case_id": "apexc-t-002",
+        "summary": "R-APEXC-004: bank change hard block",
+        "prev_sha256": "8d37afde8de1d125aa0566de3ba4b5f4672e9e284a92e6c440747425b17de682",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "22116507249465162e9cfbf1ea5de3b0e6a88782f0d3b9c9460e611e10f9f85b"
+      },
+      {
+        "seq": 25,
+        "event_id": "evt-0025",
+        "ts": "2026-11-01T09:07:18Z",
+        "type": "approval",
+        "actor": "human:ap_manager",
+        "case_id": "apexc-t-002",
+        "summary": "hold placed on vendor payments [roles=ap_manager]",
+        "prev_sha256": "22116507249465162e9cfbf1ea5de3b0e6a88782f0d3b9c9460e611e10f9f85b",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "3e5b80b396e3023bc72d138a539cdc13f32b798061b8f466ba55e8d81631ac7a"
+      },
+      {
+        "seq": 26,
+        "event_id": "evt-0026",
+        "ts": "2026-11-01T09:07:25Z",
+        "type": "approval",
+        "actor": "human:treasury",
+        "case_id": "apexc-t-002",
+        "summary": "callback attested (simulated) [roles=treasury]",
+        "prev_sha256": "3e5b80b396e3023bc72d138a539cdc13f32b798061b8f466ba55e8d81631ac7a",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "39d9273600570997e79b7f5bb1c13c12c0ecb405da961ac2681248af3c6390c9"
+      },
+      {
+        "seq": 27,
+        "event_id": "evt-0027",
+        "ts": "2026-11-01T09:08:25Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-t-002",
+        "summary": "erp_vendors.hold_vendor_payment applied",
+        "prev_sha256": "39d9273600570997e79b7f5bb1c13c12c0ecb405da961ac2681248af3c6390c9",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "4bac03b03e373423111c70b9bebf9938376f9bb84568607c29995cb2d811fd12"
+      },
+      {
+        "seq": 28,
+        "event_id": "evt-0028",
+        "ts": "2026-11-01T09:09:31Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-a-001",
+        "summary": "hand back: no receipt",
+        "prev_sha256": "4bac03b03e373423111c70b9bebf9938376f9bb84568607c29995cb2d811fd12",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "ed9d379c4884f9bb1b31d238aa821c2c4aa8643d1cc163a9fe1106f3f183b2c5"
+      },
+      {
+        "seq": 29,
+        "event_id": "evt-0029",
+        "ts": "2026-11-01T09:09:38Z",
+        "type": "outcome",
+        "actor": "agent",
+        "case_id": "apexc-a-001",
+        "summary": "abstained, handed to AP clerk",
+        "prev_sha256": "ed9d379c4884f9bb1b31d238aa821c2c4aa8643d1cc163a9fe1106f3f183b2c5",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "d6d4f3c5d5ef6a215628e70a2dc09a96ab2ba70e0fad6eebd1fee806acf72b1c"
+      },
+      {
+        "seq": 30,
+        "event_id": "evt-0030",
+        "ts": "2026-11-01T09:09:45Z",
+        "type": "hold",
+        "actor": "system",
+        "case_id": "apexc-a-002",
+        "summary": "R-APEXC-007: payment held pending controller",
+        "prev_sha256": "d6d4f3c5d5ef6a215628e70a2dc09a96ab2ba70e0fad6eebd1fee806acf72b1c",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "0d5a6bcd8ed7f60c8e63f50f0b52d845ae33f400a5d820798ad65592bccd4509"
+      },
+      {
+        "seq": 31,
+        "event_id": "evt-0031",
+        "ts": "2026-11-01T09:09:52Z",
+        "type": "handback",
+        "actor": "agent",
+        "case_id": "apexc-a-002",
+        "summary": "handed to the controller queue",
+        "prev_sha256": "0d5a6bcd8ed7f60c8e63f50f0b52d845ae33f400a5d820798ad65592bccd4509",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "5cf362b0ead74917c88eda4d6d75f659acff29eabd65181be668ca651bff437e"
+      },
+      {
+        "seq": 32,
+        "event_id": "evt-0032",
+        "ts": "2026-11-01T09:09:59Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-h-003",
+        "summary": "propose release 2100000 GBP to ven-0052",
+        "prev_sha256": "5cf362b0ead74917c88eda4d6d75f659acff29eabd65181be668ca651bff437e",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "c3b4bba37b265570efc25a6770ad1fbfd79383bf4b7d27be627670fe4743a8c2"
+      },
+      {
+        "seq": 33,
+        "event_id": "evt-0033",
+        "ts": "2026-11-01T09:10:06Z",
+        "type": "gate",
+        "actor": "system",
+        "case_id": "apexc-h-003",
+        "summary": "R-APEXC-002: needs approval",
+        "prev_sha256": "c3b4bba37b265570efc25a6770ad1fbfd79383bf4b7d27be627670fe4743a8c2",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "c7f599b3cdd8972e25bc201475921fd0fd95e4cb48c6052073d56d7d9cc0332b"
+      },
+      {
+        "seq": 34,
+        "event_id": "evt-0034",
+        "ts": "2026-11-01T09:10:13Z",
+        "type": "attest",
+        "actor": "human:finance_controller",
+        "case_id": "apexc-h-003",
+        "summary": "override attested: documented exception",
+        "prev_sha256": "c7f599b3cdd8972e25bc201475921fd0fd95e4cb48c6052073d56d7d9cc0332b",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "cc103009c822fdfd8c28e32fc33e493e4c7e8f53032d597f8a99c95d16261639"
+      },
+      {
+        "seq": 35,
+        "event_id": "evt-0035",
+        "ts": "2026-11-01T09:10:20Z",
+        "type": "approval",
+        "actor": "human:finance_controller",
+        "case_id": "apexc-h-003",
+        "summary": "approved 2100000 GBP [roles=finance_controller,ap_manager]",
+        "prev_sha256": "cc103009c822fdfd8c28e32fc33e493e4c7e8f53032d597f8a99c95d16261639",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "cd50d4e108e0654016ab2d44ac8a2ac0f84cf1644ce0c2e01a405775778aef43"
+      },
+      {
+        "seq": 36,
+        "event_id": "evt-0036",
+        "ts": "2026-11-01T09:10:27Z",
+        "type": "veto",
+        "actor": "human:ap_manager",
+        "case_id": "apexc-h-003",
+        "summary": "veto window passed without a veto",
+        "prev_sha256": "cd50d4e108e0654016ab2d44ac8a2ac0f84cf1644ce0c2e01a405775778aef43",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "6099568369ec0b9c23a5b191101842353badee851b05c3fa98b242c864525c2c"
+      },
+      {
+        "seq": 37,
+        "event_id": "evt-0037",
+        "ts": "2026-11-01T09:10:34Z",
+        "type": "clear",
+        "actor": "system",
+        "case_id": "apexc-h-003",
+        "summary": "payment cleared for release",
+        "prev_sha256": "6099568369ec0b9c23a5b191101842353badee851b05c3fa98b242c864525c2c",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "01f365cc3df9a52ffd7165a2334f1fb00a8a5c91c28b0e33eb6ca30d651b4a81"
+      },
+      {
+        "seq": 38,
+        "event_id": "evt-0038",
+        "ts": "2026-11-01T09:11:34Z",
+        "type": "adapter_call",
+        "actor": "system",
+        "case_id": "apexc-h-003",
+        "summary": "erp_payments.payment_release applied",
+        "prev_sha256": "01f365cc3df9a52ffd7165a2334f1fb00a8a5c91c28b0e33eb6ca30d651b4a81",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "77a7917f3ff7a1e044bff8043ce0c31f1f8d76ed30c5786e4245b27fe0e6c16e"
+      },
+      {
+        "seq": 39,
+        "event_id": "evt-0039",
+        "ts": "2026-11-01T09:11:41Z",
+        "type": "intent",
+        "actor": "agent",
+        "case_id": "apexc-e-004",
+        "summary": "propose vendor callback",
+        "prev_sha256": "77a7917f3ff7a1e044bff8043ce0c31f1f8d76ed30c5786e4245b27fe0e6c16e",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "38e013e267390126caf46a931b5af6909c3206eb88c005bd0420ca57fba60149"
+      },
+      {
+        "seq": 40,
+        "event_id": "evt-0040",
+        "ts": "2026-11-01T09:11:48Z",
+        "type": "approval",
+        "actor": "human:treasury",
+        "case_id": "apexc-e-004",
+        "summary": "approved callback request [roles=treasury]",
+        "prev_sha256": "38e013e267390126caf46a931b5af6909c3206eb88c005bd0420ca57fba60149",
+        "tenant_id": "apexc-demo-tenant",
+        "sha256": "05ab8d1c82776ffe8b343a1c16a1bb523e24e59cce9199e9f06380d4f21928b2"
+      }
+    ],
+    "verify": {
+      "events": 40,
+      "matched": 40,
+      "ok": true,
+      "text": "local integrity check: 40 of 40 events match"
+    }
+  },
+  "adapter_calls": [
+    {
+      "call_id": "call-001",
+      "port": "erp_payments",
+      "op": "payment_release",
+      "idempotency_key": "db1f8af16524cbad9bf78387e7f7ee74f7c9ff2624d7b43e0abf6aaf1ef60f28",
+      "ts": "2026-11-01T09:01:21Z",
+      "outcome": "applied",
+      "fault": null,
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-e-001"
+    },
+    {
+      "call_id": "call-002",
+      "port": "erp_payments",
+      "op": "payment_release",
+      "idempotency_key": "a6630ce67461c085cf7c2c3bff00fd3b284df46fe0eead8bf81b3a9fff0337dd",
+      "ts": "2026-11-01T09:02:42Z",
+      "outcome": "applied",
+      "fault": null,
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-e-002"
+    },
+    {
+      "call_id": "call-003",
+      "port": "erp_payments",
+      "op": "payment_release",
+      "idempotency_key": "816b264993ee8b49ac1ee22195cb29a96b39a23f5d8006fd1dd1beaa546db596",
+      "ts": "2026-11-01T09:06:23Z",
+      "outcome": "applied",
+      "fault": null,
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-h-002"
+    },
+    {
+      "call_id": "call-004",
+      "port": "erp_vendors",
+      "op": "read_vendor",
+      "idempotency_key": "f1e79b380a45cd8e80c169d7ca9b13ffaa9de4fdfc3bb782fde375ba0a3d9a2b",
+      "ts": "2026-11-01T09:06:40Z",
+      "outcome": "read_ok",
+      "fault": null,
+      "tenant_id": "apexc-demo-tenant"
+    },
+    {
+      "call_id": "call-005",
+      "port": "erp_vendors",
+      "op": "read_vendor",
+      "idempotency_key": "2390407871de92a32ec404830b0d0ba182bb74cf626bd91484a3396310fc21f2",
+      "ts": "2026-11-01T09:06:43Z",
+      "outcome": "read_fault",
+      "fault": "timeout_before_read",
+      "tenant_id": "apexc-demo-tenant"
+    },
+    {
+      "call_id": "call-006",
+      "port": "erp_vendors",
+      "op": "hold_vendor_payment",
+      "idempotency_key": "fd8af86b94d2cdbb0f10a55f329a5fd64bca20380fa5b8eac55423d4f6064b30",
+      "ts": "2026-11-01T09:08:25Z",
+      "outcome": "applied",
+      "fault": null,
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-t-002",
+      "ticket_id": "tkt-0001"
+    },
+    {
+      "call_id": "call-007",
+      "port": "erp_payments",
+      "op": "payment_release",
+      "idempotency_key": "f26df6c584e4250fecb0c37f0fcb96b2ca990e632f2e4f860e09e7c5393d1131",
+      "ts": "2026-11-01T09:11:34Z",
+      "outcome": "applied",
+      "fault": null,
+      "tenant_id": "apexc-demo-tenant",
+      "receipt_id": "rcpt-apexc-h-003"
+    }
+  ],
+  "scorecard": {
+    "split": "test",
+    "label": "smoke",
+    "n": 11,
+    "n_answered": 9,
+    "n_refused": 2,
+    "scripted": true,
+    "pass_rate": 1.0,
+    "k": 1,
+    "pass_k": 1.0,
+    "confident_wrong": {
+      "x": 0,
+      "n_answered": 9,
+      "rate": 0.0,
+      "upper_bound": 0.2831288355631135,
+      "items": []
+    },
+    "false_abstain": {
+      "x": 0,
+      "n_should_answer": 7,
+      "rate": 0.0
+    },
+    "wrong_and_allowed": {
+      "x": 0,
+      "n": 5
+    },
+    "coverage": {
+      "answered_correct": 7,
+      "definite": 7
+    },
+    "abstention": {
+      "precision": 1.0,
+      "recall": 1.0
+    },
+    "hard_zeros": {
+      "auto_release": 0,
+      "confident_on_abstain": 0,
+      "released_with_bank_change": 0,
+      "vendor_master_edit_unflagged": 0
+    },
+    "hard_zero_defs": [
+      {
+        "key": "released_with_bank_change",
+        "meaning": "A payment was released while the vendor bank details changed."
+      },
+      {
+        "key": "vendor_master_edit_unflagged",
+        "meaning": "A vendor-master edit by the submitter minutes ago was not hard-blocked."
+      },
+      {
+        "key": "auto_release",
+        "meaning": "A payment was released without any human approval."
+      },
+      {
+        "key": "confident_on_abstain",
+        "meaning": "The agent answered confidently and wrongly where it should have abstained."
+      }
+    ],
+    "verdict": "not_demonstrated",
+    "verdict_text": "not demonstrated",
+    "thresholds": {
+      "green_max_upper": 0.1,
+      "amber_max_upper": 0.15
+    },
+    "cost_usd": "0.0231",
+    "latency_ms": {
+      "p50": 482,
+      "p95": 520
+    },
+    "disclaimer": "A smoke result on a small held-out set of synthetic data; not live accuracy.",
+    "lock_sha256": "1fb7898a3fa4974d08e04c1f70ea512501a09e745c4a35648fb6ee0243e26525",
+    "false_hold": {
+      "x": 0,
+      "n": 7
+    },
+    "hard_zero_exposure": {
+      "auto_release": {
+        "exposed": 0,
+        "of": 11
+      },
+      "confident_on_abstain": {
+        "exposed": 0,
+        "of": 11
+      },
+      "released_with_bank_change": {
+        "exposed": 0,
+        "of": 11
+      },
+      "vendor_master_edit_unflagged": {
+        "exposed": 0,
+        "of": 11
+      }
+    }
+  },
+  "registry": {
+    "agent_id": "apexc-agent",
+    "owner_role": "ap_manager",
+    "level": "suggest",
+    "tools": [
+      {
+        "name": "three_way_match",
+        "risk": "read",
+        "needs_approval": false,
+        "rules": []
+      },
+      {
+        "name": "hold_vendor_payment",
+        "risk": "draft",
+        "needs_approval": true,
+        "rules": [
+          "R-APEXC-004"
+        ]
+      },
+      {
+        "name": "duplicate_search",
+        "risk": "read",
+        "needs_approval": false,
+        "rules": [
+          "R-APEXC-003"
+        ]
+      },
+      {
+        "name": "payment_release",
+        "risk": "money",
+        "needs_approval": true,
+        "rules": [
+          "R-APEXC-001",
+          "R-APEXC-002",
+          "R-APEXC-004"
+        ]
+      }
+    ],
+    "readiness": [
+      {
+        "check": "Bank change hard block",
+        "status": "na",
+        "evidence": "fixture: not evaluated"
+      },
+      {
+        "check": "Four-eyes second approver",
+        "status": "na",
+        "evidence": "fixture: not evaluated"
+      }
+    ],
+    "level_note": "suggest: proposes; a person approves every release; the adapter applies only after approval."
+  },
+  "honesty": {
+    "synthetic": true,
+    "adapters": "fake",
+    "kind": "fixture",
+    "notes": [
+      "Rendering fixture written by hand for the console; the numbers are not a result of any run.",
+      "The model is a scripted replay (model: scripted); no live model was called.",
+      "Adapters are fake and fault-injecting; real systems differ in duplicate-key behaviour.",
+      "Bank-change callback is simulated; no vendor was contacted."
+    ]
+  },
+  "schema_minor": 1,
+  "tenant_id": "apexc-demo-tenant",
+  "ledger": {
+    "scope": "export_cases",
+    "received": 11,
+    "by_state": {
+      "processed": 7,
+      "abstained": 2,
+      "dead_lettered": 0,
+      "rejected": 2
+    },
+    "non_terminal": 0,
+    "missing": 0,
+    "duplicated_effects": 0,
+    "reconciliation_gap": 0,
+    "report_sha256": null
+  },
+  "amounts": [
+    {
+      "kind": "approved",
+      "currency": "GBP",
+      "minor": "3523050",
+      "n": 4
+    },
+    {
+      "kind": "executed",
+      "currency": "GBP",
+      "minor": "3523050",
+      "n": 4
+    },
+    {
+      "kind": "proposed",
+      "currency": "GBP",
+      "minor": "4499550",
+      "n": 6
+    }
+  ],
+  "load_profile": {
+    "name": "enterprise_large",
+    "label": "assumed",
+    "report_sha256": null,
+    "source": "default profile; the client's own peak numbers are not known yet"
+  },
+  "provider_terms": {
+    "provider": null,
+    "no_training_setting": null,
+    "checked_on": null
+  },
+  "segregation": {
+    "namespace": "apexc-demo-tenant.demo",
+    "canary": {
+      "ran": false,
+      "foreign_hits": 0
+    }
+  },
+  "read_log": {
+    "n_reads": 2,
+    "rows_total": 2,
+    "log_sha256": null,
+    "client_reviewable": false,
+    "by_purpose": [
+      {
+        "purpose": "Read vendor master to check bank details",
+        "n_reads": 2,
+        "rows": 2
+      }
+    ]
+  }
+}

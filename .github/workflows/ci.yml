@@ -1,0 +1,215 @@
+name: CI
+
+# Required checks for main: "check", "cut" and "security". bandit, gitleaks, pip-audit and zizmor are free; CodeQL and
+# the external scanners are enabled in the repository settings.
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+    branches: [main]
+  schedule:
+    - cron: "23 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event_name == 'pull_request' && github.ref || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  GITLEAKS_VERSION: "8.30.1"
+  GITLEAKS_SHA256: "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb"
+
+jobs:
+  check:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.12", "3.13"]
+    env:
+      CI_REQUIRE_BROWSER: "1"  # a missing browser or node fails the tests instead of skipping them
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
+        with:
+          version: "0.13.6"
+          checksum: "f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
+          python-version: "${{ matrix.python }}"
+          activate-environment: true
+          cache-suffix: "ci-check-${{ matrix.python }}"
+      - name: Install (locked)
+        run: uv sync --locked
+      - name: Lint
+        run: ruff check .
+      - name: Format
+        run: ruff format --check .
+      - name: The kit's own manifest is current
+        run: python tools/vendor.py verify .
+      - name: Tests (offline; a socket opening fails the test). Includes the leak-scan and sample-data reference tests
+        run: pytest -q -m "not browser" -rs
+      - name: Console render check (headless browser; the job FAILS if no browser or node is installed)
+        run: pytest -q -m browser -rs
+
+  cut:
+    # demo_only/ is deleted: the product kit must still lint, test and build (tests that need sample data skip, marked).
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
+        with:
+          version: "0.13.6"
+          checksum: "f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
+          python-version: "3.13"
+          activate-environment: true
+          cache-suffix: "ci-cut"
+      - name: Install (locked)
+        run: uv sync --locked
+      - name: Delete demo_only/
+        run: rm -rf demo_only
+      - name: Lint and format
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Tests without sample data
+        run: pytest -q -m "not browser" -rs
+      - name: Build the vendored runtime set from the cut tree
+        run: |
+          python - <<'PY'
+          import pathlib, sys
+          sys.path.insert(0, ".")
+          from hadavin_kit import kitsum
+          files = kitsum.runtime_files(pathlib.Path("."))
+          assert files and not [f for f in files if f.startswith("demo_only")], files
+          print(len(files), "runtime files; none from demo_only/")
+          PY
+          python -m hadavin_kit.kitsum --check .
+
+  fixtures:
+    # What every demo's CI must do on its own export: kitcheck on each sample export, one job per demo.
+    if: github.event_name != 'workflow_dispatch' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        slug: [refunds, apexc, intake, dealdesk, askdata]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
+        with:
+          version: "0.13.6"
+          checksum: "f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
+          python-version: "3.13"
+          activate-environment: true
+          cache-suffix: "ci-fixtures"
+      - name: Install (locked)
+        run: uv sync --locked
+      - name: kitcheck on the sample export
+        env:
+          SLUG: ${{ matrix.slug }}
+        run: |
+          python tools/check_fixture.py "$SLUG"
+          python tools/check_fixture.py "$SLUG" --compat 0
+
+  mutation:
+    # Not a required check: a sample of mutants (a different seed every run). The harness first asserts the unmutated
+    # baseline is green and that it can see a deliberate break.
+    if: github.event_name != 'workflow_dispatch' && (github.event_name != 'pull_request' || github.event.pull_request.draft == false)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
+        with:
+          version: "0.13.6"
+          checksum: "f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
+          python-version: "3.13"
+          activate-environment: true
+          cache-suffix: "ci-mutation"
+      - name: Install (locked)
+        run: uv sync --locked
+      - name: Mutation harness (baseline asserted, sample, seed = run id)
+        env:
+          SEED: ${{ github.run_id }}
+        run: python tools/mutation.py --limit 60 --workers 3 --seed "$SEED"
+
+  mutation-full:
+    # The release gate: every mutant. Started by hand (workflow_dispatch); the result is recorded in the pull request.
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
+        with:
+          version: "0.13.6"
+          checksum: "f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
+          python-version: "3.13"
+          activate-environment: true
+          cache-suffix: "ci-mutation"
+      - name: Install (locked)
+        run: uv sync --locked
+      - name: Mutation harness, all mutants
+        run: python tools/mutation.py --all --workers 3
+
+  security:
+    if: github.event_name != 'pull_request' || github.event.pull_request.draft == false
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0  # gitleaks scans the whole history
+      - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
+        with:
+          version: "0.13.6"
+          checksum: "f29c3e94ffabd7e6f3ba521dba169a9b7ec12100bf3257087f0f24f6123f3645"
+          python-version: "3.13"
+          activate-environment: true
+          cache-suffix: "ci-security"
+      - name: Install the scanners (locked)
+        run: uv sync --locked --only-group scan
+      # hadavin-sdk is a git pin with no index entry, so pip-audit cannot look it up; it is audited in its own repository.
+      - name: Dependencies with known vulnerabilities (every locked package)
+        run: |
+          uv export --locked --all-groups --no-emit-project --no-hashes --no-emit-package hadavin-sdk --format requirements-txt -o "$RUNNER_TEMP/locked.txt"
+          pip-audit -r "$RUNNER_TEMP/locked.txt" --no-deps --disable-pip
+      - name: Python security lint
+        run: bandit -q -r hadavin_kit tools console -ll
+      - name: Workflow audit
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: zizmor --format plain .github
+      - name: Secrets (gitleaks, checksum-verified binary, whole history, scanned count must equal the commit count)
+        run: |
+          set -euo pipefail
+          curl -sSfL --proto "=https" --tlsv1.2 -o "$RUNNER_TEMP/gitleaks.tgz" \
+            "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
+          expected=$(git rev-list --count HEAD)
+          rc=0
+          "$RUNNER_TEMP/gitleaks" git --redact --verbose --no-banner --exit-code 1 . 2>&1 | tee "$RUNNER_TEMP/gitleaks.log" || rc=$?
+          scanned=$(sed -nE 's/.* ([0-9]+) commits scanned.*/\1/p' "$RUNNER_TEMP/gitleaks.log" | tail -1)
+          echo "expected commits: $expected, scanned: ${scanned:-none}"
+          test "$rc" -eq 0
+          test "${scanned:-none}" = "$expected"

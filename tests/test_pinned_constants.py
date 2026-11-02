@@ -1,0 +1,156 @@
+"""Module-level constants pinned by independent literals.
+
+A test that derives its expectation from the constant under test cannot notice that an element was dropped from it (the
+mutation harness drops one element of every literal collection). These literals are the expectation, written out.
+Changing a constant on purpose means changing its line here, which makes the change a visible diff in review.
+"""
+
+import sys
+
+from hadavin_kit import (
+    chain,
+    evalcore,
+    export_rules,
+    honest,
+    kitcheck,
+    kitsum,
+    problems,
+    versioning,
+)
+from hadavin_kit.testing import KIT
+
+sys.path.insert(0, str(KIT / "console"))
+import build_console
+
+
+def test_problem_codes():
+    assert problems.CODES == (
+        "NOT_JSON", "UNKNOWN_KEY", "WRONG_TYPE", "MISSING_KEY", "BAD_VALUE", "OVERSIZE", "CONFUSABLE_ID",
+        "BAD_CHARACTER", "UNSUPPORTED_MINOR", "MINOR_TOO_LOW", "CHAIN", "RULE", "UNEXPECTED_FILE", "MISSING_FILE",
+        "PAGE_MISMATCH", "REPORT_MISMATCH", "KIT_LOCK", "DENYLIST_HIT",
+    )  # fmt: skip
+
+
+def test_chain_formats_and_event_types():
+    assert chain.CHAINS == ("hash-chain/1", "hash-chain/2")
+    assert chain.EVENT_TYPES_V0 == ("intent", "gate", "approval", "outcome", "adapter_call", "deny")
+    assert chain.EVENT_TYPES_V1_ADDED == ("hold", "veto", "attest", "clear", "handback")
+    assert chain.EVENT_TYPES == chain.EVENT_TYPES_V0 + chain.EVENT_TYPES_V1_ADDED
+
+
+def test_outcome_groups_and_limits():
+    assert export_rules.NOT_ANSWERED == ("blocked", "abstained", "failed", "held")
+    assert export_rules.FALSE_ABSTAIN_OUTCOMES == ("blocked", "abstained", "failed")
+    assert export_rules.OWED_RESPONSE == ("act", "no_action", "refuse")
+    assert export_rules.ACT_LIKE == ("act", "no_action")
+    assert export_rules.ALLOWED == ("approved", "auto_allowed", "unknown")
+    assert export_rules.NEEDS_ROW == ("approved", "rejected", "proposed")
+    assert export_rules.TS_KEYS == {"ts", "requested_at", "expires_at"}
+    assert export_rules._BAD_CATEGORIES == {"Cc", "Cf", "Zl", "Zp"}
+    assert (export_rules.MAX_STRING, export_rules.MAX_DEPTH, export_rules.MAX_DOC_BYTES) == (
+        4000,
+        40,
+        8_000_000,
+    )
+
+
+def test_money_tokens():
+    assert export_rules.MONEY_TOKENS == frozenset({
+        "minor", "amount", "amt", "total", "price", "balance", "sum", "fee", "charge", "payout", "refund",
+        "payment", "usd", "eur", "gbp", "cad", "aud", "inr", "jpy", "cent", "iban",
+    })  # fmt: skip
+    assert export_rules.MONEY_CONTAINS == (
+        "amount", "refund", "payment", "payout", "price", "balance", "charge", "total",
+    )  # fmt: skip
+    assert export_rules.CURRENCY_CODES == ("usd", "eur", "gbp", "cad", "aud", "inr", "jpy")
+
+
+def test_kitcheck_manifest_and_forbidden_types():
+    assert kitcheck.ALLOWED_NAMES == ("export.json", "index.html", "_headers", "report.json")
+    assert kitcheck.FORBIDDEN_SUFFIXES == (
+        ".pkl", ".pickle", ".pt", ".pth", ".bin", ".safetensors", ".onnx", ".gguf", ".npy", ".npz", ".parquet",
+        ".db", ".sqlite", ".sqlite3", ".faiss", ".index", ".zip", ".tar", ".gz", ".7z", ".ipynb", ".env",
+    )  # fmt: skip
+    assert kitcheck.MAX_FILE_BYTES == 16_000_000
+
+
+def test_vendored_set_definition():
+    assert kitsum.NOT_VENDORED == ("docgen.py", "testing.py", "asks.v1.json")
+    assert kitsum.CONSOLE_FILES == (
+        "app.css",
+        "app.js",
+        "build_console.py",
+        "chain.js",
+        "index.template.html",
+    )
+    assert kitsum.SCHEMA_FILES == ("demo-export.v1.json",)
+    assert kitsum.LOCK_FORMAT == "hadavin-kit-lock/1"
+
+
+def test_versioning_constants():
+    assert versioning.MAX_MINOR == 1 and versioning.STATUS == "draft"
+    assert versioning.RESERVED == (
+        "root.ledger", "root.load_profile", "root.read_log", "root.provider_terms", "root.segregation",
+        "approver.sig_scheme",
+    )  # fmt: skip
+    assert versioning._LOWER_BOUNDS == (
+        "minLength",
+        "minItems",
+        "minimum",
+        "minProperties",
+        "exclusiveMinimum",
+    )
+    assert versioning._UPPER_BOUNDS == (
+        "maxLength",
+        "maxItems",
+        "maximum",
+        "maxProperties",
+        "exclusiveMaximum",
+    )
+    assert versioning._STRUCTURAL == (
+        "oneOf", "anyOf", "allOf", "not", "if", "then", "else", "patternProperties", "propertyNames", "prefixItems",
+        "contains", "uniqueItems", "dependentRequired", "dependentSchemas", "unevaluatedProperties",
+        "unevaluatedItems", "minContains", "maxContains",
+    )  # fmt: skip
+
+
+def test_evalcore_constants():
+    assert evalcore.SECOND_LOOKS == ("aborted", "harness_defect")
+    assert evalcore.STATUSES == ("none", "complete", "aborted")
+
+
+def test_honest_sentence():
+    assert honest.SCRIPTED_TEXT == "scripted; gate vs gold agreement; not model accuracy"
+
+
+def test_headers_are_exactly_these_lines():
+    headers = build_console.headers_file("CSP-VALUE")
+    assert headers.split("\n") == [
+        "# Generated by build_console.py with the same CSP hashes as the page's meta tag. Do not edit.",
+        "/*",
+        "  Content-Security-Policy: CSP-VALUE; frame-ancestors 'none'",
+        "  X-Content-Type-Options: nosniff",
+        "  Referrer-Policy: no-referrer",
+        "  X-Frame-Options: DENY",
+        "  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+        "  Cross-Origin-Opener-Policy: same-origin",
+        "  Cross-Origin-Resource-Policy: same-origin",
+        "  Strict-Transport-Security: max-age=31536000",
+        "  Cache-Control: no-cache",
+        "  X-Robots-Tag: noindex",
+        "",
+    ]
+
+
+def test_csp_is_exactly_this_policy():
+    csp = build_console.csp_for("JS", "CSS")
+    import base64
+    import hashlib
+
+    def h(s):
+        return "'sha256-" + base64.b64encode(hashlib.sha256(s.encode()).digest()).decode() + "'"
+
+    assert csp == (
+        f"default-src 'none'; script-src {h('JS')}; style-src {h('CSS')}; base-uri 'none'; form-action 'none'; "
+        "object-src 'none'; require-trusted-types-for 'script'"
+    )

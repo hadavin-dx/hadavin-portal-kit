@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+node_modules/
+out/
+.claude/settings.local.json
+*.pyc
+.env
+*.key
+Screenshot*
+WhatsApp Image*

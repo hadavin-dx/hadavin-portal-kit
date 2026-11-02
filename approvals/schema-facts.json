@@ -1,0 +1,1065 @@
+{
+ "/": {
+  "closed": true,
+  "required": [
+   "adapter_calls",
+   "approvals",
+   "audit",
+   "banner",
+   "cases",
+   "demo",
+   "honesty",
+   "registry",
+   "run",
+   "schema",
+   "scorecard"
+  ]
+ },
+ "/$defs/adapter_call": {
+  "closed": true,
+  "required": [
+   "call_id",
+   "fault",
+   "idempotency_key",
+   "op",
+   "outcome",
+   "port",
+   "ts"
+  ]
+ },
+ "/$defs/adapter_call/properties/fault": {
+  "maxLength": 200
+ },
+ "/$defs/adapter_call/properties/outcome": {
+  "enum": [
+   "applied",
+   "duplicate_ignored",
+   "fault_injected",
+   "read_ok",
+   "read_fault",
+   "conflict"
+  ]
+ },
+ "/$defs/approval": {
+  "closed": true,
+  "required": [
+   "action",
+   "approval_id",
+   "approvers",
+   "args",
+   "case_id",
+   "evidence",
+   "executed",
+   "idempotency_key",
+   "requested_at",
+   "rule_id",
+   "status",
+   "tier"
+  ]
+ },
+ "/$defs/approval/properties/approvers": {
+  "maxItems": 20
+ },
+ "/$defs/approval/properties/approvers/items": {
+  "closed": true,
+  "required": [
+   "decision",
+   "role",
+   "sig_ok",
+   "ts"
+  ]
+ },
+ "/$defs/approval/properties/approvers/items/properties/decision": {
+  "enum": [
+   "approve",
+   "reject"
+  ]
+ },
+ "/$defs/approval/properties/approvers/items/properties/roles_at_decision": {
+  "maxItems": 20
+ },
+ "/$defs/approval/properties/approvers/items/properties/sig_scheme": {
+  "enum": [
+   "hmac_shared_secret",
+   "ed25519",
+   "none"
+  ]
+ },
+ "/$defs/approval/properties/args": {
+  "maxProperties": 64
+ },
+ "/$defs/approval/properties/bound": {
+  "closed": true,
+  "required": [
+   "plan_sha256",
+   "snapshot_sha256"
+  ]
+ },
+ "/$defs/approval/properties/comparisons": {
+  "maxItems": 50
+ },
+ "/$defs/approval/properties/eligibility": {
+  "closed": true,
+  "required": [
+   "ok",
+   "reason"
+  ]
+ },
+ "/$defs/approval/properties/evidence": {
+  "maxItems": 50
+ },
+ "/$defs/approval/properties/evidence/items": {
+  "closed": true,
+  "required": [
+   "label",
+   "value"
+  ]
+ },
+ "/$defs/approval/properties/excluded_user_ids": {
+  "maxItems": 50
+ },
+ "/$defs/approval/properties/executed": {
+  "closed": true,
+  "required": [
+   "call_id",
+   "port",
+   "result",
+   "ts"
+  ]
+ },
+ "/$defs/approval/properties/executed/properties/result": {
+  "enum": [
+   "ok",
+   "error",
+   "duplicate_ignored",
+   "unknown"
+  ]
+ },
+ "/$defs/approval/properties/requested_by": {
+  "pattern": "^(agent|system|human:[a-z0-9_-]{1,40})(?![\\s\\S])"
+ },
+ "/$defs/approval/properties/required_roles": {
+  "maxItems": 20
+ },
+ "/$defs/approval/properties/rule_id": {
+  "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+ },
+ "/$defs/approval/properties/rule_ids": {
+  "maxItems": 5000
+ },
+ "/$defs/approval/properties/rule_ids/items": {
+  "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+ },
+ "/$defs/approval/properties/status": {
+  "enum": [
+   "pending",
+   "approved",
+   "rejected",
+   "expired"
+  ]
+ },
+ "/$defs/approval/properties/tier": {
+  "enum": [
+   "auto",
+   "human",
+   "human_nonmoney",
+   "four_eyes",
+   "blocked",
+   "four_eyes_over_max",
+   "controller_override"
+  ]
+ },
+ "/$defs/audit_event": {
+  "closed": true,
+  "required": [
+   "actor",
+   "case_id",
+   "event_id",
+   "prev_sha256",
+   "seq",
+   "sha256",
+   "summary",
+   "ts",
+   "type"
+  ]
+ },
+ "/$defs/audit_event/properties/actor": {
+  "pattern": "^(agent|system|human:[a-z0-9_-]{1,40})(?![\\s\\S])"
+ },
+ "/$defs/audit_event/properties/case_id": {
+  "pattern": "^([a-z0-9][a-z0-9_.-]{0,79})?(?![\\s\\S])"
+ },
+ "/$defs/audit_event/properties/seq": {
+  "minimum": 1
+ },
+ "/$defs/audit_event/properties/type": {
+  "enum": [
+   "intent",
+   "gate",
+   "approval",
+   "outcome",
+   "adapter_call",
+   "deny",
+   "hold",
+   "veto",
+   "attest",
+   "clear",
+   "handback"
+  ]
+ },
+ "/$defs/case": {
+  "closed": true,
+  "required": [
+   "approval_id",
+   "audit_event_ids",
+   "bucket",
+   "case_id",
+   "correct",
+   "expected",
+   "hard_zero_flags",
+   "input_summary",
+   "outcome",
+   "split",
+   "steps",
+   "wrong_confident"
+  ]
+ },
+ "/$defs/case/properties/approval_id": {
+  "pattern": "^[a-z0-9][a-z0-9_.-]{0,79}(?![\\s\\S])"
+ },
+ "/$defs/case/properties/approval_ids": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/audit_event_ids": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/bucket": {
+  "enum": [
+   "easy",
+   "hard",
+   "trap",
+   "abstain"
+  ]
+ },
+ "/$defs/case/properties/exceptions": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/exceptions/items": {
+  "closed": true,
+  "required": [
+   "code",
+   "rule_id"
+  ]
+ },
+ "/$defs/case/properties/exceptions/items/properties/rule_id": {
+  "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+ },
+ "/$defs/case/properties/expected": {
+  "closed": true,
+  "required": [
+   "checks",
+   "outcome"
+  ]
+ },
+ "/$defs/case/properties/expected/properties/actions": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/expected/properties/checks": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/expected/properties/denied_calls": {
+  "maxItems": 100
+ },
+ "/$defs/case/properties/expected/properties/exceptions": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/expected/properties/outcome": {
+  "enum": [
+   "act",
+   "abstain",
+   "refuse",
+   "no_action"
+  ]
+ },
+ "/$defs/case/properties/expected/properties/terminal_state": {
+  "enum": [
+   "processed",
+   "abstained",
+   "dead_lettered",
+   "rejected"
+  ]
+ },
+ "/$defs/case/properties/facts": {
+  "maxItems": 100
+ },
+ "/$defs/case/properties/facts/items": {
+  "closed": true,
+  "required": [
+   "group",
+   "label",
+   "value"
+  ]
+ },
+ "/$defs/case/properties/hard_zero_flags": {
+  "maxItems": 5000
+ },
+ "/$defs/case/properties/outcome": {
+  "enum": [
+   "proposed",
+   "approved",
+   "rejected",
+   "auto_allowed",
+   "blocked",
+   "abstained",
+   "failed",
+   "unknown",
+   "no_action",
+   "held"
+  ]
+ },
+ "/$defs/case/properties/reconcile": {
+  "closed": true,
+  "required": [
+   "note",
+   "state"
+  ]
+ },
+ "/$defs/case/properties/reconcile/properties/state": {
+  "enum": [
+   "pending",
+   "reconciled",
+   "manual"
+  ]
+ },
+ "/$defs/case/properties/split": {
+  "enum": [
+   "dev",
+   "test"
+  ]
+ },
+ "/$defs/case/properties/steps": {
+  "maxItems": 100
+ },
+ "/$defs/commit": {
+  "pattern": "^([0-9a-f]{7,40}|uncommitted)(?![\\s\\S])"
+ },
+ "/$defs/comparison": {
+  "closed": true,
+  "required": [
+   "field",
+   "model",
+   "source"
+  ]
+ },
+ "/$defs/comparison/properties/currency": {
+  "pattern": "^[A-Z]{3}(?![\\s\\S])"
+ },
+ "/$defs/comparison/properties/unit": {
+  "enum": [
+   "text",
+   "minor_units",
+   "percent",
+   "count"
+  ]
+ },
+ "/$defs/currency": {
+  "pattern": "^[A-Z]{3}(?![\\s\\S])"
+ },
+ "/$defs/date": {
+  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(?![\\s\\S])"
+ },
+ "/$defs/hex64": {
+  "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+ },
+ "/$defs/intstr": {
+  "pattern": "^-?[0-9]{1,18}(?![\\s\\S])"
+ },
+ "/$defs/key": {
+  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]{0,79}(?![\\s\\S])"
+ },
+ "/$defs/person_ref": {
+  "pattern": "^[a-z0-9][a-z0-9_.-]{0,59}(?![\\s\\S])"
+ },
+ "/$defs/rate": {
+  "maximum": 1,
+  "minimum": 0
+ },
+ "/$defs/scalar": {
+  "maxLength": 2000
+ },
+ "/$defs/scorecard": {
+  "closed": true,
+  "required": [
+   "abstention",
+   "confident_wrong",
+   "cost_usd",
+   "coverage",
+   "disclaimer",
+   "false_abstain",
+   "hard_zero_defs",
+   "hard_zeros",
+   "k",
+   "label",
+   "latency_ms",
+   "lock_sha256",
+   "n",
+   "n_answered",
+   "pass_k",
+   "pass_rate",
+   "split",
+   "thresholds",
+   "verdict",
+   "verdict_text",
+   "wrong_and_allowed"
+  ]
+ },
+ "/$defs/scorecard/if": {
+  "required": [
+   "scripted"
+  ]
+ },
+ "/$defs/scorecard/properties/abstention": {
+  "closed": true,
+  "required": [
+   "precision",
+   "recall"
+  ]
+ },
+ "/$defs/scorecard/properties/confident_wrong": {
+  "closed": true,
+  "required": [
+   "items",
+   "n_answered",
+   "rate",
+   "upper_bound",
+   "x"
+  ]
+ },
+ "/$defs/scorecard/properties/confident_wrong/properties/items": {
+  "maxItems": 5000
+ },
+ "/$defs/scorecard/properties/confident_wrong/properties/n_answered": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/confident_wrong/properties/x": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/coverage": {
+  "closed": true,
+  "required": [
+   "answered_correct",
+   "definite"
+  ]
+ },
+ "/$defs/scorecard/properties/coverage/properties/answered_correct": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/coverage/properties/definite": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/false_abstain": {
+  "closed": true,
+  "required": [
+   "n_should_answer",
+   "rate",
+   "x"
+  ]
+ },
+ "/$defs/scorecard/properties/false_abstain/properties/n_should_answer": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/false_abstain/properties/x": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/false_hold": {
+  "closed": true,
+  "required": [
+   "n",
+   "x"
+  ]
+ },
+ "/$defs/scorecard/properties/false_hold/properties/n": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/false_hold/properties/x": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/hard_zero_defs": {
+  "maxItems": 5000
+ },
+ "/$defs/scorecard/properties/hard_zero_defs/items": {
+  "closed": true,
+  "required": [
+   "key",
+   "meaning"
+  ]
+ },
+ "/$defs/scorecard/properties/hard_zero_exposure": {
+  "maxProperties": 64
+ },
+ "/$defs/scorecard/properties/hard_zero_exposure/additionalProperties": {
+  "closed": true,
+  "required": [
+   "exposed",
+   "of"
+  ]
+ },
+ "/$defs/scorecard/properties/hard_zero_exposure/additionalProperties/properties/exposed": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/hard_zero_exposure/additionalProperties/properties/exposed_cases": {
+  "maxItems": 2000
+ },
+ "/$defs/scorecard/properties/hard_zero_exposure/additionalProperties/properties/of": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/hard_zero_exposure/additionalProperties/properties/of_cases": {
+  "maxItems": 2000
+ },
+ "/$defs/scorecard/properties/hard_zeros": {
+  "maxProperties": 64
+ },
+ "/$defs/scorecard/properties/hard_zeros/additionalProperties": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/k": {
+  "minimum": 1
+ },
+ "/$defs/scorecard/properties/label": {
+  "maxLength": 40
+ },
+ "/$defs/scorecard/properties/latency_ms": {
+  "closed": true,
+  "required": [
+   "p50",
+   "p95"
+  ]
+ },
+ "/$defs/scorecard/properties/latency_ms/properties/p50": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/latency_ms/properties/p95": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/n": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/n_answered": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/n_refused": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/pass_rate": {
+  "maximum": 1,
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/split": {
+  "enum": [
+   "dev",
+   "test"
+  ]
+ },
+ "/$defs/scorecard/properties/steered": {
+  "closed": true,
+  "required": [
+   "label",
+   "n",
+   "x"
+  ]
+ },
+ "/$defs/scorecard/properties/steered/properties/n": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/steered/properties/x": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/thresholds": {
+  "closed": true,
+  "required": [
+   "amber_max_upper",
+   "green_max_upper"
+  ]
+ },
+ "/$defs/scorecard/properties/thresholds/properties/amber_max_upper": {
+  "maximum": 1,
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/thresholds/properties/green_max_upper": {
+  "maximum": 1,
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/verdict": {
+  "enum": [
+   "green",
+   "amber",
+   "not_demonstrated",
+   "aborted"
+  ]
+ },
+ "/$defs/scorecard/properties/wrong_and_allowed": {
+  "closed": true,
+  "required": [
+   "n",
+   "x"
+  ]
+ },
+ "/$defs/scorecard/properties/wrong_and_allowed/properties/n": {
+  "minimum": 0
+ },
+ "/$defs/scorecard/properties/wrong_and_allowed/properties/x": {
+  "minimum": 0
+ },
+ "/$defs/slug": {
+  "pattern": "^[a-z0-9][a-z0-9_.-]{0,79}(?![\\s\\S])"
+ },
+ "/$defs/step": {
+  "closed": true,
+  "required": [
+   "args_summary",
+   "confidence",
+   "cost_usd",
+   "decision",
+   "kind",
+   "model_value",
+   "ms",
+   "n",
+   "name",
+   "reason",
+   "rule_id",
+   "source_value"
+  ]
+ },
+ "/$defs/step/properties/actor": {
+  "pattern": "^(agent|system|human:[a-z0-9_-]{1,40})(?![\\s\\S])"
+ },
+ "/$defs/step/properties/args_summary": {
+  "maxProperties": 64
+ },
+ "/$defs/step/properties/comparisons": {
+  "maxItems": 50
+ },
+ "/$defs/step/properties/confidence": {
+  "maxProperties": 64
+ },
+ "/$defs/step/properties/currency": {
+  "pattern": "^[A-Z]{3}(?![\\s\\S])"
+ },
+ "/$defs/step/properties/decision": {
+  "enum": [
+   "allow",
+   "deny",
+   "needs_approval",
+   null
+  ]
+ },
+ "/$defs/step/properties/kind": {
+  "enum": [
+   "model",
+   "tool",
+   "gate",
+   "approval",
+   "adapter",
+   "reconcile",
+   "attest"
+  ]
+ },
+ "/$defs/step/properties/model_saw": {
+  "maxLength": 4000
+ },
+ "/$defs/step/properties/ms": {
+  "minimum": 0
+ },
+ "/$defs/step/properties/n": {
+  "minimum": 1
+ },
+ "/$defs/step/properties/rule_id": {
+  "pattern": "^R-[A-Z0-9]+-[0-9]{3}(?![\\s\\S])"
+ },
+ "/$defs/terminal_state": {
+  "closed": true,
+  "required": [
+   "reason",
+   "state"
+  ]
+ },
+ "/$defs/terminal_state/else/properties/reason": {
+  "minLength": 1
+ },
+ "/$defs/terminal_state/if": {
+  "required": [
+   "state"
+  ]
+ },
+ "/$defs/terminal_state/properties/state": {
+  "enum": [
+   "processed",
+   "abstained",
+   "dead_lettered",
+   "rejected"
+  ]
+ },
+ "/$defs/text": {
+  "maxLength": 2000
+ },
+ "/$defs/tier": {
+  "enum": [
+   "none",
+   "auto",
+   "human",
+   "human_nonmoney",
+   "four_eyes",
+   "four_eyes_over_max",
+   "controller_override",
+   "blocked",
+   null
+  ]
+ },
+ "/$defs/ts": {
+  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z(?![\\s\\S])"
+ },
+ "/$defs/usd": {
+  "pattern": "^[0-9]+(\\.[0-9]+)?(?![\\s\\S])"
+ },
+ "/properties/adapter_calls": {
+  "maxItems": 5000
+ },
+ "/properties/amounts": {
+  "maxItems": 64
+ },
+ "/properties/amounts/items": {
+  "closed": true,
+  "required": [
+   "currency",
+   "kind",
+   "minor",
+   "n"
+  ]
+ },
+ "/properties/amounts/items/properties/kind": {
+  "enum": [
+   "proposed",
+   "approved",
+   "executed",
+   "refused",
+   "exposure"
+  ]
+ },
+ "/properties/amounts/items/properties/n": {
+  "minimum": 0
+ },
+ "/properties/approvals": {
+  "maxItems": 5000
+ },
+ "/properties/audit": {
+  "closed": true,
+  "required": [
+   "chain",
+   "events",
+   "verify"
+  ]
+ },
+ "/properties/audit/properties/chain": {
+  "enum": [
+   "hash-chain/1",
+   "hash-chain/2"
+  ]
+ },
+ "/properties/audit/properties/events": {
+  "maxItems": 20000
+ },
+ "/properties/audit/properties/verify": {
+  "closed": true,
+  "required": [
+   "events",
+   "matched",
+   "ok",
+   "text"
+  ]
+ },
+ "/properties/audit/properties/verify/properties/events": {
+  "minimum": 0
+ },
+ "/properties/audit/properties/verify/properties/matched": {
+  "minimum": 0
+ },
+ "/properties/cases": {
+  "maxItems": 2000
+ },
+ "/properties/demo": {
+  "closed": true,
+  "required": [
+   "core_commit",
+   "kit_commit",
+   "slug",
+   "title",
+   "version"
+  ]
+ },
+ "/properties/demo/properties/title": {
+  "maxLength": 200,
+  "minLength": 1
+ },
+ "/properties/demo/properties/version": {
+  "maxLength": 40,
+  "minLength": 1
+ },
+ "/properties/honesty": {
+  "closed": true,
+  "required": [
+   "adapters",
+   "notes",
+   "synthetic"
+  ]
+ },
+ "/properties/honesty/properties/kind": {
+  "enum": [
+   "fixture",
+   "run"
+  ]
+ },
+ "/properties/honesty/properties/notes": {
+  "maxItems": 5000
+ },
+ "/properties/ledger": {
+  "closed": true,
+  "required": [
+   "by_state",
+   "duplicated_effects",
+   "missing",
+   "non_terminal",
+   "received",
+   "reconciliation_gap",
+   "report_sha256",
+   "scope"
+  ]
+ },
+ "/properties/ledger/properties/by_state": {
+  "closed": true,
+  "required": [
+   "abstained",
+   "dead_lettered",
+   "processed",
+   "rejected"
+  ]
+ },
+ "/properties/ledger/properties/by_state/properties/abstained": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/by_state/properties/dead_lettered": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/by_state/properties/processed": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/by_state/properties/rejected": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/duplicated_effects": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/missing": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/non_terminal": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/received": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/reconciliation_gap": {
+  "minimum": 0
+ },
+ "/properties/ledger/properties/report_sha256": {
+  "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+ },
+ "/properties/ledger/properties/scope": {
+  "enum": [
+   "export_cases",
+   "load_run"
+  ]
+ },
+ "/properties/load_profile": {
+  "closed": true,
+  "required": [
+   "label",
+   "name",
+   "report_sha256",
+   "source"
+  ]
+ },
+ "/properties/load_profile/properties/label": {
+  "enum": [
+   "assumed",
+   "measured"
+  ]
+ },
+ "/properties/load_profile/properties/report_sha256": {
+  "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+ },
+ "/properties/provider_terms": {
+  "closed": true,
+  "required": [
+   "checked_on",
+   "no_training_setting",
+   "provider"
+  ]
+ },
+ "/properties/provider_terms/properties/checked_on": {
+  "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}(?![\\s\\S])"
+ },
+ "/properties/provider_terms/properties/no_training_setting": {
+  "maxLength": 200
+ },
+ "/properties/provider_terms/properties/provider": {
+  "maxLength": 200
+ },
+ "/properties/read_log": {
+  "closed": true,
+  "required": [
+   "by_purpose",
+   "client_reviewable",
+   "log_sha256",
+   "n_reads",
+   "rows_total"
+  ]
+ },
+ "/properties/read_log/properties/by_purpose": {
+  "maxItems": 64
+ },
+ "/properties/read_log/properties/by_purpose/items": {
+  "closed": true,
+  "required": [
+   "n_reads",
+   "purpose",
+   "rows"
+  ]
+ },
+ "/properties/read_log/properties/by_purpose/items/properties/n_reads": {
+  "minimum": 0
+ },
+ "/properties/read_log/properties/by_purpose/items/properties/rows": {
+  "minimum": 0
+ },
+ "/properties/read_log/properties/log_sha256": {
+  "pattern": "^[0-9a-f]{64}(?![\\s\\S])"
+ },
+ "/properties/read_log/properties/n_reads": {
+  "minimum": 0
+ },
+ "/properties/read_log/properties/rows_total": {
+  "minimum": 0
+ },
+ "/properties/registry": {
+  "closed": true,
+  "required": [
+   "agent_id",
+   "level",
+   "owner_role",
+   "readiness",
+   "tools"
+  ]
+ },
+ "/properties/registry/properties/level": {
+  "enum": [
+   "shadow",
+   "suggest"
+  ]
+ },
+ "/properties/registry/properties/readiness": {
+  "maxItems": 5000
+ },
+ "/properties/registry/properties/readiness/items": {
+  "closed": true,
+  "required": [
+   "check",
+   "evidence",
+   "status"
+  ]
+ },
+ "/properties/registry/properties/readiness/items/properties/status": {
+  "enum": [
+   "pass",
+   "fail",
+   "na"
+  ]
+ },
+ "/properties/registry/properties/tools": {
+  "maxItems": 5000
+ },
+ "/properties/registry/properties/tools/items": {
+  "closed": true,
+  "required": [
+   "name",
+   "needs_approval",
+   "risk",
+   "rules"
+  ]
+ },
+ "/properties/registry/properties/tools/items/properties/risk": {
+  "enum": [
+   "read",
+   "draft",
+   "money"
+  ]
+ },
+ "/properties/registry/properties/tools/items/properties/rules": {
+  "maxItems": 5000
+ },
+ "/properties/run": {
+  "closed": true,
+  "required": [
+   "config_hash",
+   "dataset_sha256",
+   "level",
+   "mode",
+   "model",
+   "prompt_sha256",
+   "run_id",
+   "seed",
+   "ts"
+  ]
+ },
+ "/properties/run/properties/level": {
+  "enum": [
+   "shadow",
+   "suggest"
+  ]
+ },
+ "/properties/run/properties/mode": {
+  "enum": [
+   "scripted",
+   "live"
+  ]
+ },
+ "/properties/run/properties/model": {
+  "maxLength": 120,
+  "minLength": 1
+ },
+ "/properties/run/properties/seed": {
+  "minimum": 0
+ },
+ "/properties/schema_minor": {
+  "enum": [
+   0,
+   1
+  ]
+ },
+ "/properties/segregation": {
+  "closed": true,
+  "required": [
+   "canary",
+   "namespace"
+  ]
+ },
+ "/properties/segregation/properties/canary": {
+  "closed": true,
+  "required": [
+   "foreign_hits",
+   "ran"
+  ]
+ },
+ "/properties/segregation/properties/canary/properties/foreign_hits": {
+  "minimum": 0
+ }
+}

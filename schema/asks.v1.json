@@ -1,0 +1,692 @@
+{
+  "schema": "hadavin.demo-export-asks/1",
+  "rows": [
+    {
+      "id": "RF-1",
+      "demo": "refunds",
+      "ask": "scorecard.steered {x, n, label}: steered recorded turns the real pre-gate denied",
+      "justification": "Adversarial replay is reported beside, not inside, the pass rate and confident-wrong.",
+      "status": "added",
+      "features": [
+        "scorecard.steered"
+      ],
+      "conflict": null,
+      "resolution": "Added; label is a constant string so it can never read as model behaviour.",
+      "where": ""
+    },
+    {
+      "id": "RF-2",
+      "demo": "refunds",
+      "ask": "Idempotency key excludes the model-chosen reason id",
+      "justification": "A reason chosen by the model would make three keys for one refund.",
+      "status": "demo_side",
+      "features": [],
+      "conflict": null,
+      "resolution": "No schema change: the key stays a hex64; the formula is the demo's (maintainer decision 2026-11-01).",
+      "where": ""
+    },
+    {
+      "id": "RF-3",
+      "demo": "refunds",
+      "ask": "approvals[].lifecycle: the demo's real state (step1_approved, executed, void)",
+      "justification": "The four-value status enum hides step 1 of two and a voided request.",
+      "status": "added",
+      "features": [
+        "approval.lifecycle"
+      ],
+      "conflict": null,
+      "resolution": "Added as a slug; status stays the four-value export enum, void maps to expired.",
+      "where": ""
+    },
+    {
+      "id": "RF-4",
+      "demo": "refunds",
+      "ask": "Scripted runs are capped at amber and print 'scripted; gate vs gold agreement; not model accuracy'",
+      "justification": "A replayed script says nothing about a model.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Validator already forbids green on scripted; console now prints the sentence (scorecard page).",
+      "where": "rules: scripted truth; console: SCRIPTED_TEXT"
+    },
+    {
+      "id": "RF-5",
+      "demo": "refunds",
+      "ask": "case.tier null for refused and abstained cases",
+      "justification": "A blocked case has no approvals row, so no tier.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "case.tier already allows null/none; rule: none/null with an approvals row is rejected.",
+      "where": "case.tier"
+    },
+    {
+      "id": "RF-6",
+      "demo": "refunds",
+      "ask": "Reservation view needs no new field",
+      "justification": "approvals[].evidence entries are enough.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Confirmed: no field.",
+      "where": ""
+    },
+    {
+      "id": "RF-7",
+      "demo": "refunds",
+      "ask": "cases[].queue: the hand-back queue of the 14 HandBackReason values",
+      "justification": "An approver sees where a hand-back went.",
+      "status": "added",
+      "features": [
+        "case.queue"
+      ],
+      "conflict": null,
+      "resolution": "Added as a slug.",
+      "where": ""
+    },
+    {
+      "id": "RF-8",
+      "demo": "refunds",
+      "ask": "HZ-ABSTAIN maps to confident_on_abstain, no double count",
+      "justification": "The validator derives confident_on_abstain itself; a demo that also lists it must not be counted twice.",
+      "status": "kit_fix",
+      "features": [],
+      "conflict": null,
+      "resolution": "Class fix: derived_flags (validator) and run_flags (evalcore) dedupe. Hard-zero keys may now be upper case (HZ-04) and are case-insensitively unique.",
+      "where": "export_rules.derived_flags; evalcore.build_scorecard; $defs/key"
+    },
+    {
+      "id": "RF-9",
+      "demo": "refunds",
+      "ask": "scorecard.scripted and run.mode must agree; kit validates it",
+      "justification": "A scripted run must be marked as such in both places.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Already validated (scripted truth rules).",
+      "where": "export_rules.check"
+    },
+    {
+      "id": "IN-1",
+      "demo": "intake",
+      "ask": "case.outcome no_action for a matched invoice; counts as answered",
+      "justification": "A clean answer can be confidently wrong.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Outcome exists in 1.0. Gold side: expected.outcome no_action is added so the gold can say it (minor 1).",
+      "where": "case.outcome"
+    },
+    {
+      "id": "IN-2",
+      "demo": "intake",
+      "ask": "expected.outcome no_action",
+      "justification": "The gold for a matched invoice is 'nothing to do', not 'act'.",
+      "status": "added",
+      "features": [
+        "expected.outcome=no_action"
+      ],
+      "conflict": "IN-1 says false_abstain.n_should_answer = act + no_action + refuse; RF-8 and the frozen contract say expected act only.",
+      "resolution": "False abstain is owed on act and no_action only: abstaining where a definite answer was owed. A refuse case cannot be falsely abstained from. n_answered = act + no_action + refuse (unchanged for demos with no no_action gold). Intake's proposal is amended accordingly.",
+      "where": ""
+    },
+    {
+      "id": "IN-3",
+      "demo": "intake",
+      "ask": "Refused instruction-only message: outcome blocked, one deny gate step, no approvals row",
+      "justification": "A denied attempt is a metric, not an approval.",
+      "status": "already_in_1.0",
+      "features": [
+        "expected.denied_calls"
+      ],
+      "conflict": null,
+      "resolution": "Expressible in 1.0 (blocked, steps, deny event). expected.denied_calls added to carry the tool names the gold expects to be denied.",
+      "where": "case.outcome blocked"
+    },
+    {
+      "id": "IN-4",
+      "demo": "intake",
+      "ask": "Nullable case tier for the gold tier; export never contains auto",
+      "justification": "Tier is a gold property.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "case.tier and expected.tier exist; auto-on-money is rejected.",
+      "where": "case.tier, expected.tier"
+    },
+    {
+      "id": "IN-5",
+      "demo": "intake",
+      "ask": "cases[].exceptions [{code, rule_id}]; expected.exceptions, actions, tier, verdict, denied_calls",
+      "justification": "Exact set equality is the scoring rule.",
+      "status": "added",
+      "features": [
+        "expected.verdict",
+        "expected.denied_calls"
+      ],
+      "conflict": null,
+      "resolution": "exceptions, expected.exceptions/actions/tier exist in 1.0; verdict and denied_calls added.",
+      "where": ""
+    },
+    {
+      "id": "IN-6",
+      "demo": "intake",
+      "ask": "Four-eyes as ONE approval with an ordered approvers array",
+      "justification": "One decision, two signers.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Already the contract.",
+      "where": "approval.approvers"
+    },
+    {
+      "id": "IN-7",
+      "demo": "intake",
+      "ask": "approvals[].rule_id is the single tier-deciding rule; others as evidence",
+      "justification": "Keeps the row readable.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Already the contract.",
+      "where": ""
+    },
+    {
+      "id": "IN-8",
+      "demo": "intake",
+      "ask": "approvals[].executed nullable; port draft_store; never an ERP port",
+      "justification": "A person enters the ERP by hand.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Nullable in 1.0; the port rule is the demo's check_export.",
+      "where": ""
+    },
+    {
+      "id": "IN-9",
+      "demo": "intake",
+      "ask": "adapter_calls[].outcome conflict (same key, different content); read_ok",
+      "justification": "A conflict is a refusal to merge, not a duplicate.",
+      "status": "added",
+      "features": [
+        "adapter_call.outcome=conflict"
+      ],
+      "conflict": null,
+      "resolution": "conflict added; read_ok already exists. Rule: at most one applied per idempotency key (minor 1).",
+      "where": ""
+    },
+    {
+      "id": "IN-10",
+      "demo": "intake",
+      "ask": "n_answered / n_refused / false_abstain.n_should_answer same set",
+      "justification": "One definition.",
+      "status": "added",
+      "features": [
+        "expected.outcome=no_action"
+      ],
+      "conflict": "See IN-2.",
+      "resolution": "Resolved in IN-2: n_answered = act + no_action + refuse; n_should_answer = act + no_action.",
+      "where": ""
+    },
+    {
+      "id": "IN-11",
+      "demo": "intake",
+      "ask": "step.source_value / model_value",
+      "justification": "The approver sees both.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Exist in 1.0.",
+      "where": ""
+    },
+    {
+      "id": "IN-12",
+      "demo": "intake",
+      "ask": "hard_zeros as {count, exposure}",
+      "justification": "Console prints '0 of 14 cases exposed'.",
+      "status": "added",
+      "features": [
+        "scorecard.hard_zero_exposure"
+      ],
+      "conflict": "Changing hard_zeros from integer to object would break every existing export.",
+      "resolution": "hard_zeros stays integer counts (breaches); the new hard_zero_exposure map {key: {exposed, of}} is additive. exposed = cases where the opportunity occurred or was attempted, of = cases at risk. Rule: breaches <= exposed <= of <= n, so '1 exposed, 0 breached' (the gate stopped it) is reportable. The earlier rule that exposed is zero exactly when the count is zero was wrong and is removed. Internally consistent, not independently derived: without of_cases, `of` must equal n and `exposed` is the demo's own assertion; with of_cases and exposed_cases the validator counts them, and every breached case must be among the exposed ones. scorecard.steered may name the exposure it probes (exposure_key).",
+      "where": ""
+    },
+    {
+      "id": "IN-13",
+      "demo": "intake",
+      "ask": "Input envelope not exported; the model_saw text after redaction instead",
+      "justification": "Nothing unredacted leaves the demo.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "step.model_saw exists in 1.0.",
+      "where": ""
+    },
+    {
+      "id": "IN-14",
+      "demo": "intake",
+      "ask": "Injectable clock; timestamps = as_of + audit sequence seconds",
+      "justification": "Reproducible exports.",
+      "status": "demo_side",
+      "features": [],
+      "conflict": null,
+      "resolution": "Demo-side; the kit only checks that timestamps are real calendar times.",
+      "where": ""
+    },
+    {
+      "id": "IN-15",
+      "demo": "intake",
+      "ask": "New codes X27, X28, X23",
+      "justification": "Exception codes.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Exceptions are free slugs; no schema change.",
+      "where": "case.exceptions"
+    },
+    {
+      "id": "IN-16",
+      "demo": "intake",
+      "ask": "cases[].terminal_state: processed / abstained / rejected (and dead_lettered)",
+      "justification": "every inbound message ends in a recorded terminal state.",
+      "status": "added",
+      "features": [
+        "case.terminal_state",
+        "expected.terminal_state"
+      ],
+      "conflict": null,
+      "resolution": "Added as {state, reason}; reason required unless processed. dead_lettered needs outcome failed; abstained needs outcome abstained or held.",
+      "where": ""
+    },
+    {
+      "id": "IN-17",
+      "demo": "intake",
+      "ask": "tenant_id per case",
+      "justification": ".",
+      "status": "added",
+      "features": [
+        "root.tenant_id",
+        "case.tenant_id"
+      ],
+      "conflict": null,
+      "resolution": "Added on every record (see KT-1).",
+      "where": ""
+    },
+    {
+      "id": "AP-1",
+      "demo": "apexc",
+      "ask": "approvals[].tier human_nonmoney and controller_override",
+      "justification": "A non-money action and a documented controller override are different from human and four_eyes_over_max; never auto.",
+      "status": "added",
+      "features": [
+        "approval.tier=human_nonmoney",
+        "approval.tier=controller_override",
+        "case.tier=human_nonmoney",
+        "case.tier=controller_override",
+        "expected.tier=human_nonmoney",
+        "expected.tier=controller_override"
+      ],
+      "conflict": null,
+      "resolution": "Added to the one tier enum. Rules: human_nonmoney on a money action is rejected; controller_override needs one eligible approver (no two-person rule).",
+      "where": ""
+    },
+    {
+      "id": "AP-2",
+      "demo": "apexc",
+      "ask": "case.outcome held",
+      "justification": "Holding a payment is not a proposal.",
+      "status": "added",
+      "features": [
+        "case.outcome=held"
+      ],
+      "conflict": "held is a non-answer, but false_abstain must not be blended with false_hold.",
+      "resolution": "held counts as not answered (abstention precision/recall) but is excluded from false_abstain; scorecard.false_hold {x, n} reports it beside. Rule: false_hold must match the cases; a held case without false_hold is rejected.",
+      "where": ""
+    },
+    {
+      "id": "AP-3",
+      "demo": "apexc",
+      "ask": "approvals[].plan_step and excluded_user_ids",
+      "justification": "Multi-step resolution plans and segregation of duties.",
+      "status": "added",
+      "features": [
+        "approval.plan_step",
+        "approval.excluded_user_ids"
+      ],
+      "conflict": "apexc fixes plan_step to resolution|plan_1|plan_2|clear; deal desk has single-step plans.",
+      "resolution": "plan_step is a slug (the kit does not own the vocabulary). Rule: an excluded user may not appear among the approvers.",
+      "where": ""
+    },
+    {
+      "id": "AP-4",
+      "demo": "apexc",
+      "ask": "adapter_calls[].ticket_id for callbacks",
+      "justification": "Links a callback to its ticket.",
+      "status": "added",
+      "features": [
+        "adapter_call.ticket_id"
+      ],
+      "conflict": null,
+      "resolution": "Added as a slug.",
+      "where": ""
+    },
+    {
+      "id": "AP-5",
+      "demo": "apexc",
+      "ask": "audit event types hold, veto, attest, clear, handback; rows carry roles_at_decision",
+      "justification": "The audit trail must show these steps.",
+      "status": "added",
+      "features": [
+        "audit_event.type=hold",
+        "audit_event.type=veto",
+        "audit_event.type=attest",
+        "audit_event.type=clear",
+        "audit_event.type=handback",
+        "approver.roles_at_decision"
+      ],
+      "conflict": "approvers[] (where the decision and its roles live) is outside the audit hash chain; only audit events are hashed, and the event recipe has no roles field.",
+      "resolution": "Event types added (chain recipe unchanged except tenant, see KT-1). roles_at_decision lives on approvers[], with the rule that the decision role is one of them. Because approvers[] is unauthenticated, the hashed approval event of each approver (actor human:<role>) must end its summary with [roles=a,b]; the rule is checked per case, per approver and in both directions (a declared set that no event states, or an event that states a set nobody declares, is refused). Fixtures include a one-person two-role approver and a two-approver case.",
+      "where": ""
+    },
+    {
+      "id": "AP-6",
+      "demo": "apexc",
+      "ask": "scorecard.false_hold; hard-zero keys HZ-01..HZ-17; verdict_text free; scripted capped at amber",
+      "justification": "Own metrics and keys.",
+      "status": "added",
+      "features": [
+        "scorecard.false_hold"
+      ],
+      "conflict": "The slug pattern forbids upper case, so HZ-01 was invalid as a key.",
+      "resolution": "Hard-zero keys use the new key pattern (ASCII, upper case allowed, case-insensitively unique). verdict_text stays free text.",
+      "where": ""
+    },
+    {
+      "id": "AP-7",
+      "demo": "apexc",
+      "ask": "honesty.notes pointer for HZ-15 (DOM test result is a kit artefact)",
+      "justification": "A browser-test result is not a Python value.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "honesty.notes exists; no schema change.",
+      "where": ""
+    },
+    {
+      "id": "DD-1",
+      "demo": "dealdesk",
+      "ask": "Approver eligibility predicate",
+      "justification": "Core approval is necessary but not sufficient.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "approvals[].eligibility exists in 1.0 and blocks approval/execution when not ok.",
+      "where": "approval.eligibility"
+    },
+    {
+      "id": "DD-2",
+      "demo": "dealdesk",
+      "ask": "Amount-aware / tiered policy hook in authorize",
+      "justification": "Class-based gate sees no amounts.",
+      "status": "core_issue",
+      "features": [],
+      "conflict": null,
+      "resolution": "Core issue (hadavin-sdk); no export field. Filed in the core follow-ups.",
+      "where": ""
+    },
+    {
+      "id": "DD-3",
+      "demo": "dealdesk",
+      "ask": "Quorum / ordered multi-step chains with distinct approvers per step",
+      "justification": "Sequencing is demo-side.",
+      "status": "added",
+      "features": [
+        "approval.plan_step"
+      ],
+      "conflict": null,
+      "resolution": "Expressed with plan_step plus the ordered approvers array.",
+      "where": ""
+    },
+    {
+      "id": "DD-4",
+      "demo": "dealdesk",
+      "ask": "Business-scoped idempotency key with an epoch",
+      "justification": "Core key is run-scoped.",
+      "status": "demo_side",
+      "features": [],
+      "conflict": null,
+      "resolution": "Key stays a hex64; the formula is the demo's.",
+      "where": ""
+    },
+    {
+      "id": "DD-5",
+      "demo": "dealdesk",
+      "ask": "data_class confidential raises request_approval to sign_off",
+      "justification": "request_approval would be unusable.",
+      "status": "core_issue",
+      "features": [],
+      "conflict": null,
+      "resolution": "Core issue; the demo pins data_class internal (synthetic) and states it in honesty.notes.",
+      "where": ""
+    },
+    {
+      "id": "DD-6",
+      "demo": "dealdesk",
+      "ask": "Tenant isolation statement; Clock kind",
+      "justification": "; deterministic time.",
+      "status": "added",
+      "features": [
+        "root.tenant_id",
+        "root.segregation"
+      ],
+      "conflict": null,
+      "resolution": "tenant_id and segregation block added (KT-1, KT-8). Clock kind is core.",
+      "where": ""
+    },
+    {
+      "id": "DD-7",
+      "demo": "dealdesk",
+      "ask": "Asymmetric decision signatures (HMAC lets a verifier mint)",
+      "justification": "The console must not imply unforgeable signatures when the verifier holds the key.",
+      "status": "added",
+      "features": [
+        "approver.sig_scheme"
+      ],
+      "conflict": null,
+      "resolution": "sig_scheme {hmac_shared_secret, ed25519, none} is a LABEL, not verification (no key id, public key or signed payload hash is carried); the console states the HMAC limit; sig_ok true with scheme none is rejected. ed25519 is reserved.",
+      "where": ""
+    },
+    {
+      "id": "DD-8",
+      "demo": "dealdesk",
+      "ask": "Approvals bind the terms and snapshot shown; second decision refused",
+      "justification": "A decision must be about what the approver saw.",
+      "status": "added",
+      "features": [
+        "approval.bound"
+      ],
+      "conflict": null,
+      "resolution": "approval.bound {plan_sha256, snapshot_sha256} added. First-decision-wins stays demo-side.",
+      "where": ""
+    },
+    {
+      "id": "KT-1",
+      "demo": "kit",
+      "ask": "tenant_id on every record",
+      "justification": "A record that cannot be placed in one tenant is a leak waiting to happen.",
+      "status": "added",
+      "features": [
+        "root.tenant_id",
+        "case.tenant_id",
+        "approval.tenant_id",
+        "adapter_call.tenant_id",
+        "audit_event.tenant_id",
+        "audit.chain=hash-chain/2"
+      ],
+      "conflict": "Adding tenant_id to audit rows outside the hash would leave it unauthenticated; changing hash-chain/1 would break every pinned head.",
+      "resolution": "New chain format hash-chain/2 hashes tenant_id as a ninth element; hash-chain/1 is untouched and still verified for minor 0. From minor 1 every record carries the export's one tenant id and hash-chain/2 is required.",
+      "where": ""
+    },
+    {
+      "id": "KT-2",
+      "demo": "kit",
+      "ask": "Message ledger and receipt ids",
+      "justification": "Write-ahead receipt before ack; every message ends terminal; counts reconcile with the source.",
+      "status": "added",
+      "features": [
+        "root.ledger",
+        "case.receipt_id",
+        "adapter_call.receipt_id"
+      ],
+      "conflict": null,
+      "resolution": "ledger block {scope, received, by_state, non_terminal, missing, duplicated_effects, reconciliation_gap, report_sha256}; invariant received = sum(by_state) + non_terminal; scope export_cases is recounted from the cases; scope load_run names the raw report hash. The console shows a breach in red and never as a pass.",
+      "where": ""
+    },
+    {
+      "id": "KT-3",
+      "demo": "kit",
+      "ask": "Per-currency amounts",
+      "justification": "Mixed currencies must never be summed.",
+      "status": "added",
+      "features": [
+        "root.amounts"
+      ],
+      "conflict": null,
+      "resolution": "amounts [{kind, currency, minor (integer string), n}], one row per (kind, currency).",
+      "where": ""
+    },
+    {
+      "id": "KT-4",
+      "demo": "kit",
+      "ask": "Load profile label assumed|measured",
+      "justification": "The demo profile is not the client's peak.",
+      "status": "added",
+      "features": [
+        "root.load_profile"
+      ],
+      "conflict": null,
+      "resolution": "load_profile {name, label, source, report_sha256}; measured needs the raw report hash and is rejected on a fixture.",
+      "where": ""
+    },
+    {
+      "id": "KT-5",
+      "demo": "kit",
+      "ask": "Read-log summary",
+      "justification": "Every read of client data is logged and client-reviewable.",
+      "status": "added",
+      "features": [
+        "root.read_log"
+      ],
+      "conflict": null,
+      "resolution": "read_log {n_reads, rows_total, by_purpose, log_sha256, client_reviewable}; totals must equal the per-purpose sums.",
+      "where": ""
+    },
+    {
+      "id": "KT-6",
+      "demo": "kit",
+      "ask": "Provider no-training setting and date, null until recorded",
+      "justification": "Never state an unchecked setting.",
+      "status": "added",
+      "features": [
+        "root.provider_terms"
+      ],
+      "conflict": null,
+      "resolution": "provider_terms {provider, no_training_setting, checked_on}; both null or both set; date not after the run; console shows NOT RECORDED when null.",
+      "where": ""
+    },
+    {
+      "id": "KT-7",
+      "demo": "kit",
+      "ask": "Segregation namespace and canary result",
+      "justification": "Per-client store, index, cache and prompt namespaces.",
+      "status": "added",
+      "features": [
+        "root.segregation"
+      ],
+      "conflict": null,
+      "resolution": "segregation {namespace, canary {ran, foreign_hits}}; the namespace must start with the tenant id; a canary that did not run is shown as not run.",
+      "where": ""
+    },
+    {
+      "id": "KT-8",
+      "demo": "kit",
+      "ask": "Schema minor and migration rules",
+      "justification": "Additive changes without breaking exports.",
+      "status": "added",
+      "features": [
+        "root.schema_minor"
+      ],
+      "conflict": null,
+      "resolution": "Optional schema_minor 0..1; features need their minor; an unknown minor is refused; see versioning.py. Minor 1 is DRAFT until a real demo exporter passes kitcheck; features with no producer yet are listed as reserved.",
+      "where": ""
+    },
+    {
+      "id": "KT-9",
+      "demo": "kit",
+      "ask": "honesty.kind fixture|run required",
+      "justification": "A missing kind was silently treated as a fixture.",
+      "status": "already_in_1.0",
+      "features": [],
+      "conflict": null,
+      "resolution": "Exists in 1.0; required from minor 1.",
+      "where": "honesty.kind"
+    },
+    {
+      "id": "KT-10",
+      "demo": "kit",
+      "ask": "Clean export: only export.json, console page, _headers, report.json; hygiene scan with a deny-list",
+      "justification": "Nothing learned or other clients' names travel with an export.",
+      "status": "kit_fix",
+      "features": [],
+      "conflict": null,
+      "resolution": "Not a schema field: kitcheck enforces the file allowlist, forbidden file types and a deny-list scan.",
+      "where": ""
+    },
+    {
+      "id": "AD-1",
+      "demo": "askdata",
+      "ask": "askdata has no approvals; its real metric ('result equals gold on both seed databases') lives only in free text",
+      "justification": "The schema is approval-shaped; a data-question demo must not be forced to invent approvals.",
+      "status": "demo_side",
+      "features": [],
+      "conflict": null,
+      "resolution": "Decided minimally: per-case `correct` plus hard_zero_defs (writes_executed, restricted_values_returned) carry the metric; the gold comparison stays in case.expected.checks and facts. No scorecard.metrics[] is added until the real exporter shows a metric that cannot be expressed that way.",
+      "where": "case.correct, scorecard.hard_zero_defs"
+    },
+    {
+      "id": "KT-11",
+      "demo": "kit",
+      "ask": "A scripted run carries the hash of the recorded turns it replayed",
+      "justification": "A scripted model must not be passable as a live one by renaming it (`model: gpt`).",
+      "status": "added",
+      "features": [
+        "run.recorded_turns_sha256"
+      ],
+      "conflict": null,
+      "resolution": "run.recorded_turns_sha256 (hex64), required for scripted runs from minor 1, forbidden for live runs; ScriptedLLM-side helper recorded_turns_sha256(dir). kitcheck cannot recompute it without the recorded files: the demo's own test must.",
+      "where": ""
+    },
+    {
+      "id": "KT-12",
+      "demo": "kit",
+      "ask": "Vendoring contract: KIT.lock, a per-file hash over the runtime files, a tree hash, a check and kitcheck --kit-lock",
+      "justification": "A demo must be able to prove which kit it runs and that the copy is intact (rule: core modules are vendored with a hash file).",
+      "status": "kit_fix",
+      "features": [],
+      "conflict": null,
+      "resolution": "tools/vendor.py (manifest, copy, verify), python -m hadavin_kit.kitsum --check, kitcheck --kit-lock/--deploy, KIT-SHA256SUMS kept current by a test, vendor/KIT.lock in the format core_sync_check verifies, runtime path-independent via hadavin_kit.paths.",
+      "where": ""
+    },
+    {
+      "id": "KT-13",
+      "demo": "kit",
+      "ask": "case_id is a plain slug, no bucket letter or three-digit cap",
+      "justification": "The pattern hard-coded one demo family's convention into every demo.",
+      "status": "kit_fix",
+      "features": [],
+      "conflict": null,
+      "resolution": "A loosening (superset of the old pattern), recorded in ACCEPTED_TIGHTENINGS; the bucket stays its own field.",
+      "where": ""
+    }
+  ]
+}

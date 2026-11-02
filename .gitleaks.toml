@@ -1,0 +1,15 @@
+# Default rules plus one narrow allowlist: a 64-hex sha256 digest inside the files that legitimately hold many of
+# them (synthetic sample exports, the lock file). Both conditions must hold, so a real
+# key-shaped secret in any other file, or any non-digest text in these files, is still reported.
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "sha256 digests in fixture, hash-list and lock files"
+condition = "AND"
+paths = [
+  '''^demo_only/(examples|fixtures|fixtures/compat-v1\.0)/[a-z0-9.-]+\.json$''',
+  '''^demo_only/fixtures/compat-v1\.0/SHA256SUMS$''',
+  '''^uv\.lock$''',
+]
+regexes = ['''^[0-9a-f]{64}$''']
