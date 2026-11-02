@@ -32,7 +32,11 @@ def main(argv: list[str] | None = None) -> int:
     args = ap.parse_args(argv)
     src = (
         KIT
-        / ("examples" if args.compat is None else f"demo_only/fixtures/compat-v1.{args.compat}")
+        / (
+            "demo_only/examples"
+            if args.compat is None
+            else f"demo_only/fixtures/compat-v1.{args.compat}"
+        )
         / f"{args.slug}.json"
     )
     doc = json.loads(src.read_text(encoding="utf-8"))

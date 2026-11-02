@@ -4,8 +4,10 @@ The patterns are built from parts so this file does not match them itself."""
 
 import re
 import subprocess
+import sys
 from pathlib import Path
 
+import pytest
 from hadavin_kit import kitsum
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -112,3 +114,18 @@ def test_git_history_has_no_trailers_or_foreign_authors():
         capture_output=True, text=True, check=False,
     ).stdout.split()  # fmt: skip
     assert set(out) <= {"dev@hadavin.com|dev@hadavin.com"}, set(out)
+
+
+@pytest.mark.needs_samples
+@pytest.mark.parametrize("compat", [[], ["--compat", "0"]])
+def test_check_fixture_finds_the_sample_exports_in_their_folder(compat):
+    out = subprocess.run(
+        [sys.executable, str(ROOT / "tools" / "check_fixture.py"), "refunds", *compat],
+        capture_output=True, text=True, check=False, cwd=ROOT, timeout=120,
+    )  # fmt: skip
+    assert out.returncode == 0 and "OK" in out.stdout, out.stdout + out.stderr
+
+
+def test_ci_reads_the_gitleaks_count_without_colour_codes():
+    ci = (ROOT / ".github" / "workflows" / "ci.yml").read_text(encoding="utf-8")
+    assert "--no-color" in ci and "[^0-9]([0-9]+) commits scanned" in ci
