@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 import pytest
 from hadavin_kit import docgen, evalcore, kitcheck, kitsum, paths, strict_json
@@ -501,3 +502,65 @@ def test_dot_means_the_current_directory_and_vendor_verify_dot_works(world, monk
     assert paths.cli_path(".") == work
     monkeypatch.chdir(KIT)  # the CI step: `python tools/vendor.py verify .` from the kit root
     assert vendor.main(["verify", "."]) == 0
+
+
+# ---- round 2 review: confine pitfalls, write through a directory link, vendor copy through a link -----------------------
+
+
+def test_confine_sibling_prefix_root_base_and_the_base_itself(tmp_path):
+    work, sibling = tmp_path / "w", tmp_path / "w2"  # "w2" starts with "w" but is not inside it
+    work.mkdir()
+    sibling.mkdir()
+    with pytest.raises(paths.UnsafePath):
+        paths.confine(work, sibling)
+    assert paths.confine(work, work) == Path(os.path.realpath(work))
+    root = Path(tmp_path.anchor)  # a base that is a drive or filesystem root
+    assert paths.confine(root, tmp_path) == Path(os.path.realpath(tmp_path))
+    assert paths.confine(work, work / "a" / "b.txt").name == "b.txt"
+    assert not paths.inside(work, tmp_path)
+
+
+def test_write_text_in_refuses_to_write_through_a_directory_link(world):
+    work, outside = world
+    make_link(work / "ln", outside)
+    with pytest.raises(paths.UnsafePath):
+        paths.write_text_in(work, "ln/x.txt", "data")
+    assert not (outside / "x.txt").exists()
+    paths.write_text_in(work, "ok.txt", "data")
+    assert (work / "ok.txt").read_text(encoding="utf-8") == "data"
+
+
+def _copy_env(monkeypatch):
+    monkeypatch.setenv(vendor.ALLOW_ENV, "1")  # tests only: skip the merged-commit check
+
+
+def test_vendor_copy_refuses_a_vendor_directory_that_is_a_link_and_touches_nothing_outside(
+    world, monkeypatch, capsys
+):
+    work, outside = world
+    _copy_env(monkeypatch)
+    (outside / "portal-kit").mkdir()
+    keep = outside / "portal-kit" / "precious.txt"
+    keep.write_text("keep", encoding="utf-8")
+    demo = work / "demo"
+    demo.mkdir()
+    make_link(demo / "vendor", outside)  # a symlink, or a junction on Windows
+    assert vendor.cmd_copy(demo, "a" * 40) == 2
+    assert "must not be links" in capsys.readouterr().out
+    assert keep.read_text(encoding="utf-8") == "keep"  # not deleted by the wipe
+    assert not (outside / "KIT.lock").exists()
+
+
+def test_vendor_copy_refuses_a_portal_kit_link_and_a_kit_lock_symlink(world, monkeypatch):
+    work, outside = world
+    _copy_env(monkeypatch)
+    demo = work / "demo"
+    (demo / "vendor").mkdir(parents=True)
+    make_link(demo / "vendor" / "portal-kit", outside)
+    assert vendor.cmd_copy(demo, "a" * 40) == 2
+    assert (outside / "export.json").is_file()
+    demo2 = work / "demo2"
+    (demo2 / "vendor").mkdir(parents=True)
+    make_file_link(demo2 / "vendor" / "KIT.lock", outside / "lock-target")
+    assert vendor.cmd_copy(demo2, "a" * 40) == 2
+    assert not (outside / "lock-target").exists()

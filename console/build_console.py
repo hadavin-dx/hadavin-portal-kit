@@ -145,7 +145,10 @@ def main(argv: list[str] | None = None) -> int:
             paths.write_text_in(
                 out.parent, "_headers", headers_file(csp_for(js, css)), newline=chr(10)
             )
-        except paths.UnsafePath as err:  # a _headers link that leaves the folder
+        except (
+            OSError,
+            ValueError,
+        ) as err:  # a _headers link that leaves the folder (UnsafePath), or a write error
             print(f"error: {err}", file=sys.stderr)
             return 2
     print(out)

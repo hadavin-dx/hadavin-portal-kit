@@ -226,7 +226,9 @@ def main(argv: list[str] | None = None) -> int:
     lock_path = d / "vendor" / "KIT.lock"
     if lock_path.is_file():  # a demo repository: the files sit where the lock says, inside the demo
         try:
-            lock = json.loads(paths.read_text_in(lock_path.parent, lock_path.name))
+            lock = json.loads(
+                paths.read_text_in(d, "vendor/KIT.lock")
+            )  # a vendor link leaving d is refused
         except (OSError, ValueError, RecursionError):
             lock = None
         shape = lock_shape_problems(lock)

@@ -103,23 +103,30 @@ def cmd_copy(demo: Path, commit: str) -> int:
     except RuntimeError as err:
         print(f"vendor: {err}")
         return 2
-    vdir = demo / VENDOR_DIR
-    if (demo / "vendor").is_symlink() or vdir.is_symlink():
-        print("vendor: DEMO/vendor and DEMO/vendor/portal-kit must not be links")
+    # Everything below lands inside the demo: safe_join returns the REAL path, so a link or a Windows junction
+    # (is_symlink() is False for a junction) at DEMO/vendor, DEMO/vendor/portal-kit or KIT.lock is refused.
+    real_demo = Path(os.path.realpath(demo))
+    try:
+        vdir = paths.safe_join(demo, VENDOR_DIR)
+        lock_path = paths.safe_join(demo, "vendor/KIT.lock")
+        linked = vdir != real_demo / VENDOR_DIR or lock_path != real_demo / "vendor" / "KIT.lock"
+    except paths.UnsafePath:
+        linked = True
+    if linked:
+        print("vendor: DEMO/vendor, DEMO/vendor/portal-kit and KIT.lock must not be links")
         return 2
     files = kitsum.digests(KIT)  # hashes of the SOURCE files, taken before anything is copied
     if vdir.exists():
         shutil.rmtree(vdir)  # no stale or planted file survives a re-vendor
     for rel in files:
-        target = vdir / rel
+        target = paths.safe_join(vdir, rel)
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(KIT / rel, target)
     lock = {"kit_commit": commit, "vendor_dir": VENDOR_DIR, "format": kitsum.LOCK_FORMAT,
             "schema_minor_max": versioning.MAX_MINOR, "requires": required,
             "files": files, "tree_sha256": kitsum.tree_hash(files)}  # fmt: skip
-    lock_path = demo / "vendor" / "KIT.lock"
-    lock_path.write_text(
-        json.dumps(lock, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
+    paths.write_text_in(
+        demo, "vendor/KIT.lock", json.dumps(lock, indent=1, sort_keys=True) + "\n", newline="\n"
     )
     problems = kitsum.check(vdir, lock_path)
     if problems:

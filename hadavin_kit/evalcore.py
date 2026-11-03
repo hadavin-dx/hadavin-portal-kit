@@ -209,6 +209,8 @@ def read_lock(eval_dir: Path) -> Lock:
 
 
 def write_lock(eval_dir: Path, lock: Lock) -> None:
+    # Not routed through paths.write_text_in on purpose: the write is atomic (temp file, fsync, os.replace) and both
+    # names are fixed by this module, never taken from a command line or a file's content.
     path = lock_path(eval_dir)
     tmp = path.with_name(path.name + ".tmp")
     with open(tmp, "w", encoding="utf-8", newline="\n") as f:
@@ -521,9 +523,6 @@ def render_md(title: str, sc: dict[str, Any]) -> str:
 def write_report(out_dir: Path, title: str, scorecard: dict[str, Any]) -> None:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "report.json").write_text(
-        json.dumps(scorecard, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
-    (out_dir / "report.md").write_text(render_md(title, scorecard), encoding="utf-8", newline="\n")
+    body = json.dumps(scorecard, indent=2, sort_keys=True, ensure_ascii=True) + "\n"
+    paths.write_text_in(out_dir, "report.json", body, newline="\n")
+    paths.write_text_in(out_dir, "report.md", render_md(title, scorecard), newline="\n")
