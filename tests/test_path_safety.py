@@ -97,6 +97,7 @@ def test_unsafe_reason_accepts_plain_relative_names(good):
     assert paths.unsafe_reason(good) is None
 
 
+@pytest.mark.needs_samples
 def test_safe_join_refuses_a_link_leaving_the_base(world):
     work, outside = world
     make_link(work / "ln", outside)
@@ -105,6 +106,7 @@ def test_safe_join_refuses_a_link_leaving_the_base(world):
     assert paths.safe_join(work, "plain/export.json") == work / "plain" / "export.json"
 
 
+@pytest.mark.needs_samples
 def test_cli_path_confines_to_the_current_directory(world):
     work, outside = world
     (work / "d").mkdir()
@@ -115,6 +117,7 @@ def test_cli_path_confines_to_the_current_directory(world):
             paths.cli_path(bad)
 
 
+@pytest.mark.needs_samples
 def test_read_in_refuses_a_file_link_leaving_the_folder(world):
     work, outside = world
     make_file_link(work / "r.json", outside / "export.json")
@@ -127,6 +130,7 @@ def test_read_in_refuses_a_file_link_leaving_the_folder(world):
 # ---- command-line paths --------------------------------------------------------------------------------------------
 
 
+@pytest.mark.needs_samples
 @pytest.mark.parametrize("how", ["dotdot", "absolute", "link"])
 def test_kitcheck_cli_refuses_a_directory_outside_the_current_directory(world, capsys, how):
     work, outside = world
@@ -137,6 +141,7 @@ def test_kitcheck_cli_refuses_a_directory_outside_the_current_directory(world, c
     assert "unsafe path" in capsys.readouterr().out
 
 
+@pytest.mark.needs_samples
 def test_kitcheck_cli_refuses_deny_list_and_kit_lock_outside(world, capsys):
     work, outside = world
     (outside / "terms.txt").write_text("secret\n", encoding="utf-8")
@@ -146,6 +151,7 @@ def test_kitcheck_cli_refuses_deny_list_and_kit_lock_outside(world, capsys):
     assert capsys.readouterr().out.count("unsafe path") == 2
 
 
+@pytest.mark.needs_samples
 @pytest.mark.parametrize("how", ["dotdot", "absolute", "link"])
 def test_build_console_cli_refuses_an_export_outside_and_writes_nothing(world, capsys, how):
     work, outside = world
@@ -161,6 +167,7 @@ def test_build_console_cli_refuses_an_export_outside_and_writes_nothing(world, c
     assert not (outside / "index.html").exists() and not (outside / "_headers").exists()
 
 
+@pytest.mark.needs_samples
 def test_build_console_cli_refuses_an_output_outside(world, capsys):
     work, outside = world
     (work / "export.json").write_text(json.dumps(example("intake")), encoding="utf-8", newline="\n")
@@ -170,6 +177,7 @@ def test_build_console_cli_refuses_an_output_outside(world, capsys):
     assert build_console.main(["export.json"]) == 0 and (work / "index.html").is_file()
 
 
+@pytest.mark.needs_samples
 def test_build_console_refuses_a_headers_link_leaving_the_folder(world, capsys):
     work, outside = world
     (work / "export.json").write_text(json.dumps(example("intake")), encoding="utf-8", newline="\n")
@@ -178,6 +186,7 @@ def test_build_console_refuses_a_headers_link_leaving_the_folder(world, capsys):
     assert not (outside / "stolen").exists()
 
 
+@pytest.mark.needs_samples
 def test_kitsum_and_vendor_cli_refuse_a_directory_outside(world, capsys):
     _, outside = world
     assert kitsum.main(["--check", "../outside"]) == 2
@@ -186,10 +195,12 @@ def test_kitsum_and_vendor_cli_refuse_a_directory_outside(world, capsys):
     assert vendor.main(["copy", "../outside", "--commit", "0" * 40]) == 2
 
 
+@pytest.mark.needs_samples
 def test_check_fixture_refuses_a_slug_with_a_path(world, capsys):
     assert check_fixture.main(["../../x"]) == 2
 
 
+@pytest.mark.needs_samples
 def test_mutation_cli_refuses_targets_and_only_outside(world, capsys):
     _, outside = world
     (outside / "report.txt").write_text("", encoding="utf-8")
@@ -200,6 +211,7 @@ def test_mutation_cli_refuses_targets_and_only_outside(world, capsys):
 # ---- paths that come from a file's content -------------------------------------------------------------------------
 
 
+@pytest.mark.needs_samples
 def test_sums_file_naming_a_path_outside_is_a_problem_and_not_read(world):
     work, outside = world
     (outside / "secret.py").write_text("x", encoding="utf-8")
@@ -208,6 +220,7 @@ def test_sums_file_naming_a_path_outside_is_a_problem_and_not_read(world):
     assert out and all("not a safe relative path" in m for m in out)
 
 
+@pytest.mark.needs_samples
 @pytest.mark.parametrize("name", ["../outside/secret.py", "/abs/secret.py", "C:x"])
 def test_kit_lock_naming_a_path_outside_is_a_problem(world, name):
     work, _ = world
@@ -217,6 +230,7 @@ def test_kit_lock_naming_a_path_outside_is_a_problem(world, name):
     assert any("safe relative path" in m for m in kitsum.check(work, work / "KIT.lock"))
 
 
+@pytest.mark.needs_samples
 def test_a_planted_link_in_a_vendored_tree_is_reported_not_followed(world):
     work, outside = world
     (work / "hadavin_kit").mkdir()
@@ -226,12 +240,14 @@ def test_a_planted_link_in_a_vendored_tree_is_reported_not_followed(world):
     assert hashlib.sha256((outside / "export.json").read_bytes()).hexdigest() not in got.values()
 
 
+@pytest.mark.needs_samples
 def test_vendor_dir_that_leaves_the_demo_is_refused(world):
     work, _ = world
     for bad in ("../x", "/x", "C:x", "a\\b"):
         assert kitsum.vendor_dir_of(work, {"vendor_dir": bad})[0] is None
 
 
+@pytest.mark.needs_samples
 def test_eval_lock_naming_a_path_outside_is_reported_as_bad(world):
     work, outside = world
     (outside / "dev.jsonl").write_text("x", encoding="utf-8")
@@ -242,6 +258,7 @@ def test_eval_lock_naming_a_path_outside_is_reported_as_bad(world):
     assert not (work / "lock.json").exists()
 
 
+@pytest.mark.needs_samples
 def test_report_json_link_leaving_the_directory_is_not_read(tmp_path, world):
     _, outside = world
     doc = example("intake")
@@ -258,6 +275,7 @@ def test_report_json_link_leaving_the_directory_is_not_read(tmp_path, world):
     assert "MISSING_FILE" in {p.code for p in res["problems"]}
 
 
+@pytest.mark.needs_samples
 def test_recorded_turns_set_refuses_a_link_leaving_the_folder(world):
     from hadavin_kit import scripted_llm
 
