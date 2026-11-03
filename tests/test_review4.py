@@ -159,7 +159,7 @@ def test_the_hash_is_the_plain_sha256_of_the_bytes(tmp_path):
 
     f = tmp_path / "f.txt"
     f.write_bytes(b"a\r\nb\n")
-    assert kitsum._sha(f) == hashlib.sha256(b"a\r\nb\n").hexdigest()
+    assert kitsum._sha(f.parent, f.name) == hashlib.sha256(b"a\r\nb\n").hexdigest()
 
 
 # ---------------------------------------------------------------- M3: tamper coverage

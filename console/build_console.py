@@ -134,17 +134,16 @@ def main(argv: list[str] | None = None) -> int:
         export = paths.cli_path(args.export)  # command-line paths stay inside the current directory
         out = paths.cli_path(args.out) if args.out else paths.safe_join(export.parent, "index.html")
         page = build(strict_json.load_object(export))
-        out.write_text(
-            page, encoding="utf-8", newline=chr(10)
-        )  # a missing output folder is exit 2, not a traceback
+        # a missing output folder is exit 2, not a traceback
+        paths.write_text_in(out.parent, out.name, page, newline=chr(10))
     except (OSError, ValueError, RecursionError) as err:  # UnsafePath is a ValueError
         print(f"error: {type(err).__name__}: {err}", file=sys.stderr)
         return 2
     if not args.no_headers:
         _, css, js = assets()
         try:
-            paths.safe_join(out.parent, "_headers").write_text(
-                headers_file(csp_for(js, css)), encoding="utf-8", newline=chr(10)
+            paths.write_text_in(
+                out.parent, "_headers", headers_file(csp_for(js, css)), newline=chr(10)
             )
         except paths.UnsafePath as err:  # a _headers link that leaves the folder
             print(f"error: {err}", file=sys.stderr)

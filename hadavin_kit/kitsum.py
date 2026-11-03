@@ -45,18 +45,18 @@ def runtime_files(root: Path) -> list[str]:
     return sorted(found)
 
 
-def _sha(path: Path) -> str:
+def _sha(root: Path, rel: str) -> str:
     """sha256 of the RAW bytes: no newline normalisation. A demo repository therefore needs
     `vendor/portal-kit/** -text` in .gitattributes, or a CRLF checkout changes the hashes; in this repository the
     runtime files are pinned to LF by .gitattributes."""
-    return hashlib.sha256(path.read_bytes()).hexdigest()
+    try:
+        return hashlib.sha256(paths.read_bytes_in(root, rel)).hexdigest()
+    except paths.UnsafePath:  # a link that leaves the folder is never hashed
+        return _LEAVES_FOLDER
 
 
 def digests(root: Path) -> dict[str, str]:
-    return {
-        rel: _sha(root / rel) if paths.inside(root, root / rel) else _LEAVES_FOLDER
-        for rel in runtime_files(root)
-    }
+    return {rel: _sha(root, rel) for rel in runtime_files(root)}
 
 
 def tree_hash(files: dict[str, str]) -> str:
@@ -165,7 +165,7 @@ def check(root: Path, lock_path: Path | None = None) -> list[str]:
     out = [f"{rel}: missing" for rel in sorted(rel for rel in want if not (root / rel).is_file())]
     if strict:
         everything = {
-            rel: _sha(root / rel) if paths.inside(root, root / rel) else _LEAVES_FOLDER
+            rel: _sha(root, rel)
             for rel in _vendored_files(root, exclusive=bool(lock.get("vendor_dir")))
             if (root / rel).is_file()
         }
