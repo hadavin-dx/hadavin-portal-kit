@@ -209,7 +209,7 @@ jobs:
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
           echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
-          expected=$(git rev-list --count HEAD)
+          expected=$(git rev-list --count --all)  # gitleaks scans every ref, so count every ref (a PR run also has the merge ref)
           rc=0
           "$RUNNER_TEMP/gitleaks" git --redact --verbose --no-banner --no-color --exit-code 1 . 2>&1 | tee "$RUNNER_TEMP/gitleaks.log" || rc=$?
           scanned=$(sed -nE 's/.*[^0-9]([0-9]+) commits scanned.*/\1/p' "$RUNNER_TEMP/gitleaks.log" | tail -1)
