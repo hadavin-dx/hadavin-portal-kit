@@ -261,7 +261,14 @@ def _deny_problems(
     for p in sorted(root.iterdir()):
         if not p.is_file() or p.is_symlink() or p.suffix not in (".json", ".html", ".md"):
             continue
-        raw = paths.safe_join(root, p.name).read_text(encoding="utf-8-sig", errors="replace")
+        try:
+            raw = paths.safe_join(root, p.name).read_text(encoding="utf-8-sig", errors="replace")
+        except paths.UnsafePath:
+            # the hygiene check already reports such a file name; it is named here so the scan gap is visible
+            notes.append(
+                f"{_safe(p.name)} was not scanned for deny-list terms: its name is not a safe name"
+            )
+            continue
         texts.append(raw)
         if p.name == "export.json" and doc is not None:
             texts += _strings(doc)

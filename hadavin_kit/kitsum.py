@@ -203,7 +203,7 @@ def main(argv: list[str] | None = None) -> int:
         "directory",
         nargs="?",
         type=Path,
-        default=paths.ROOT,
+        default=None,
         help="a demo repository (vendor/KIT.lock) or a kit root",
     )
     g = ap.add_mutually_exclusive_group(required=True)
@@ -211,9 +211,8 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--print", action="store_true", dest="show")
     args = ap.parse_args(argv)
     try:
-        directory = paths.cli_path(
-            args.directory
-        )  # command-line paths stay inside the current directory
+        # a directory typed on the command line stays inside the current directory; the default (the kit root) is ours
+        directory = paths.ROOT if args.directory is None else paths.cli_path(args.directory)
     except ValueError as err:  # UnsafePath
         print(f"kitsum: {err}")
         return 2

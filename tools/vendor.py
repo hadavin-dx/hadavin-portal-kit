@@ -4,6 +4,9 @@
     python tools/vendor.py copy DEMO --commit SHA        copy the runtime files into DEMO/vendor/portal-kit and write DEMO/vendor/KIT.lock
     python tools/vendor.py verify DIR                    same as python -m hadavin_kit.kitsum --check DIR (a demo repository or a kit root)
 
+Every DEST/DIR is confined to the current directory (an absolute path is accepted only inside it): run from the demo,
+`cd demo; python ../portal-kit/tools/vendor.py copy . --commit SHA`. A path outside it exits 2 and says so.
+
 `copy` binds the lock to the bytes it copies. It refuses unless (1) --commit is 40 hex digits, (2) the checkout's HEAD IS
 that commit, (3) the kit directory has no uncommitted or untracked change, and (4) the commit is an ancestor of
 origin/main (vendor only from a merged commit: a SHA from a branch vanishes on squash-merge). Outside a git checkout it
@@ -143,6 +146,10 @@ def main(argv: list[str] | None = None) -> int:
             )  # command-line paths stay inside the current directory
         except ValueError as err:  # UnsafePath
             print(f"vendor: {err}")
+            print(
+                "vendor: run it from inside the demo repository and name the demo as a relative path, e.g. "
+                "`cd <demo>; python ../portal-kit/tools/vendor.py copy . --commit <40-hex sha>`"
+            )
             return 2
     if args.cmd == "manifest":
         (KIT / "KIT-SHA256SUMS").write_text(

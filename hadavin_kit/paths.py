@@ -36,6 +36,18 @@ def require(path: Path) -> Path:
     return path
 
 
+_WINDOWS_DEVICES = frozenset(
+    {
+        "CON",
+        "PRN",
+        "AUX",
+        "NUL",
+        *(f"COM{i}" for i in range(1, 10)),
+        *(f"LPT{i}" for i in range(1, 10)),
+    }
+)
+
+
 class UnsafePath(ValueError):
     """A path that is absolute, uses `..`, names a drive or leaves its base directory (also through a link)."""
 
@@ -43,7 +55,8 @@ class UnsafePath(ValueError):
 def unsafe_reason(rel: str) -> str | None:
     """Why `rel` is not a plain relative path (None = fine). Checked in BOTH path flavours, so a Windows form
     (a drive such as `C:x`, a network share, a backslash before `..`) is refused on every platform: the same text must
-    mean the same everywhere."""
+    mean the same everywhere. Also refused: a name ending in a dot or space and the Windows device names. Not refused
+    here, but caught by `inside` (it follows the real path): 8.3 short names such as `PROGRA~1`."""
     if not isinstance(rel, str) or not rel:
         return "empty or not text"
     if "\0" in rel:
@@ -52,8 +65,16 @@ def unsafe_reason(rel: str) -> str | None:
         return "absolute, or names a drive"
     if ":" in rel:
         return "contains a colon (drive letter or stream name)"
-    if ".." in rel.replace("\\", "/").split("/"):
+    parts = rel.replace("\\", "/").split("/")
+    if ".." in parts:
         return "contains .."
+    for part in parts:
+        if part != part.rstrip(" ."):
+            return (
+                "a name ends with a dot or a space (Windows drops it, so it names something else)"
+            )
+        if part.split(".")[0].upper() in _WINDOWS_DEVICES:
+            return "a Windows device name (CON, NUL, COM1, ...)"
     return None
 
 
@@ -64,7 +85,9 @@ def inside(base: Path | str, candidate: Path | str) -> bool:
 
 def safe_join(base: Path | str, rel: str) -> Path:
     """`base/rel`, refused (UnsafePath) when `rel` is absolute, has `..` or a drive, or when the result leaves `base`
-    through a symlink or junction. THE one place every path that comes from a file's content is joined."""
+    through a symlink or junction. THE one place every path that comes from a file's content is joined.
+    Limit: this is check-then-open. A link swapped in between this check and the caller's open is not caught; the
+    protection is against a path that is already wrong, not against a second process racing the check."""
     why = unsafe_reason(rel)
     if why:
         raise UnsafePath(f"unsafe path {rel!r}: {why}")
@@ -83,10 +106,22 @@ def cli_path(arg: Path | str, base: Path | str | None = None) -> Path:
         raise UnsafePath("unsafe path: contains a NUL character")
     p = Path(text)
     if p.is_absolute():
+        if ":" in p.name:
+            raise UnsafePath(
+                f"unsafe path {text!r}: the file name contains a colon (a Windows alternate data stream)"
+            )
         if not inside(base, p):
-            raise UnsafePath(f"unsafe path {text!r}: outside {base.name or base}")
+            raise UnsafePath(
+                f"unsafe path {text!r}: outside the current directory. Change into the folder that holds it "
+                "(cd <folder>) and give a path relative to it."
+            )
         return p
-    return safe_join(base, text)
+    try:
+        return safe_join(base, text)
+    except UnsafePath as err:
+        raise UnsafePath(
+            f"{err}. A command-line path must stay inside the current directory: cd into the folder that holds it."
+        ) from None
 
 
 def read_text_in(base: Path | str, rel: str, encoding: str = "utf-8") -> str:
