@@ -80,9 +80,27 @@ def unsafe_reason(rel: str) -> str | None:
     return None
 
 
+def confine(base: Path | str, candidate: Path | str) -> Path:
+    """The real path of `candidate` (every link followed), refused (UnsafePath) unless it lies within the real path of
+    `base`. The check is `os.path.commonpath` on real paths, the pattern static analysers recognise as a path guard."""
+    real_base = os.path.realpath(base)
+    real = os.path.realpath(candidate)
+    try:
+        inside_base = os.path.commonpath([real_base, real]) == real_base
+    except ValueError:  # another drive
+        inside_base = False
+    if not inside_base:
+        raise UnsafePath("unsafe path: leaves the base directory (also through a link)")
+    return Path(real)
+
+
 def inside(base: Path | str, candidate: Path | str) -> bool:
     """True when `candidate`, after following every link, lies within `base` (also after following links)."""
-    return Path(os.path.realpath(candidate)).is_relative_to(Path(os.path.realpath(base)))
+    try:
+        confine(base, candidate)
+    except UnsafePath:
+        return False
+    return True
 
 
 def safe_join(base: Path | str, rel: str) -> Path:
@@ -93,10 +111,10 @@ def safe_join(base: Path | str, rel: str) -> Path:
     why = unsafe_reason(rel)
     if why:
         raise UnsafePath(f"unsafe path {rel!r}: {why}")
-    target = Path(base) / rel
-    if not inside(base, target):
-        raise UnsafePath(f"unsafe path {rel!r}: leaves the base directory through a link")
-    return target
+    try:
+        return confine(base, Path(base) / rel)
+    except UnsafePath:
+        raise UnsafePath(f"unsafe path {rel!r}: leaves the base directory through a link") from None
 
 
 def cli_path(arg: Path | str, base: Path | str | None = None) -> Path:
@@ -117,7 +135,7 @@ def cli_path(arg: Path | str, base: Path | str | None = None) -> Path:
                 f"unsafe path {text!r}: outside the current directory. Change into the folder that holds it "
                 "(cd <folder>) and give a path relative to it."
             )
-        return p
+        return confine(base, p)
     try:
         return safe_join(base, text)
     except UnsafePath as err:
