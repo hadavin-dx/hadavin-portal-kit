@@ -23,9 +23,9 @@ from __future__ import annotations
 
 import argparse
 import ast
+import hashlib
 import json
 import os
-import random
 import re
 import shutil
 import subprocess
@@ -38,6 +38,11 @@ from typing import Any
 
 HERE = Path(__file__).resolve().parent
 KIT = HERE.parent
+sys.path.insert(0, str(KIT))
+
+
+from hadavin_kit import paths
+
 SCHEMA_REL = "schema/demo-export.v1.json"
 DEFAULT_TARGETS = (
     "export_rules.py", "rules_v11.py", "validate.py", "versioning.py", "chain.py", "honest.py",
@@ -156,7 +161,9 @@ def _split_alts(s: str) -> list[str]:
     return [*out, cur]
 
 
-_GROUP = re.compile(r"\((?:\?[:=!])?([^()]*\|[^()]*)\)")
+# Linear time: the alternatives are `[^()|]*` pieces split ONLY by a literal `|`, so no two parts of the pattern can
+# match the same text (the old `[^()]*\|[^()]*` could split a long run at any `|`, which backtracks quadratically).
+_GROUP = re.compile(r"\((?:\?[:=!])?([^()|]*(?:\|[^()|]*)+)\)")
 _REGEX_FUNCS = {"compile", "search", "match", "fullmatch", "sub", "findall", "finditer", "split"}
 
 
@@ -256,7 +263,26 @@ def _sites(tree: ast.AST) -> list[tuple[ast.AST, str, str]]:
 
 
 def src_path(rel: str) -> Path:
-    return KIT / rel if rel.startswith(IN_KIT_DIRS) else KIT / "hadavin_kit" / rel
+    # `rel` is typed on the command line (--targets): refused when it is absolute, has `..` or leaves the kit by a link
+    return paths.safe_join(KIT, rel if rel.startswith(IN_KIT_DIRS) else f"hadavin_kit/{rel}")
+
+
+def parse_survivor(line: str) -> str | None:
+    """`SURVIVOR <file> [<kind>] (<func>) <text>` -> the mutant key `file::func::kind::text`, or None.
+    Plain string splitting (linear time) instead of a regex with lazy groups, which backtracks super-linearly."""
+    s = line.lstrip()
+    if not s.startswith("SURVIVOR "):
+        return None
+    file, sep, rest = s[len("SURVIVOR ") :].partition(" [")
+    if not sep or not file or any(c.isspace() for c in file):
+        return None
+    kind, sep, rest = rest.partition("] (")
+    if not sep or not kind:
+        return None
+    func, sep, text = rest.partition(") ")
+    if not sep:
+        return None
+    return f"{file}::{func}::{kind}::{text}"
 
 
 def enumerate_python(rel: str) -> list[Mutant]:
@@ -450,6 +476,11 @@ def main(argv: list[str] | None = None) -> int:
         shutil.copytree(live, snap / "kit", ignore=COPY_IGNORE)
         KIT = snap / "kit"
         return _main(argv)
+    except (
+        paths.UnsafePath
+    ) as err:  # a --targets or --only path that leaves the kit / the current folder
+        print(f"mutation: {err}")
+        return 2
     finally:
         KIT = live
         shutil.rmtree(snap, ignore_errors=True)
@@ -468,6 +499,10 @@ def _main(argv: list[str] | None = None) -> int:
         help="run only the mutants named by SURVIVOR lines in this earlier report (re-check survivors after adding tests)",
     )
     args = ap.parse_args(argv)
+    only = paths.cli_path(args.only) if args.only else None  # refused BEFORE the slow baseline run
+    for t in args.targets:
+        if t != SCHEMA_REL:
+            src_path(t)
 
     with tempfile.TemporaryDirectory(prefix="mut-base-", ignore_cleanup_errors=True) as tmp:
         try:
@@ -492,13 +527,16 @@ def _main(argv: list[str] | None = None) -> int:
     total = len(mutants)
     if args.only:
         wanted = set()
-        for line in args.only.read_text(encoding="utf-8").splitlines():
-            m = re.match(r"\s*SURVIVOR (\S+?) \[(.+?)\] \((.*?)\) (.*)$", line)
-            if m:
-                wanted.add(f"{m.group(1)}::{m.group(3)}::{m.group(2)}::{m.group(4)}")
+        for line in only.read_text(encoding="utf-8").splitlines():
+            parsed = parse_survivor(line)
+            if parsed:
+                wanted.add(parsed)
         mutants = [m for m in mutants if m.key in wanted]
     elif not args.all and len(mutants) > args.limit:
-        mutants = random.Random(args.seed).sample(mutants, args.limit)  # noqa: S311 (a seeded sample, not security)
+        # A reproducible sample (same seed, same mutants, on every Python version) ordered by a hash: no random generator.
+        mutants = sorted(
+            mutants, key=lambda m: hashlib.sha256(f"{args.seed}:{m.key}".encode()).hexdigest()
+        )[: args.limit]
     allowed = {
         e["key"]: e for e in json.loads(EQUIVALENTS.read_text(encoding="utf-8"))["equivalent"]
     }

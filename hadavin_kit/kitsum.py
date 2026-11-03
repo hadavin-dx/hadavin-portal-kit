@@ -53,7 +53,10 @@ def _sha(path: Path) -> str:
 
 
 def digests(root: Path) -> dict[str, str]:
-    return {rel: _sha(root / rel) for rel in runtime_files(root)}
+    return {
+        rel: _sha(root / rel) if paths.inside(root, root / rel) else _LEAVES_FOLDER
+        for rel in runtime_files(root)
+    }
 
 
 def tree_hash(files: dict[str, str]) -> str:
@@ -80,6 +83,7 @@ def expected_names() -> list[str]:
 
 
 _IGNORED_NAMES = (".DS_Store", "Thumbs.db")
+_LEAVES_FOLDER = "a link that leaves the folder: not hashed"  # never equals a 64-hex digest
 _HEX64 = re.compile(r"[0-9a-f]{64}")
 
 
@@ -110,15 +114,7 @@ def lock_shape_problems(lock: Any) -> list[str]:
         return ["not a KIT.lock: a JSON object with a `files` object is required"]
     out = []
     for rel, sha in lock["files"].items():
-        parts = rel.split("/") if isinstance(rel, str) else []
-        if (
-            not parts
-            or rel.startswith("/")
-            or ".." in parts
-            or "" in parts
-            or "\\" in rel
-            or ":" in rel
-        ):
+        if paths.unsafe_reason(rel) or "" in rel.split("/") or "\\" in rel:
             out.append("a file path in the lock is not a safe relative path")
         elif not isinstance(sha, str) or not _HEX64.fullmatch(sha):
             out.append(f"{rel}: the lock's hash is not 64 lowercase hex digits")
@@ -128,16 +124,9 @@ def lock_shape_problems(lock: Any) -> list[str]:
 def vendor_dir_of(demo: Path, lock: dict[str, Any]) -> tuple[Path | None, str | None]:
     """DEMO/<vendor_dir>, confined to the demo: a vendor_dir that leaves it (absolute, `..`, a link) is a problem."""
     rel = lock.get("vendor_dir") or "vendor/portal-kit"
-    parts = rel.split("/") if isinstance(rel, str) else []
-    if (
-        not parts
-        or rel.startswith("/")
-        or ":" in rel
-        or ".." in parts
-        or "" in parts
-        or "\\" in rel
-    ):
+    if paths.unsafe_reason(rel) or "" in rel.split("/") or "\\" in rel:
         return None, "vendor_dir is not a relative path inside the demo"
+    parts = rel.split("/")
     target = demo / rel
     probe = demo
     for part in parts:
@@ -159,7 +148,7 @@ def check(root: Path, lock_path: Path | None = None) -> list[str]:
     lock_path = lock_path or (root / "KIT-SHA256SUMS")
     strict = lock_path.suffix == ".lock"
     try:
-        text = lock_path.read_text(encoding="utf-8")
+        text = paths.read_text_in(lock_path.parent, lock_path.name)
         lock: Any = json.loads(text) if strict else {}
         if strict:
             shape = lock_shape_problems(lock)
@@ -170,11 +159,13 @@ def check(root: Path, lock_path: Path | None = None) -> list[str]:
             want = parse_sums(text)
     except (OSError, ValueError, RecursionError) as err:
         return [f"{lock_path.name} is unreadable: {type(err).__name__}"]
+    if any(paths.unsafe_reason(rel) for rel in want):  # a KIT-SHA256SUMS is not shape-checked above
+        return [f"{lock_path.name}: a file path is not a safe relative path"]
     have = digests(root)
     out = [f"{rel}: missing" for rel in sorted(rel for rel in want if not (root / rel).is_file())]
     if strict:
         everything = {
-            rel: _sha(root / rel)
+            rel: _sha(root / rel) if paths.inside(root, root / rel) else _LEAVES_FOLDER
             for rel in _vendored_files(root, exclusive=bool(lock.get("vendor_dir")))
             if (root / rel).is_file()
         }
@@ -219,17 +210,24 @@ def main(argv: list[str] | None = None) -> int:
     g.add_argument("--check", action="store_true")
     g.add_argument("--print", action="store_true", dest="show")
     args = ap.parse_args(argv)
+    try:
+        directory = paths.cli_path(
+            args.directory
+        )  # command-line paths stay inside the current directory
+    except ValueError as err:  # UnsafePath
+        print(f"kitsum: {err}")
+        return 2
     if args.show:
-        data = lock_data(args.directory)
+        data = lock_data(directory)
         for rel, h in data["files"].items():
             print(f"{h}  {rel}")
         print(f"tree {data['tree_sha256']}")
         return 0
-    d = args.directory
+    d = directory
     lock_path = d / "vendor" / "KIT.lock"
     if lock_path.is_file():  # a demo repository: the files sit where the lock says, inside the demo
         try:
-            lock = json.loads(lock_path.read_text(encoding="utf-8"))
+            lock = json.loads(paths.read_text_in(lock_path.parent, lock_path.name))
         except (OSError, ValueError, RecursionError):
             lock = None
         shape = lock_shape_problems(lock)
@@ -244,7 +242,7 @@ def main(argv: list[str] | None = None) -> int:
         problems = check(d)
     for p in problems:
         print(f"kitsum: {p}")
-    print(f"kitsum {args.directory}: {'OK' if not problems else 'MISMATCH'}")
+    print(f"kitsum {directory}: {'OK' if not problems else 'MISMATCH'}")
     return 1 if problems else 0
 
 

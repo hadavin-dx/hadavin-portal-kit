@@ -189,7 +189,8 @@ def test_os_noise_files_are_not_unlisted(tmp_path):
 
 
 @pytest.mark.parametrize("bad", ["../elsewhere", "/abs/path", "vendor/../../x", "C:/x", "a\\b"])
-def test_a_vendor_dir_that_leaves_the_demo_is_refused(tmp_path, bad, capsys):
+def test_a_vendor_dir_that_leaves_the_demo_is_refused(tmp_path, bad, capsys, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     demo, _, lock = vend(tmp_path)
     elsewhere = tmp_path / "elsewhere"
     shutil.copytree(
@@ -210,7 +211,8 @@ def test_a_vendor_dir_that_leaves_the_demo_is_refused(tmp_path, bad, capsys):
         lambda d: d.update(files={"hadavin_kit/chain.py": "G" * 64}),
     ],
 )
-def test_a_malformed_lock_is_reported_not_raised(tmp_path, mutate, capsys):
+def test_a_malformed_lock_is_reported_not_raised(tmp_path, mutate, capsys, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     demo, vdir, lock = vend(tmp_path)
     rewrite_lock(lock, mutate)
     assert kitsum.check(vdir, lock)
@@ -246,7 +248,7 @@ def test_a_shape_broken_export_beside_a_page_is_a_problem_not_a_traceback(tmp_pa
     env = {**os.environ, "PYTHONPATH": str(KIT)}
     res = subprocess.run(
         [sys.executable, "-m", "hadavin_kit.kitcheck", str(d), "--json"],
-        capture_output=True, text=True, env=env, timeout=120, check=False,
+        capture_output=True, text=True, env=env, timeout=120, check=False, cwd=tmp_path,
     )  # fmt: skip
     assert res.returncode == 1 and "Traceback" not in res.stderr, res.stderr
     out = json.loads(res.stdout)

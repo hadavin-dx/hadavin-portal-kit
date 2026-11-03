@@ -136,7 +136,7 @@ def schema_facts(schema: dict) -> dict[str, dict]:
     return out
 
 
-def main() -> int:
+def main() -> None:
     if "--update-schema-facts" in sys.argv:
         facts = schema_facts(
             json.loads((KIT / "schema" / "demo-export.v1.json").read_text(encoding="utf-8"))
@@ -147,12 +147,11 @@ def main() -> int:
             newline="\n",
         )
         print(FACTS)
-        return 0
+        return
     p = KIT / "CONTRACT.md"
     p.write_text(splice(p.read_text(encoding="utf-8"), generate()), encoding="utf-8", newline="\n")
     print(p)
-    return 0
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    main()

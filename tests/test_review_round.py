@@ -409,12 +409,11 @@ def b64(text):
 
 @pytest.mark.parametrize("slug", SLUGS)
 @pytest.mark.needs_samples
-def test_csp_hashes_are_recomputed_from_the_built_bytes(slug, tmp_path):
+def test_csp_hashes_are_recomputed_from_the_built_bytes(slug, tmp_path, monkeypatch):
     out = tmp_path / "index.html"
-    assert (
-        build_console.main([str(KIT / "demo_only" / "examples" / f"{slug}.json"), "-o", str(out)])
-        == 0
-    )
+    shutil.copyfile(KIT / "demo_only" / "examples" / f"{slug}.json", tmp_path / f"{slug}.json")
+    monkeypatch.chdir(tmp_path)  # command-line paths must lie inside the current directory
+    assert build_console.main([f"{slug}.json", "-o", "index.html"]) == 0
     page = out.read_text(encoding="utf-8")
     style, scripts = inline_parts(page)
     assert len(scripts) == 1

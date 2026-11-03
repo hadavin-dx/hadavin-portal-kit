@@ -212,6 +212,7 @@ def test_cli_exit_codes_and_json(tmp_path):
             env=env,
             timeout=60,
             check=False,
+            cwd=tmp_path,  # command-line paths must lie inside the current directory
         )
 
     ok = cli(str(good), "--demo", "askdata", "--json")

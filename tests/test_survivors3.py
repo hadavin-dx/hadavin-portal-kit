@@ -166,7 +166,8 @@ def test_sums_mode_finds_changed_missing_and_extra_runtime_files(tmp_path):
     assert "hadavin_kit/extra.py: not in KIT-SHA256SUMS (extra runtime file)" in got
 
 
-def test_a_lock_without_vendor_dir_means_the_default_vendor_directory(tmp_path):
+def test_a_lock_without_vendor_dir_means_the_default_vendor_directory(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
     demo = tmp_path / "demo"
     assert vendor.cmd_copy(demo, "a" * 40) == 0
     lock_path = demo / "vendor" / "KIT.lock"

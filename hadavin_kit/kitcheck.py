@@ -148,11 +148,11 @@ def _canon(value: Any) -> str:
 
 def _page_problems(root: Path, doc: dict[str, Any] | None, notes: list[str]) -> list[Problem]:
     page_path, headers_path = root / "index.html", root / "_headers"
-    if not page_path.exists():
+    if not page_path.exists() or not paths.inside(root, page_path):
         notes.append("no index.html: console page not checked")
         return []
     out: list[Problem] = []
-    text = page_path.read_text(encoding="utf-8")
+    text = paths.read_text_in(root, "index.html")
     page = _Page()
     page.feed(text)
     # remote references are looked for in the skeleton, scripts and styles only: the embedded data may legitimately
@@ -227,12 +227,12 @@ def _page_problems(root: Path, doc: dict[str, Any] | None, notes: list[str]) -> 
                     "page differs from the page the kit builds from export.json (skeleton, banner, navigation or text edited)",
                 )
             )
-    if not headers_path.exists():
+    if not headers_path.exists() or not paths.inside(root, headers_path):
         out.append(
             Problem("MISSING_FILE", "_headers", "index.html needs the matching _headers file")
         )
     else:
-        have = headers_path.read_text(encoding="utf-8").replace("\r\n", "\n")
+        have = paths.read_text_in(root, "_headers").replace("\r\n", "\n")
         if have != _kit_console().headers_file(expected_csp):
             out.append(
                 Problem(
@@ -261,7 +261,7 @@ def _deny_problems(
     for p in sorted(root.iterdir()):
         if not p.is_file() or p.is_symlink() or p.suffix not in (".json", ".html", ".md"):
             continue
-        raw = p.read_text(encoding="utf-8-sig", errors="replace")
+        raw = paths.safe_join(root, p.name).read_text(encoding="utf-8-sig", errors="replace")
         texts.append(raw)
         if p.name == "export.json" and doc is not None:
             texts += _strings(doc)
@@ -306,9 +306,9 @@ def _lock_problems(
 ) -> list[Problem]:
     """The export must name the vendored kit commit, and the running kit must be the files that lock describes."""
     try:
-        lock = json.loads(lock_path.read_text(encoding="utf-8"))
+        lock = json.loads(paths.read_text_in(lock_path.parent, lock_path.name))
         locked = lock["kit_commit"]
-    except (OSError, ValueError, KeyError, TypeError):
+    except (OSError, ValueError, KeyError, TypeError):  # UnsafePath is a ValueError
         return [
             Problem(
                 "KIT_LOCK", _safe(lock_path.name), "unreadable, or not a KIT.lock with a kit_commit"
@@ -455,8 +455,8 @@ def run(
             rp = root / "report.json"
             if want is None:
                 continue
-            if rp.is_file():
-                if hashlib.sha256(rp.read_bytes()).hexdigest() != want:
+            if rp.is_file() and paths.inside(root, rp):
+                if hashlib.sha256(paths.read_bytes_in(root, "report.json")).hexdigest() != want:
                     problems.append(
                         Problem(
                             "REPORT_MISMATCH",
@@ -483,7 +483,7 @@ def run(
     rp = root / "report.json"
     if rp.is_file() and not rp.is_symlink():
         try:
-            strict_json.loads(rp.read_text(encoding="utf-8-sig"))
+            strict_json.loads(paths.read_text_in(root, "report.json", "utf-8-sig"))
         except (ValueError, RecursionError):  # UnicodeDecodeError is a ValueError
             if require_report or deploy:
                 problems.append(
@@ -526,17 +526,26 @@ def main(argv: list[str] | None = None) -> int:
     )
     ap.add_argument("--json", action="store_true", help="print the result as JSON")
     args = ap.parse_args(argv)
-    deny = None
-    if args.deny_list:
-        deny = args.deny_list.read_text(encoding="utf-8-sig").splitlines()
+    try:
+        directory = paths.cli_path(
+            args.directory
+        )  # command-line paths stay inside the current directory
+        kit_lock = paths.cli_path(args.kit_lock) if args.kit_lock else None
+        deny = None
+        if args.deny_list:
+            deny_file = paths.cli_path(args.deny_list)
+            deny = paths.read_text_in(deny_file.parent, deny_file.name, "utf-8-sig").splitlines()
+    except (OSError, ValueError) as err:  # UnsafePath is a ValueError
+        print(f"kitcheck: {type(err).__name__}: {err}")
+        return 2
     try:
         res = run(
-            args.directory,
+            directory,
             demo=args.demo,
             deny=deny,
             require_report=args.require_report or args.deploy,
             expect_head=args.expect_head,
-            kit_lock=args.kit_lock,
+            kit_lock=kit_lock,
             deploy=args.deploy,
         )
     except paths.KitLayoutError as err:
@@ -546,7 +555,7 @@ def main(argv: list[str] | None = None) -> int:
         print(json.dumps({**res, "problems": [p.as_dict() for p in res["problems"]]}, indent=2))
     else:
         print(
-            f"kitcheck {args.directory}: {'OK' if res['ok'] else 'PROBLEMS'} (schema minor {res['minor']}, max supported {versioning.MAX_MINOR})"
+            f"kitcheck {directory}: {'OK' if res['ok'] else 'PROBLEMS'} (schema minor {res['minor']}, max supported {versioning.MAX_MINOR})"
         )
         for p in res["problems"]:
             print(f"  {p}")

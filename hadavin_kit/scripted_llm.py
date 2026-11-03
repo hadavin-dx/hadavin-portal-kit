@@ -16,7 +16,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from hadavin_kit import strict_json
+from hadavin_kit import paths, strict_json
 
 MODEL = "scripted"
 _SLUG = re.compile(r"[a-z0-9][a-z0-9_-]{0,63}")  # used with fullmatch: no trailing newline
@@ -61,6 +61,8 @@ def recorded_turns_sha256(recorded_dir: Path | str) -> str:
     root = Path(recorded_dir)
     h = hashlib.sha256()
     for p in sorted(root.rglob("*.json")):
+        if not paths.inside(root, p):
+            raise paths.UnsafePath(f"recorded turn {p.name!r} is a link that leaves the folder")
         h.update(p.relative_to(root).as_posix().encode("utf-8") + b"\0" + p.read_bytes() + b"\0")
     return h.hexdigest()
 

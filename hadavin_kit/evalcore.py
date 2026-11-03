@@ -23,7 +23,7 @@ from typing import Any, Literal, Protocol, TypedDict
 
 from hadavin_sdk.stats import upper_error_bound
 
-from hadavin_kit import strict_json
+from hadavin_kit import paths, strict_json
 
 HUMAN_READ_SALT = "human-read-v1"
 DISCLAIMER = "A smoke result on a small held-out set of synthetic data; not live accuracy."
@@ -224,7 +224,7 @@ def freeze(eval_dir: Path, names: list[str], thresholds: Thresholds | None = Non
     if lock_path(eval_dir).exists():
         raise LockError("lock.json already exists: refusing to overwrite a frozen set")
     lock = Lock(
-        files={n: sha256_file(Path(eval_dir) / n) for n in names},
+        files={n: sha256_file(paths.safe_join(eval_dir, n)) for n in names},
         thresholds=thresholds or Thresholds(),
     )
     write_lock(eval_dir, lock)
@@ -235,7 +235,13 @@ def verify_files(eval_dir: Path, lock: Lock) -> list[str]:
     """Names of files that are missing or changed since the freeze (empty = intact)."""
     bad = []
     for name, digest in lock.files.items():
-        p = Path(eval_dir) / name
+        try:
+            p = paths.safe_join(
+                eval_dir, name
+            )  # the name comes from lock.json, i.e. from file content
+        except paths.UnsafePath:
+            bad.append(name)
+            continue
         if not p.is_file() or sha256_file(p) != digest:
             bad.append(name)
     return bad

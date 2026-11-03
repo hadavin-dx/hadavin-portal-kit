@@ -18,7 +18,7 @@ sys.path.insert(0, str(KIT))
 sys.path.insert(0, str(KIT / "console"))
 
 import build_console
-from hadavin_kit import kitcheck
+from hadavin_kit import kitcheck, paths
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -30,15 +30,18 @@ def main(argv: list[str] | None = None) -> int:
         help="check the frozen compat-v1.N copy instead of the current example",
     )
     args = ap.parse_args(argv)
-    src = (
-        KIT
-        / (
-            "demo_only/examples"
-            if args.compat is None
-            else f"demo_only/fixtures/compat-v1.{args.compat}"
-        )
-        / f"{args.slug}.json"
+    folder = (
+        "demo_only/examples"
+        if args.compat is None
+        else f"demo_only/fixtures/compat-v1.{int(args.compat)}"
     )
+    try:
+        src = paths.safe_join(
+            KIT / folder, f"{args.slug}.json"
+        )  # the slug is typed on the command line
+    except ValueError as err:  # UnsafePath
+        print(f"error: {err}")
+        return 2
     doc = json.loads(src.read_text(encoding="utf-8"))
     with tempfile.TemporaryDirectory() as tmp:
         root = Path(tmp)

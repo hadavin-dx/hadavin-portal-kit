@@ -89,6 +89,7 @@ def test_the_fixed_survivor_report_format_round_trips_through_only(tmp_path, mon
     monkeypatch.setattr(mutation, "make_workspace", lambda dst: dst)
     monkeypatch.setattr(mutation, "canary_checks", lambda: 0)
     monkeypatch.setattr(mutation, "run_mutant", lambda code, rel: "killed")
+    monkeypatch.chdir(tmp_path)  # --only must lie inside the current directory
     assert mutation.main(["--only", str(report), "--workers", "1", "--targets", "chain.py"]) == 0
     out = capsys.readouterr().out
     assert "1 run of" in out and "STALE" not in out

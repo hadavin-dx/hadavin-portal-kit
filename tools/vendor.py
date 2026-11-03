@@ -32,7 +32,7 @@ JSONSCHEMA_RANGE = (
 )
 sys.path.insert(0, str(KIT))
 
-from hadavin_kit import kitsum, versioning
+from hadavin_kit import kitsum, paths, versioning
 
 
 def pins() -> dict[str, str]:
@@ -136,6 +136,14 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("verify")
     v.add_argument("dest", type=Path)
     args = ap.parse_args(argv)
+    if args.cmd in ("copy", "verify"):
+        try:
+            args.dest = paths.cli_path(
+                args.dest
+            )  # command-line paths stay inside the current directory
+        except ValueError as err:  # UnsafePath
+            print(f"vendor: {err}")
+            return 2
     if args.cmd == "manifest":
         (KIT / "KIT-SHA256SUMS").write_text(
             kitsum.sums_text(kitsum.digests(KIT)), encoding="utf-8", newline="\n"

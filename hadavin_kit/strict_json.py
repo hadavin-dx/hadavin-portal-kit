@@ -8,6 +8,8 @@ import math
 from pathlib import Path
 from typing import Any
 
+from hadavin_kit import paths
+
 
 def _constant(name: str) -> Any:
     raise ValueError(f"non-finite number {name} is not allowed")
@@ -34,7 +36,10 @@ def loads(text: str) -> Any:
 
 
 def load_object(path: Path | str) -> dict[str, Any]:
-    data = loads(Path(path).read_text(encoding="utf-8"))
+    p = Path(
+        path
+    )  # read through the shared helper: a name that is a link leaving its own folder is refused
+    data = loads(paths.read_text_in(p.parent, p.name))
     if not isinstance(data, dict):
         raise ValueError("a JSON object is required")  # noqa: TRY004
     return data
