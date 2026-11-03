@@ -228,3 +228,18 @@ def test_chain_head_reported_equals_recomputed(tmp_path):
     res = kitcheck.run(write_dir(tmp_path / "hd", d, page=False, headers=False))
     assert res["chain"]["head"] == d["audit"]["events"][-1]["sha256"]
     assert chain.verify(d["audit"]["events"], d["audit"]["chain"])["ok"]
+
+
+@pytest.mark.needs_samples
+@pytest.mark.parametrize("breaker", ["WRONG_TYPE", "MISSING_KEY", "UNKNOWN_KEY"])
+def test_a_shape_broken_export_computes_no_minor_or_chain(tmp_path, breaker):
+    doc = example("intake")
+    if breaker == "WRONG_TYPE":
+        doc["run"]["seed"] = True
+    elif breaker == "MISSING_KEY":
+        del doc["run"]["seed"]
+    else:
+        doc["run"]["surprise"] = 1
+    res = kitcheck.run(write_dir(tmp_path / "x", doc, page=False))
+    assert breaker in codes(res)
+    assert res["minor"] is None and res["chain"] is None and not res["ok"]
