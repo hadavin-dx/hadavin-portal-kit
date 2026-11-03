@@ -235,7 +235,7 @@ def main(argv: list[str] | None = None) -> int:
         vend, bad = (None, None) if shape else vendor_dir_of(d, lock)
         if shape:
             problems = [f"KIT.lock: {m}" for m in shape]
-        elif bad or vend is None:
+        elif bad:  # vendor_dir_of returns a reason exactly when it returns no directory
             problems = [f"KIT.lock: {bad}"]
         else:
             problems = check(vend, lock_path)

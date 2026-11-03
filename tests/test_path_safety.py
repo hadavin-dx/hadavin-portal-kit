@@ -624,3 +624,24 @@ def test_source_problem_refuses_a_missing_or_different_head(tmp_path, monkeypatc
     monkeypatch.setattr(vendor, "KIT", tmp_path)
     monkeypatch.setattr(vendor, "_git", lambda *args: head)
     assert "HEAD is not --commit" in vendor.source_problem("a" * 40)
+
+
+def test_kitsum_ignores_only_the_known_junk_names_and_reports_bad_hashes():
+    assert kitsum._ignorable(Path(".DS_Store")) and kitsum._ignorable(Path("Thumbs.db"))
+    assert not kitsum._ignorable(Path("evil.py"))
+    got = kitsum.lock_shape_problems({"files": {"a.py": "G" * 64}})
+    assert got == ["a.py: the lock's hash is not 64 lowercase hex digits"]
+
+
+def test_an_unlisted_file_in_each_of_the_three_kit_folders_is_found(tmp_path):
+    for folder, name in (("hadavin_kit", "a.py"), ("schema", "b.json"), ("console", "c.js")):
+        (tmp_path / folder).mkdir()
+        (tmp_path / folder / name).write_text("x", encoding="utf-8")
+    lock = tmp_path / "KIT.lock"
+    lock.write_text(
+        json.dumps({"kit_commit": "a" * 40, "files": {}, "tree_sha256": kitsum.tree_hash({})}),
+        encoding="utf-8",
+    )
+    got = kitsum.check(tmp_path, lock)
+    for rel in ("hadavin_kit/a.py", "schema/b.json", "console/c.js"):
+        assert f"{rel}: not in the lock (unlisted file)" in got
