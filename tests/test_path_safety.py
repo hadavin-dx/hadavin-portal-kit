@@ -207,6 +207,10 @@ def test_check_fixture_refuses_a_slug_with_a_path(world, capsys):
     assert check_fixture.main(["../../x"]) == 2
 
 
+@pytest.mark.skipif(
+    bool(os.environ.get("HADAVIN_MUTATION_RUN")),
+    reason="the mutation harness runs these tests inside a mutated copy: no recursion, and a mutated runtime file legitimately differs from the manifest",
+)
 def test_mutation_cli_refuses_targets_and_only_outside(world, capsys):
     _, outside = world
     (outside / "report.txt").write_text("", encoding="utf-8")
@@ -431,6 +435,10 @@ def test_docgen_main_returns_nothing_and_leaves_the_committed_block_unchanged(mo
 # ---- review round: default directory, messages, odd names ------------------------------------------------------------
 
 
+@pytest.mark.skipif(
+    bool(os.environ.get("HADAVIN_MUTATION_RUN")),
+    reason="the mutation harness runs these tests inside a mutated copy: no recursion, and a mutated runtime file legitimately differs from the manifest",
+)
 def test_kitsum_default_directory_is_the_kit_root_from_any_current_directory(world, capsys):
     assert (
         kitsum.main(["--check"]) == 0
@@ -497,6 +505,10 @@ def test_windows_short_name_cannot_escape_the_base(tmp_path):
         assert paths.inside(tmp_path, got)  # accepted names still resolve inside the base
 
 
+@pytest.mark.skipif(
+    bool(os.environ.get("HADAVIN_MUTATION_RUN")),
+    reason="the mutation harness runs these tests inside a mutated copy: no recursion, and a mutated runtime file legitimately differs from the manifest",
+)
 def test_dot_means_the_current_directory_and_vendor_verify_dot_works(world, monkeypatch):
     work, _ = world
     assert paths.cli_path(".") == work
@@ -564,3 +576,8 @@ def test_vendor_copy_refuses_a_portal_kit_link_and_a_kit_lock_symlink(world, mon
     make_file_link(demo2 / "vendor" / "KIT.lock", outside / "lock-target")
     assert vendor.cmd_copy(demo2, "a" * 40) == 2
     assert not (outside / "lock-target").exists()
+
+
+@pytest.mark.parametrize("not_text", [None, 5, b"a", ["a"]])
+def test_unsafe_reason_refuses_a_value_that_is_not_text(not_text):
+    assert paths.unsafe_reason(not_text)

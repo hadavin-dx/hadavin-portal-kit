@@ -57,7 +57,7 @@ TEST_FILES = (
     "test_rules_v11.py", "test_rules_v10.py", "test_validate_typed.py", "test_versioning.py", "test_kitcheck.py",
     "test_amendments.py", "test_kit_core.py", "test_review_round.py", "test_boundaries.py", "test_console_v11.py",
     "test_hostile.py", "test_evalcore_gates.py", "test_schema_walk.py", "test_additive_diff.py", "test_vendor.py",
-    "test_review3.py", "test_pinned_constants.py", "test_survivors3.py", "test_review4.py",
+    "test_review3.py", "test_pinned_constants.py", "test_survivors3.py", "test_review4.py", "test_path_safety.py",
 )  # fmt: skip
 EQUIVALENTS = HERE / "mutation_equivalents.json"
 TIMEOUT_S = 420
