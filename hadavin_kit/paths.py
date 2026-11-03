@@ -148,7 +148,9 @@ def read_text_in(base: Path | str, rel: str, encoding: str = "utf-8") -> str:
 def write_text_in(
     base: Path | str, rel: str, text: str, encoding: str = "utf-8", newline: str | None = None
 ) -> None:
-    safe_join(base, rel).write_text(text, encoding=encoding, newline=newline)
+    target = safe_join(base, rel)
+    with open(target, "w", encoding=encoding, newline=newline) as handle:
+        handle.write(text)
 
 
 def read_bytes_in(base: Path | str, rel: str) -> bytes:
