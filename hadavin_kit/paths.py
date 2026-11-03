@@ -69,6 +69,8 @@ def unsafe_reason(rel: str) -> str | None:
     if ".." in parts:
         return "contains .."
     for part in parts:
+        if part in (".", ""):  # the current directory and a doubled slash name nothing odd
+            continue
         if part != part.rstrip(" ."):
             return (
                 "a name ends with a dot or a space (Windows drops it, so it names something else)"

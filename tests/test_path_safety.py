@@ -102,7 +102,9 @@ def test_unsafe_reason_refuses_every_traversal_form(bad):
         paths.safe_join("base", bad)
 
 
-@pytest.mark.parametrize("good", ["a", "a/b.json", "a b/c", ".hidden", "a..b/c"])
+@pytest.mark.parametrize(
+    "good", ["a", "a/b.json", "a b/c", ".hidden", "a..b/c", ".", "./a", "a/./b"]
+)
 def test_unsafe_reason_accepts_plain_relative_names(good):
     assert paths.unsafe_reason(good) is None
 
@@ -492,3 +494,10 @@ def test_windows_short_name_cannot_escape_the_base(tmp_path):
         except paths.UnsafePath:
             continue
         assert paths.inside(tmp_path, got)  # accepted names still resolve inside the base
+
+
+def test_dot_means_the_current_directory_and_vendor_verify_dot_works(world, monkeypatch):
+    work, _ = world
+    assert paths.cli_path(".") == work
+    monkeypatch.chdir(KIT)  # the CI step: `python tools/vendor.py verify .` from the kit root
+    assert vendor.main(["verify", "."]) == 0
