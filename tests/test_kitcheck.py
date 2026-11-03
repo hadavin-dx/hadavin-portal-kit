@@ -243,3 +243,34 @@ def test_a_shape_broken_export_computes_no_minor_or_chain(tmp_path, breaker):
     res = kitcheck.run(write_dir(tmp_path / "x", doc, page=False))
     assert breaker in codes(res)
     assert res["minor"] is None and res["chain"] is None and not res["ok"]
+
+
+def test_range_note_fires_exactly_at_the_upper_bound_and_below_the_lower_bound():
+    assert kitcheck._range_note("5", "<5") and kitcheck._range_note("4.9", ">=5")
+    assert (
+        kitcheck._range_note("5.0", ">=5") is None and kitcheck._range_note("4.26.0", "<5") is None
+    )
+
+
+def test_lock_problems_adds_the_jsonschema_range_note_when_given_a_notes_list(tmp_path):
+    lock = tmp_path / "KIT.lock"
+    lock.write_text(
+        json.dumps({"kit_commit": "a" * 40, "requires": {"jsonschema_range": ">=999"}}),
+        encoding="utf-8",
+    )
+    notes: list[str] = []
+    kitcheck._lock_problems({"demo": {"kit_commit": "a" * 40}}, lock, notes)
+    assert any("outside the range" in n for n in notes)
+
+
+@pytest.mark.needs_samples
+def test_an_export_the_kit_cannot_build_a_page_from_is_a_page_mismatch(tmp_path):
+    doc = example("refunds")
+    d = write_dir(tmp_path / "p", doc, headers=False)
+    broken = dict(doc)
+    broken["demo"] = {"slug": "refunds"}  # no title, no kit_commit: the page builder raises
+    (d / "export.json").write_text(json.dumps(broken), encoding="utf-8", newline="\n")
+    res = kitcheck.run(d)
+    assert any(
+        p.code == "PAGE_MISMATCH" and "cannot build a page" in p.message for p in res["problems"]
+    ), res["problems"]
