@@ -391,7 +391,7 @@ def test_gitleaks_scans_the_whole_history_and_compares_the_scanned_count():
         pytest.skip("repository root not present")
     text = CI.read_text(encoding="utf-8")
     assert "fetch-depth: 0" in text and "set -euo pipefail" in text
-    assert "git rev-list --count HEAD" in text and "commits scanned" in text
+    assert "git rev-list --count --all" in text and "commits scanned" in text
     assert "origin/main..HEAD" not in text, (
         "the whole history is scanned, on pushes and pull requests"
     )
