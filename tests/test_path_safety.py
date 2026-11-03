@@ -613,9 +613,44 @@ def test_vendor_main_copy_and_manifest_commands_work(world, monkeypatch, capsys)
     assert vendor.main(["copy", "demo", "--commit", "a" * 40]) == 0
     assert (work / "demo" / "vendor" / "KIT.lock").is_file()
     assert vendor.main(["verify", "demo"]) == 0
+
+
+def test_vendor_manifest_command_writes_the_manifest_of_the_kit_it_runs_in(tmp_path, monkeypatch):
+    # Run on a TEMPORARY copy of the runtime files: the repository's own KIT-SHA256SUMS must not be rewritten by a test
+    # (that would hide a stale committed manifest; tests/test_vendor.py is the currency check).
+    tmp_kit = tmp_path / "kit"
+    for folder in ("hadavin_kit", "schema", "console"):
+        shutil.copytree(
+            KIT / folder, tmp_kit / folder, ignore=shutil.ignore_patterns("__pycache__")
+        )
+    real = (KIT / "KIT-SHA256SUMS").read_bytes()
+    monkeypatch.setattr(vendor, "KIT", tmp_kit)
+    (tmp_kit / "console" / "chain.js").write_text("// changed on purpose\n", encoding="utf-8")
     assert vendor.main(["manifest"]) == 0
-    sums = (KIT / "KIT-SHA256SUMS").read_text(encoding="utf-8")
-    assert sums == kitsum.sums_text(kitsum.digests(KIT))
+    written = (tmp_kit / "KIT-SHA256SUMS").read_text(encoding="utf-8")
+    assert written == kitsum.sums_text(kitsum.digests(tmp_kit))
+    assert written.encode() != real  # it describes the changed copy, not the repository
+    assert (
+        KIT / "KIT-SHA256SUMS"
+    ).read_bytes() == real  # and the repository's file was not touched
+
+
+def test_mutation_target_is_validated_before_the_package_prefix_is_added():
+    for bad in ("/chain.py", r"\chain.py", "C:chain.py", "../chain.py"):
+        with pytest.raises(paths.UnsafePath):
+            mutation.src_path(bad)
+    assert mutation.src_path("chain.py").name == "chain.py"
+
+
+def test_sampling_can_pick_either_of_two_sites_that_share_one_key():
+    a = mutation.Mutant("m.py", 1, "cmp Is->IsNot", 10, "check", "bound is None")
+    b = mutation.Mutant("m.py", 2, "cmp Is->IsNot", 20, "check", "bound is None")
+    assert a.key == b.key
+    picked = {mutation.sample([a, b], seed, 1)[0].index for seed in range(40)}
+    assert picked == {1, 2}  # keyed by text only, one site could never be chosen
+    assert mutation.sample([a, b], 7, 1) == mutation.sample(
+        [b, a], 7, 1
+    )  # reproducible, order-independent
 
 
 @pytest.mark.parametrize("head", [None, "0" * 40 + chr(10)])

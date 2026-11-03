@@ -263,8 +263,21 @@ def _sites(tree: ast.AST) -> list[tuple[ast.AST, str, str]]:
 
 
 def src_path(rel: str) -> Path:
-    # `rel` is typed on the command line (--targets): refused when it is absolute, has `..` or leaves the kit by a link
+    # `rel` is typed on the command line (--targets): refused when it is absolute, has `..` or leaves the kit by a link.
+    # It is checked BEFORE the package prefix is added, or `/chain.py` would become the harmless-looking `hadavin_kit//chain.py`.
+    why = paths.unsafe_reason(rel)
+    if why:
+        raise paths.UnsafePath(f"unsafe target {rel!r}: {why}")
     return paths.safe_join(KIT, rel if rel.startswith(IN_KIT_DIRS) else f"hadavin_kit/{rel}")
+
+
+def sample(mutants: list[Mutant], seed: int, limit: int) -> list[Mutant]:
+    """A reproducible sample (same seed, same mutants, on every Python version), ordered by a hash: no random generator.
+    The site (file and index) is part of the hash because different sites can share one `key`."""
+    return sorted(
+        mutants,
+        key=lambda m: hashlib.sha256(f"{seed}:{m.file}:{m.index}:{m.key}".encode()).hexdigest(),
+    )[:limit]
 
 
 def parse_survivor(line: str) -> str | None:
@@ -533,10 +546,7 @@ def _main(argv: list[str] | None = None) -> int:
                 wanted.add(parsed)
         mutants = [m for m in mutants if m.key in wanted]
     elif not args.all and len(mutants) > args.limit:
-        # A reproducible sample (same seed, same mutants, on every Python version) ordered by a hash: no random generator.
-        mutants = sorted(
-            mutants, key=lambda m: hashlib.sha256(f"{args.seed}:{m.key}".encode()).hexdigest()
-        )[: args.limit]
+        mutants = sample(mutants, args.seed, args.limit)
     allowed = {
         e["key"]: e for e in json.loads(EQUIVALENTS.read_text(encoding="utf-8"))["equivalent"]
     }
