@@ -69,7 +69,9 @@ def unsafe_reason(rel: str) -> str | None:
     if ".." in parts:
         return "contains .."
     for part in parts:
-        if part in (".", ""):  # the current directory and a doubled slash name nothing odd
+        if (
+            part == "."
+        ):  # the current directory names nothing odd (an empty part, from a doubled slash, is harmless too)
             continue
         if part != part.rstrip(" ."):
             return (

@@ -146,7 +146,7 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("verify")
     v.add_argument("dest", type=Path)
     args = ap.parse_args(argv)
-    if args.cmd in ("copy", "verify"):
+    if args.cmd == "copy":  # `verify` is confined by kitsum.main itself
         try:
             args.dest = paths.cli_path(
                 args.dest

@@ -581,3 +581,46 @@ def test_vendor_copy_refuses_a_portal_kit_link_and_a_kit_lock_symlink(world, mon
 @pytest.mark.parametrize("not_text", [None, 5, b"a", ["a"]])
 def test_unsafe_reason_refuses_a_value_that_is_not_text(not_text):
     assert paths.unsafe_reason(not_text)
+
+
+# ---- mutation survivors of the first run: tests that pin the vendor command and the in-demo link check --------------------
+
+
+def test_vendor_copy_refuses_links_that_point_inside_the_demo_too(world, monkeypatch):
+    work, _ = world
+    _copy_env(monkeypatch)
+    demo = work / "demo"
+    (demo / "elsewhere").mkdir(parents=True)
+    (demo / "vendor").mkdir()
+    make_link(
+        demo / "vendor" / "portal-kit", demo / "elsewhere"
+    )  # inside the demo, but not where the lock says
+    assert vendor.cmd_copy(demo, "a" * 40) == 2
+    demo2 = work / "demo2"
+    (demo2 / "real").mkdir(parents=True)
+    make_link(demo2 / "vendor", demo2 / "real")
+    assert vendor.cmd_copy(demo2, "a" * 40) == 2
+    demo3 = work / "demo3"
+    (demo3 / "vendor").mkdir(parents=True)
+    (demo3 / "other.lock").write_text("x", encoding="utf-8")
+    make_file_link(demo3 / "vendor" / "KIT.lock", demo3 / "other.lock")  # only the lock is a link
+    assert vendor.cmd_copy(demo3, "a" * 40) == 2
+
+
+def test_vendor_main_copy_and_manifest_commands_work(world, monkeypatch, capsys):
+    work, _ = world
+    _copy_env(monkeypatch)
+    assert vendor.main(["copy", "demo", "--commit", "a" * 40]) == 0
+    assert (work / "demo" / "vendor" / "KIT.lock").is_file()
+    assert vendor.main(["verify", "demo"]) == 0
+    assert vendor.main(["manifest"]) == 0
+    sums = (KIT / "KIT-SHA256SUMS").read_text(encoding="utf-8")
+    assert sums == kitsum.sums_text(kitsum.digests(KIT))
+
+
+@pytest.mark.parametrize("head", [None, "0" * 40 + chr(10)])
+def test_source_problem_refuses_a_missing_or_different_head(tmp_path, monkeypatch, head):
+    (tmp_path / ".git").mkdir()
+    monkeypatch.setattr(vendor, "KIT", tmp_path)
+    monkeypatch.setattr(vendor, "_git", lambda *args: head)
+    assert "HEAD is not --commit" in vendor.source_problem("a" * 40)
