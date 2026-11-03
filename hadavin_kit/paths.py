@@ -82,13 +82,10 @@ def unsafe_reason(rel: str) -> str | None:
 
 def confine(base: Path | str, candidate: Path | str) -> Path:
     """The real path of `candidate` (every link followed), refused (UnsafePath) unless it lies within the real path of
-    `base`. The check is `os.path.commonpath` on real paths, the pattern static analysers recognise as a path guard."""
+    `base`. The check is `startswith` on real paths, the pattern static analysers recognise as a path guard."""
     real_base = os.path.realpath(base)
     real = os.path.realpath(candidate)
-    try:
-        inside_base = os.path.commonpath([real_base, real]) == real_base
-    except ValueError:  # another drive
-        inside_base = False
+    inside_base = real == real_base or real.startswith(real_base.rstrip(os.sep) + os.sep)
     if not inside_base:
         raise UnsafePath("unsafe path: leaves the base directory (also through a link)")
     return Path(real)
