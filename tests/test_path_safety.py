@@ -680,3 +680,12 @@ def test_an_unlisted_file_in_each_of_the_three_kit_folders_is_found(tmp_path):
     got = kitsum.check(tmp_path, lock)
     for rel in ("hadavin_kit/a.py", "schema/b.json", "console/c.js"):
         assert f"{rel}: not in the lock (unlisted file)" in got
+
+
+def test_fold_removes_control_characters_and_format_characters_separately():
+    from hadavin_kit import textnorm
+
+    assert textnorm.fold("a" + chr(0) + "b") == "ab"  # a control character (category Cc)
+    assert textnorm.fold("a" + chr(0x7F) + "b") == "ab"
+    assert textnorm.fold("a" + chr(0x200B) + "b") == "ab"  # a format character (category Cf)
+    assert textnorm.fold("a  b") == "a b"  # whitespace collapses to one space, which is not removed
