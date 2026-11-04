@@ -19,7 +19,7 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent))
 
-from hadavin_kit import strict_json
+from hadavin_kit import paths, strict_json
 from hadavin_kit.validate import validate as validate_export
 
 
@@ -131,17 +131,26 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = ap.parse_args(argv)
     try:
-        page = build(strict_json.load_object(args.export))
-    except (OSError, ValueError, RecursionError) as err:
+        export = paths.cli_path(args.export)  # command-line paths stay inside the current directory
+        out = paths.cli_path(args.out) if args.out else paths.safe_join(export.parent, "index.html")
+        page = build(strict_json.load_object(export))
+        # a missing output folder is exit 2, not a traceback
+        paths.write_text_in(out.parent, out.name, page, newline=chr(10))
+    except (OSError, ValueError, RecursionError) as err:  # UnsafePath is a ValueError
         print(f"error: {type(err).__name__}: {err}", file=sys.stderr)
         return 2
-    out = args.out or args.export.with_name("index.html")
-    out.write_text(page, encoding="utf-8", newline=chr(10))
     if not args.no_headers:
         _, css, js = assets()
-        out.with_name("_headers").write_text(
-            headers_file(csp_for(js, css)), encoding="utf-8", newline=chr(10)
-        )
+        try:
+            paths.write_text_in(
+                out.parent, "_headers", headers_file(csp_for(js, css)), newline=chr(10)
+            )
+        except (
+            OSError,
+            ValueError,
+        ) as err:  # a _headers link that leaves the folder (UnsafePath), or a write error
+            print(f"error: {err}", file=sys.stderr)
+            return 2
     print(out)
     return 0
 

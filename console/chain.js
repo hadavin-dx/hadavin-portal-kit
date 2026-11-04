@@ -24,6 +24,8 @@ function sha256(str) {
   var bits = l * 8;
   for (var s = 7; s >= 0; s--) m.push(s > 3 ? 0 : (bits >>> (s * 8)) & 255);
   var H = [0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19];
+  // `>>> 0` is the 32-bit wrap SHA-256 needs (sums of 32-bit words are taken modulo 2^32), NOT a truncation: Math.trunc would
+  // keep the bits above 2^32 and change the hash. The bit operations below read these unsigned values as 32-bit words.
   var w = new Array(64);
   function rr(x, n) { return (x >>> n) | (x << (32 - n)); }
   for (var o = 0; o < m.length; o += 64) {
@@ -31,15 +33,15 @@ function sha256(str) {
     for (t = 16; t < 64; t++) {
       var s0 = rr(w[t - 15], 7) ^ rr(w[t - 15], 18) ^ (w[t - 15] >>> 3);
       var s1 = rr(w[t - 2], 17) ^ rr(w[t - 2], 19) ^ (w[t - 2] >>> 10);
-      w[t] = (w[t - 16] + s0 + w[t - 7] + s1) | 0;
+      w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
     }
     var a = H[0], b = H[1], c = H[2], d = H[3], e = H[4], f = H[5], g = H[6], hh = H[7];
     for (t = 0; t < 64; t++) {
-      var T1 = (hh + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & f) ^ (~e & g)) + K[t] + w[t]) | 0;
-      var T2 = ((rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) | 0;
-      hh = g; g = f; f = e; e = (d + T1) | 0; d = c; c = b; b = a; a = (T1 + T2) | 0;
+      var T1 = (hh + (rr(e, 6) ^ rr(e, 11) ^ rr(e, 25)) + ((e & f) ^ (~e & g)) + K[t] + w[t]) >>> 0;
+      var T2 = ((rr(a, 2) ^ rr(a, 13) ^ rr(a, 22)) + ((a & b) ^ (a & c) ^ (b & c))) >>> 0;
+      hh = g; g = f; f = e; e = (d + T1) >>> 0; d = c; c = b; b = a; a = (T1 + T2) >>> 0;
     }
-    H = [(H[0] + a) | 0, (H[1] + b) | 0, (H[2] + c) | 0, (H[3] + d) | 0, (H[4] + e) | 0, (H[5] + f) | 0, (H[6] + g) | 0, (H[7] + hh) | 0];
+    H = [(H[0] + a) >>> 0, (H[1] + b) >>> 0, (H[2] + c) >>> 0, (H[3] + d) >>> 0, (H[4] + e) >>> 0, (H[5] + f) >>> 0, (H[6] + g) >>> 0, (H[7] + hh) >>> 0];
   }
   return H.map(function (x) { return ('00000000' + (x >>> 0).toString(16)).slice(-8); }).join('');
 }

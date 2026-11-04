@@ -4,6 +4,9 @@
     python tools/vendor.py copy DEMO --commit SHA        copy the runtime files into DEMO/vendor/portal-kit and write DEMO/vendor/KIT.lock
     python tools/vendor.py verify DIR                    same as python -m hadavin_kit.kitsum --check DIR (a demo repository or a kit root)
 
+Every DEST/DIR is confined to the current directory (an absolute path is accepted only inside it): run from the demo,
+`cd demo; python ../portal-kit/tools/vendor.py copy . --commit SHA`. A path outside it exits 2 and says so.
+
 `copy` binds the lock to the bytes it copies. It refuses unless (1) --commit is 40 hex digits, (2) the checkout's HEAD IS
 that commit, (3) the kit directory has no uncommitted or untracked change, and (4) the commit is an ancestor of
 origin/main (vendor only from a merged commit: a SHA from a branch vanishes on squash-merge). Outside a git checkout it
@@ -32,7 +35,7 @@ JSONSCHEMA_RANGE = (
 )
 sys.path.insert(0, str(KIT))
 
-from hadavin_kit import kitsum, versioning
+from hadavin_kit import kitsum, paths, versioning
 
 
 def pins() -> dict[str, str]:
@@ -100,23 +103,30 @@ def cmd_copy(demo: Path, commit: str) -> int:
     except RuntimeError as err:
         print(f"vendor: {err}")
         return 2
-    vdir = demo / VENDOR_DIR
-    if (demo / "vendor").is_symlink() or vdir.is_symlink():
-        print("vendor: DEMO/vendor and DEMO/vendor/portal-kit must not be links")
+    # Everything below lands inside the demo: safe_join returns the REAL path, so a link or a Windows junction
+    # (is_symlink() is False for a junction) at DEMO/vendor, DEMO/vendor/portal-kit or KIT.lock is refused.
+    real_demo = Path(os.path.realpath(demo))
+    try:
+        vdir = paths.safe_join(demo, VENDOR_DIR)
+        lock_path = paths.safe_join(demo, "vendor/KIT.lock")
+        linked = vdir != real_demo / VENDOR_DIR or lock_path != real_demo / "vendor" / "KIT.lock"
+    except paths.UnsafePath:
+        linked = True
+    if linked:
+        print("vendor: DEMO/vendor, DEMO/vendor/portal-kit and KIT.lock must not be links")
         return 2
     files = kitsum.digests(KIT)  # hashes of the SOURCE files, taken before anything is copied
     if vdir.exists():
         shutil.rmtree(vdir)  # no stale or planted file survives a re-vendor
     for rel in files:
-        target = vdir / rel
+        target = paths.safe_join(vdir, rel)
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(KIT / rel, target)
     lock = {"kit_commit": commit, "vendor_dir": VENDOR_DIR, "format": kitsum.LOCK_FORMAT,
             "schema_minor_max": versioning.MAX_MINOR, "requires": required,
             "files": files, "tree_sha256": kitsum.tree_hash(files)}  # fmt: skip
-    lock_path = demo / "vendor" / "KIT.lock"
-    lock_path.write_text(
-        json.dumps(lock, indent=1, sort_keys=True) + "\n", encoding="utf-8", newline="\n"
+    paths.write_text_in(
+        demo, "vendor/KIT.lock", json.dumps(lock, indent=1, sort_keys=True) + "\n", newline="\n"
     )
     problems = kitsum.check(vdir, lock_path)
     if problems:
@@ -136,6 +146,18 @@ def main(argv: list[str] | None = None) -> int:
     v = sub.add_parser("verify")
     v.add_argument("dest", type=Path)
     args = ap.parse_args(argv)
+    if args.cmd == "copy":  # `verify` is confined by kitsum.main itself
+        try:
+            args.dest = paths.cli_path(
+                args.dest
+            )  # command-line paths stay inside the current directory
+        except ValueError as err:  # UnsafePath
+            print(f"vendor: {err}")
+            print(
+                "vendor: run it from inside the demo repository and name the demo as a relative path, e.g. "
+                "`cd <demo>; python ../portal-kit/tools/vendor.py copy . --commit <40-hex sha>`"
+            )
+            return 2
     if args.cmd == "manifest":
         (KIT / "KIT-SHA256SUMS").write_text(
             kitsum.sums_text(kitsum.digests(KIT)), encoding="utf-8", newline="\n"

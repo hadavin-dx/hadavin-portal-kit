@@ -32,7 +32,10 @@ below.
 The kit is a core-style module that each consumer **vendors** with a hash file, never an unpinned copy.
 
 1. Vendor only from a **merged** kit commit on main (a SHA from a branch vanishes on squash-merge):
-   `python tools/vendor.py copy <demo repository> --commit <40-hex merged commit>`. It copies the runtime files into `vendor/portal-kit/`
+   `python tools/vendor.py copy <demo repository> --commit <40-hex merged commit>`. **Current-directory rule:** every command-line path of
+   `vendor.py`, `kitcheck`, `kitsum` and `build_console.py` must lie inside the current directory (a path outside exits 2 and says so;
+   `..`, drive letters and links leaving the directory are refused), so run it from the demo: `cd <demo>; python ../portal-kit/tools/vendor.py copy . --commit <sha>`.
+   The check happens before the file is opened (check-then-open): it does not stop another process swapping a link in between. It copies the runtime files into `vendor/portal-kit/`
    (`hadavin_kit/*.py` except `docgen.py` and `testing.py`, `schema/demo-export.v1.json`, `console/`), keeps the layout
    (the tree is one unit: the package, `schema/` and `console/` side by side; a copy of the package alone fails with
    "the vendored kit is incomplete"), and writes `vendor/KIT.lock` (JSON: `kit_commit`, `vendor_dir`, `files`, `tree_sha256` = sha256 of the sorted `<sha>  <path>` lines; plus `schema_minor_max` and `requires`), the file format the studio's `tools/core_sync_check.py` reads (`KIT-FORMAT.md`). The lock holds: the commit, a SHA-256 per file over the

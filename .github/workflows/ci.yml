@@ -37,6 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha }}  # the PR commit itself, not GitHub's synthetic merge commit (history checks)
           persist-credentials: false
       - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
         with:
@@ -66,6 +67,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha }}  # the PR commit itself, not GitHub's synthetic merge commit (history checks)
           persist-credentials: false
       - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
         with:
@@ -177,6 +179,7 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
+          ref: ${{ github.event.pull_request.head.sha }}  # the PR commit itself, not GitHub's synthetic merge commit (history checks)
           persist-credentials: false
           fetch-depth: 0  # gitleaks scans the whole history
       - uses: astral-sh/setup-uv@18d369b23da25a81e9458561248e1aafff6a70fa  # v10.3.1
@@ -199,17 +202,20 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: zizmor --format plain .github
-      - name: Secrets (gitleaks, checksum-verified binary, whole history, scanned count must equal the commit count)
+      - name: Secrets (gitleaks, checksum-verified binary, whole history, scanned count must be a real scan and not above the commit count)
         run: |
           set -euo pipefail
           curl -sSfL --proto "=https" --tlsv1.2 -o "$RUNNER_TEMP/gitleaks.tgz" \
             "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
           echo "${GITLEAKS_SHA256}  $RUNNER_TEMP/gitleaks.tgz" | sha256sum -c -
           tar -xzf "$RUNNER_TEMP/gitleaks.tgz" -C "$RUNNER_TEMP" gitleaks
-          expected=$(git rev-list --count HEAD)
+          expected=$(git rev-list --count --all)  # gitleaks scans every ref, so count every ref (a PR run also has the merge ref)
           rc=0
           "$RUNNER_TEMP/gitleaks" git --redact --verbose --no-banner --no-color --exit-code 1 . 2>&1 | tee "$RUNNER_TEMP/gitleaks.log" || rc=$?
           scanned=$(sed -nE 's/.*[^0-9]([0-9]+) commits scanned.*/\1/p' "$RUNNER_TEMP/gitleaks.log" | tail -1)
-          echo "expected commits: $expected, scanned: ${scanned:-none}"
+          echo "commits in history: $expected, scanned by gitleaks: ${scanned:-none}"
           test "$rc" -eq 0
-          test "${scanned:-none}" = "$expected"
+          # gitleaks counts only commits that add a file fragment (an empty or delete-only commit is not counted), so the
+          # count can be lower than the commit count: require a real scan (not none, not zero) that is not larger than it.
+          case "${scanned:-none}" in none|0|*[!0-9]*) echo "gitleaks scanned nothing"; exit 1;; esac
+          test "$scanned" -le "$expected"

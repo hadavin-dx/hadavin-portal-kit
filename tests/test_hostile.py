@@ -128,8 +128,13 @@ def test_cli_deny_list_with_a_byte_order_mark_still_matches_its_first_term(tmp_p
     env = {**os.environ, "PYTHONPATH": str(KIT)}
     out = subprocess.run(
         [sys.executable, "-m", "hadavin_kit.kitcheck", str(root), "--deny-list", str(terms)],
-        capture_output=True, text=True, env=env, timeout=60, check=False,
-    )  # fmt: skip
+        capture_output=True,
+        text=True,
+        env=env,
+        timeout=60,
+        check=False,
+        cwd=tmp_path,
+    )  # fmt: skip  (command-line paths must lie inside the current directory)
     assert out.returncode == 1 and "DENYLIST_HIT" in out.stdout
 
 

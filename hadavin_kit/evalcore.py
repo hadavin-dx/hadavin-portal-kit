@@ -23,7 +23,7 @@ from typing import Any, Literal, Protocol, TypedDict
 
 from hadavin_sdk.stats import upper_error_bound
 
-from hadavin_kit import strict_json
+from hadavin_kit import paths, strict_json
 
 HUMAN_READ_SALT = "human-read-v1"
 DISCLAIMER = "A smoke result on a small held-out set of synthetic data; not live accuracy."
@@ -209,6 +209,8 @@ def read_lock(eval_dir: Path) -> Lock:
 
 
 def write_lock(eval_dir: Path, lock: Lock) -> None:
+    # Not routed through paths.write_text_in on purpose: the write is atomic (temp file, fsync, os.replace) and both
+    # names are fixed by this module, never taken from a command line or a file's content.
     path = lock_path(eval_dir)
     tmp = path.with_name(path.name + ".tmp")
     with open(tmp, "w", encoding="utf-8", newline="\n") as f:
@@ -224,7 +226,7 @@ def freeze(eval_dir: Path, names: list[str], thresholds: Thresholds | None = Non
     if lock_path(eval_dir).exists():
         raise LockError("lock.json already exists: refusing to overwrite a frozen set")
     lock = Lock(
-        files={n: sha256_file(Path(eval_dir) / n) for n in names},
+        files={n: sha256_file(paths.safe_join(eval_dir, n)) for n in names},
         thresholds=thresholds or Thresholds(),
     )
     write_lock(eval_dir, lock)
@@ -235,7 +237,13 @@ def verify_files(eval_dir: Path, lock: Lock) -> list[str]:
     """Names of files that are missing or changed since the freeze (empty = intact)."""
     bad = []
     for name, digest in lock.files.items():
-        p = Path(eval_dir) / name
+        try:
+            p = paths.safe_join(
+                eval_dir, name
+            )  # the name comes from lock.json, i.e. from file content
+        except paths.UnsafePath:
+            bad.append(name)
+            continue
         if not p.is_file() or sha256_file(p) != digest:
             bad.append(name)
     return bad
@@ -515,9 +523,6 @@ def render_md(title: str, sc: dict[str, Any]) -> str:
 def write_report(out_dir: Path, title: str, scorecard: dict[str, Any]) -> None:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "report.json").write_text(
-        json.dumps(scorecard, indent=2, sort_keys=True, ensure_ascii=True) + "\n",
-        encoding="utf-8",
-        newline="\n",
-    )
-    (out_dir / "report.md").write_text(render_md(title, scorecard), encoding="utf-8", newline="\n")
+    body = json.dumps(scorecard, indent=2, sort_keys=True, ensure_ascii=True) + "\n"
+    paths.write_text_in(out_dir, "report.json", body, newline="\n")
+    paths.write_text_in(out_dir, "report.md", render_md(title, scorecard), newline="\n")
